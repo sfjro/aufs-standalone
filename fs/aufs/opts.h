@@ -105,6 +105,12 @@ struct au_opt_del {
 	struct path	h_path;
 };
 
+struct au_opt_mod {
+	char		*path;
+	int		perm;
+	struct dentry	*h_root;
+};
+
 struct au_opt_xino {
 	char		*path;
 	struct file	*file;
@@ -127,6 +133,7 @@ struct au_opt {
 		struct au_opt_xino_itrunc xino_itrunc;
 		struct au_opt_add	add;
 		struct au_opt_del	del;
+		struct au_opt_mod	mod;
 		int			rdcache;
 		unsigned int		rdblk;
 		unsigned int		rdhash;
