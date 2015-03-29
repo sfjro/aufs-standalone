@@ -7,7 +7,11 @@
  * handling file/dir, and address_space operation
  */
 
+#ifdef CONFIG_AUFS_DEBUG
+#include <linux/migrate.h>
+#endif
 #include <linux/fsnotify.h>
+#include <linux/pagemap.h>
 #include "aufs.h"
 
 /* drop flags for writing */
@@ -78,3 +82,91 @@ out_br:
 out:
 	return h_file;
 }
+
+/* ---------------------------------------------------------------------- */
+
+/* cf. aufs_nopage() */
+/* for madvise(2) */
+static int aufs_readpage(struct file *file __maybe_unused, struct page *page)
+{
+	unlock_page(page);
+	return 0;
+}
+
+/* it will never be called, but necessary to support O_DIRECT */
+static ssize_t aufs_direct_IO(struct kiocb *iocb, struct iov_iter *iter)
+{ BUG(); return 0; }
+
+/* they will never be called. */
+#ifdef CONFIG_AUFS_DEBUG
+static int aufs_write_begin(struct file *file, struct address_space *mapping,
+			    loff_t pos, unsigned len, unsigned flags,
+			    struct page **pagep, void **fsdata)
+{ AuUnsupport(); return 0; }
+static int aufs_write_end(struct file *file, struct address_space *mapping,
+			  loff_t pos, unsigned len, unsigned copied,
+			  struct page *page, void *fsdata)
+{ AuUnsupport(); return 0; }
+static int aufs_writepage(struct page *page, struct writeback_control *wbc)
+{ AuUnsupport(); return 0; }
+
+static int aufs_set_page_dirty(struct page *page)
+{ AuUnsupport(); return 0; }
+static void aufs_invalidatepage(struct page *page, unsigned int offset,
+				unsigned int length)
+{ AuUnsupport(); }
+static int aufs_releasepage(struct page *page, gfp_t gfp)
+{ AuUnsupport(); return 0; }
+#if 0 /* called by memory compaction regardless file */
+static int aufs_migratepage(struct address_space *mapping, struct page *newpage,
+			    struct page *page, enum migrate_mode mode)
+{ AuUnsupport(); return 0; }
+#endif
+static bool aufs_isolate_page(struct page *page, isolate_mode_t mode)
+{ AuUnsupport(); return true; }
+static void aufs_putback_page(struct page *page)
+{ AuUnsupport(); }
+static int aufs_launder_page(struct page *page)
+{ AuUnsupport(); return 0; }
+static int aufs_is_partially_uptodate(struct page *page,
+				      unsigned long from,
+				      unsigned long count)
+{ AuUnsupport(); return 0; }
+static void aufs_is_dirty_writeback(struct page *page, bool *dirty,
+				    bool *writeback)
+{ AuUnsupport(); }
+static int aufs_error_remove_page(struct address_space *mapping,
+				  struct page *page)
+{ AuUnsupport(); return 0; }
+static int aufs_swap_activate(struct swap_info_struct *sis, struct file *file,
+			      sector_t *span)
+{ AuUnsupport(); return 0; }
+static void aufs_swap_deactivate(struct file *file)
+{ AuUnsupport(); }
+#endif /* CONFIG_AUFS_DEBUG */
+
+const struct address_space_operations aufs_aop = {
+	.readpage		= aufs_readpage,
+	.direct_IO		= aufs_direct_IO,
+#ifdef CONFIG_AUFS_DEBUG
+	.writepage		= aufs_writepage,
+	/* no writepages, because of writepage */
+	.set_page_dirty		= aufs_set_page_dirty,
+	/* no readpages, because of readpage */
+	.write_begin		= aufs_write_begin,
+	.write_end		= aufs_write_end,
+	/* no bmap, no block device */
+	.invalidatepage		= aufs_invalidatepage,
+	.releasepage		= aufs_releasepage,
+	/* is fallback_migrate_page ok? */
+	/* .migratepage		= aufs_migratepage, */
+	.isolate_page		= aufs_isolate_page,
+	.putback_page		= aufs_putback_page,
+	.launder_page		= aufs_launder_page,
+	.is_partially_uptodate	= aufs_is_partially_uptodate,
+	.is_dirty_writeback	= aufs_is_dirty_writeback,
+	.error_remove_page	= aufs_error_remove_page,
+	.swap_activate		= aufs_swap_activate,
+	.swap_deactivate	= aufs_swap_deactivate
+#endif /* CONFIG_AUFS_DEBUG */
+};
