@@ -12,8 +12,11 @@
 
 #ifdef __KERNEL__
 
+#include "debug.h"
+
 #include "inode.h"
 #include "module.h"
+#include "rwsem.h"
 #include "super.h"
 
 #endif /* __KERNEL__ */
