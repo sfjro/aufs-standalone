@@ -46,6 +46,23 @@ static inline unsigned int au_opts_plink(unsigned int mntflags)
 
 /* ---------------------------------------------------------------------- */
 
+/* policies to select one among multiple writable branches */
+enum {
+	AuWbrCreate_TDP,	/* top down parent */
+	/* add more later */
+
+	AuWbrCreate_Def = AuWbrCreate_TDP
+};
+
+enum {
+	AuWbrCopyup_TDP,	/* top down parent */
+	/* add more later */
+
+	AuWbrCopyup_Def = AuWbrCopyup_TDP
+};
+
+/* ---------------------------------------------------------------------- */
+
 struct au_opt_add {
 	aufs_bindex_t	bindex;
 	char		*pathname;
@@ -62,12 +79,19 @@ struct au_opt_xino_itrunc {
 	aufs_bindex_t	bindex;
 };
 
+struct au_opt_wbr_create {
+	int			wbr_create;
+	/* add more later */
+};
+
 struct au_opt {
 	int type;
 	union {
 		struct au_opt_xino	xino;
 		struct au_opt_xino_itrunc xino_itrunc;
 		struct au_opt_add	add;
+		struct au_opt_wbr_create wbr_create;
+		int			wbr_copyup;
 		/* add more later */
 	};
 };
@@ -92,6 +116,8 @@ struct au_opts {
 
 /* opts.c */
 void au_optstr_br_perm(au_br_perm_str_t *str, int perm);
+const char *au_optstr_wbr_copyup(int wbr_copyup);
+const char *au_optstr_wbr_create(int wbr_create);
 
 void au_opts_free(struct au_opts *opts);
 struct super_block;
