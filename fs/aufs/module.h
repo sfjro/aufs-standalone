@@ -15,6 +15,7 @@
 #include <linux/slab.h>
 #include "debug.h"
 #include "dentry.h"
+#include "file.h"
 #include "inode.h"
 
 struct path;
@@ -104,6 +105,7 @@ AuStubVoid(au_procfs_fin, void);
 enum {
 	AuCache_DINFO,
 	AuCache_ICNTNR,
+	AuCache_FINFO,
 	AuCache_HNOTIFY, /* must be last */
 	AuCache_Last
 };
@@ -136,6 +138,7 @@ extern struct kmem_cache *au_cache[AuCache_Last];
 
 AuCacheFuncs(dinfo, DINFO);
 AuCacheFuncs(icntnr, ICNTNR);
+AuCacheFuncs(finfo, FINFO);
 #ifdef CONFIG_AUFS_HNOTIFY
 AuCacheFuncs(hnotify, HNOTIFY);
 #endif
