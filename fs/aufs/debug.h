@@ -52,6 +52,16 @@ AuStubInt0(au_debug_test, void)
 } while (0)
 #define AuLabel(l)		AuDbg(#l "\n")
 
+#define AuTraceErr(e) do { \
+	if (unlikely((e) < 0)) \
+		AuDbg("err %d\n", (int)(e)); \
+} while (0)
+
+#define AuTraceErrPtr(p) do { \
+	if (IS_ERR(p)) \
+		AuDbg("err %ld\n", PTR_ERR(p)); \
+} while (0)
+
 /* ---------------------------------------------------------------------- */
 
 struct dentry;
