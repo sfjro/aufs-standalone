@@ -308,6 +308,174 @@ void au_iarray_free(struct inode **a, unsigned long long max)
 
 /* ---------------------------------------------------------------------- */
 
+/*
+ * refresh dentry and inode at remount time.
+ */
+/* todo: consolidate with simple_reval_dpath() and au_reval_for_attr() */
+static int au_do_refresh(struct dentry *dentry, unsigned int dir_flags,
+		      struct dentry *parent)
+{
+	int err;
+
+	di_write_lock_child(dentry);
+	di_read_lock_parent(parent, AuLock_IR);
+	err = au_refresh_dentry(dentry, parent);
+	if (!err && dir_flags)
+		au_hn_reset(d_inode(dentry), dir_flags);
+	di_read_unlock(parent, AuLock_IR);
+	di_write_unlock(dentry);
+
+	return err;
+}
+
+static int au_do_refresh_d(struct dentry *dentry, unsigned int sigen,
+			   struct au_sbinfo *sbinfo,
+			   const unsigned int dir_flags)
+{
+	int err;
+	struct dentry *parent;
+
+	err = 0;
+	parent = dget_parent(dentry);
+	if (!au_digen_test(parent, sigen) && au_digen_test(dentry, sigen)) {
+		if (d_really_is_positive(dentry)) {
+			if (!d_is_dir(dentry))
+				err = au_do_refresh(dentry, /*dir_flags*/0,
+						 parent);
+			else {
+				err = au_do_refresh(dentry, dir_flags, parent);
+				if (unlikely(err))
+					au_fset_si(sbinfo, FAILED_REFRESH_DIR);
+			}
+		} else
+			err = au_do_refresh(dentry, /*dir_flags*/0, parent);
+		AuDbgDentry(dentry);
+	}
+	dput(parent);
+
+	AuTraceErr(err);
+	return err;
+}
+
+static int au_refresh_d(struct super_block *sb)
+{
+	int err, i, j, ndentry, e;
+	unsigned int sigen;
+	struct au_dcsub_pages dpages;
+	struct au_dpage *dpage;
+	struct dentry **dentries, *d;
+	struct au_sbinfo *sbinfo;
+	struct dentry *root = sb->s_root;
+	const unsigned int dir_flags = au_hi_flags(d_inode(root), /*isdir*/1);
+
+	err = au_dpages_init(&dpages, GFP_NOFS);
+	if (unlikely(err))
+		goto out;
+	err = au_dcsub_pages(&dpages, root, NULL, NULL);
+	if (unlikely(err))
+		goto out_dpages;
+
+	sigen = au_sigen(sb);
+	sbinfo = au_sbi(sb);
+	for (i = 0; i < dpages.ndpage; i++) {
+		dpage = dpages.dpages + i;
+		dentries = dpage->dentries;
+		ndentry = dpage->ndentry;
+		for (j = 0; j < ndentry; j++) {
+			d = dentries[j];
+			e = au_do_refresh_d(d, sigen, sbinfo, dir_flags);
+			if (unlikely(e && !err))
+				err = e;
+			/* go on even err */
+		}
+	}
+
+out_dpages:
+	au_dpages_free(&dpages);
+out:
+	return err;
+}
+
+static int au_refresh_i(struct super_block *sb)
+{
+	int err, e;
+	unsigned int sigen;
+	unsigned long long max, ull;
+	struct inode *inode, **array;
+
+	array = au_iarray_alloc(sb, &max);
+	err = PTR_ERR(array);
+	if (IS_ERR(array))
+		goto out;
+
+	err = 0;
+	sigen = au_sigen(sb);
+	for (ull = 0; ull < max; ull++) {
+		inode = array[ull];
+		if (unlikely(!inode))
+			break;
+		if (au_iigen(inode, NULL) != sigen) {
+			ii_write_lock_child(inode);
+			e = au_refresh_hinode_self(inode);
+			ii_write_unlock(inode);
+			if (unlikely(e)) {
+				pr_err("error %d, i%lu\n", e, inode->i_ino);
+				if (!err)
+					err = e;
+				/* go on even if err */
+			}
+		}
+	}
+
+	au_iarray_free(array, max);
+
+out:
+	return err;
+}
+
+static void au_remount_refresh(struct super_block *sb)
+{
+	int err, e;
+	unsigned int udba;
+	aufs_bindex_t bindex, bbot;
+	struct dentry *root;
+	struct inode *inode;
+	struct au_branch *br;
+
+	au_sigen_inc(sb);
+	au_fclr_si(au_sbi(sb), FAILED_REFRESH_DIR);
+
+	root = sb->s_root;
+	DiMustNoWaiters(root);
+	inode = d_inode(root);
+	IiMustNoWaiters(inode);
+
+	udba = au_opt_udba(sb);
+	bbot = au_sbbot(sb);
+	for (bindex = 0; bindex <= bbot; bindex++) {
+		br = au_sbr(sb, bindex);
+		err = au_hnotify_reset_br(udba, br, br->br_perm);
+		if (unlikely(err))
+			AuIOErr("hnotify failed on br %d, %d, ignored\n",
+				bindex, err);
+		/* go on even if err */
+	}
+	au_hn_reset(inode, au_hi_flags(inode, /*isdir*/1));
+
+	di_write_unlock(root);
+	err = au_refresh_d(sb);
+	e = au_refresh_i(sb);
+	if (unlikely(e && !err))
+		err = e;
+	/* aufs_write_lock() calls ..._child() */
+	di_write_lock_child(root);
+
+	au_cpup_attr_all(inode, /*force*/1);
+
+	if (unlikely(err))
+		AuIOErr("refresh failed, ignored, %d\n", err);
+}
+
 /* stop extra interpretation of errno in mount(8), and strange error messages */
 static int cvt_err(int err)
 {
@@ -323,12 +491,82 @@ static int cvt_err(int err)
 	return err;
 }
 
+static int aufs_remount_fs(struct super_block *sb, int *flags, char *data)
+{
+	int err, do_dx;
+	unsigned int mntflags;
+	struct au_opts opts = {
+		.opt = NULL
+	};
+	struct dentry *root;
+	struct inode *inode;
+	struct au_sbinfo *sbinfo;
+
+	err = 0;
+	root = sb->s_root;
+	if (!data || !*data) {
+		err = si_write_lock(sb, AuLock_FLUSH | AuLock_NOPLM);
+		if (!err) {
+			di_write_lock_child(root);
+			err = au_opts_verify(sb, *flags, /*pending*/0);
+			aufs_write_unlock(root);
+		}
+		goto out;
+	}
+
+	err = -ENOMEM;
+	opts.opt = (void *)__get_free_page(GFP_NOFS);
+	if (unlikely(!opts.opt))
+		goto out;
+	opts.max_opt = PAGE_SIZE / sizeof(*opts.opt);
+	opts.flags = AuOpts_REMOUNT;
+	opts.sb_flags = *flags;
+
+	/* parse it before aufs lock */
+	err = au_opts_parse(sb, data, &opts);
+	if (unlikely(err))
+		goto out_opts;
+
+	sbinfo = au_sbi(sb);
+	inode = d_inode(root);
+	inode_lock(inode);
+	err = si_write_lock(sb, AuLock_FLUSH | AuLock_NOPLM);
+	if (unlikely(err))
+		goto out_mtx;
+	di_write_lock_child(root);
+
+	/* au_opts_remount() may return an error */
+	err = au_opts_remount(sb, &opts);
+	au_opts_free(&opts);
+
+	if (au_ftest_opts(opts.flags, REFRESH))
+		au_remount_refresh(sb);
+
+	if (au_ftest_opts(opts.flags, REFRESH_DYAOP)) {
+		mntflags = au_mntflags(sb);
+		do_dx = !!au_opt_test(mntflags, DIO);
+		au_dy_arefresh(do_dx);
+	}
+
+	aufs_write_unlock(root);
+
+out_mtx:
+	inode_unlock(inode);
+out_opts:
+	free_page((unsigned long)opts.opt);
+out:
+	err = cvt_err(err);
+	AuTraceErr(err);
+	return err;
+}
+
 static const struct super_operations aufs_sop = {
 	.alloc_inode	= aufs_alloc_inode,
 	.destroy_inode	= aufs_destroy_inode,
 	/* always deleting, no clearing */
 	.drop_inode	= generic_delete_inode,
-	.put_super	= aufs_put_super
+	.put_super	= aufs_put_super,
+	.remount_fs	= aufs_remount_fs
 };
 
 /* ---------------------------------------------------------------------- */
@@ -480,6 +718,10 @@ static void aufs_kill_sb(struct super_block *sb)
 		aufs_write_lock(sb->s_root);
 		if (sbinfo->si_wbr_create_ops->fin)
 			sbinfo->si_wbr_create_ops->fin(sb);
+		if (au_opt_test(sbinfo->si_mntflags, UDBA_HNOTIFY)) {
+			au_opt_set_udba(sbinfo->si_mntflags, UDBA_NONE);
+			au_remount_refresh(sb);
+		}
 		if (au_opt_test(sbinfo->si_mntflags, PLINK))
 			au_plink_put(sb, /*verbose*/1);
 		au_xino_clr(sb);
