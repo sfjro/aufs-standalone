@@ -24,6 +24,9 @@ void au_si_free(struct kobject *kobj)
 		AuDebugOn(!hlist_bl_empty(sbinfo->si_plink + i));
 	AuDebugOn(atomic_read(&sbinfo->si_nowait.nw_len));
 
+	AuLCntZero(au_lcnt_read(&sbinfo->si_ninodes, /*do_rev*/0));
+	au_lcnt_fin(&sbinfo->si_ninodes, /*do_sync*/0);
+
 	au_rw_write_lock(&sbinfo->si_rwsem);
 	au_br_free(sbinfo);
 	au_rw_write_unlock(&sbinfo->si_rwsem);
@@ -32,6 +35,7 @@ void au_si_free(struct kobject *kobj)
 	mutex_destroy(&sbinfo->si_xib_mtx);
 	AuRwDestroy(&sbinfo->si_rwsem);
 
+	au_lcnt_wait_for_fin(&sbinfo->si_ninodes);
 	au_kfree_rcu(sbinfo);
 }
 
@@ -56,6 +60,8 @@ int au_si_alloc(struct super_block *sb)
 
 	au_nwt_init(&sbinfo->si_nowait);
 	au_rw_init_wlock(&sbinfo->si_rwsem);
+
+	au_lcnt_init(&sbinfo->si_ninodes, /*release*/NULL);
 
 	sbinfo->si_bbot = -1;
 	sbinfo->si_last_br_id = AUFS_BRANCH_MAX / 2;
