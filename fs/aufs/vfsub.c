@@ -12,6 +12,21 @@
 #include <linux/uaccess.h>
 #include "aufs.h"
 
+int vfsub_sync_filesystem(struct super_block *h_sb, int wait)
+{
+	int err;
+
+	lockdep_off();
+	down_read(&h_sb->s_umount);
+	err = __sync_filesystem(h_sb, wait);
+	up_read(&h_sb->s_umount);
+	lockdep_on();
+
+	return err;
+}
+
+/* ---------------------------------------------------------------------- */
+
 struct file *vfsub_dentry_open(struct path *path, int flags)
 {
 	struct file *file;
