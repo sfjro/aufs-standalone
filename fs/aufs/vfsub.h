@@ -13,6 +13,7 @@
 #ifdef __KERNEL__
 
 #include <linux/fs.h>
+#include <linux/mount.h>
 #include "debug.h"
 
 /* ---------------------------------------------------------------------- */
@@ -51,10 +52,31 @@ static inline struct dentry *vfsub_lkup_one(struct qstr *name,
 
 /* ---------------------------------------------------------------------- */
 
+static inline int vfsub_mnt_want_write(struct vfsmount *mnt)
+{
+	int err;
+
+	lockdep_off();
+	err = mnt_want_write(mnt);
+	lockdep_on();
+	return err;
+}
+
+static inline void vfsub_mnt_drop_write(struct vfsmount *mnt)
+{
+	lockdep_off();
+	mnt_drop_write(mnt);
+	lockdep_on();
+}
+
+/* ---------------------------------------------------------------------- */
+
 int vfsub_create(struct inode *dir, struct path *path, int mode,
 		 bool want_excl);
 int vfsub_link(struct dentry *src_dentry, struct inode *dir,
 	       struct path *path, struct inode **delegated_inode);
+int vfsub_mkdir(struct inode *dir, struct path *path, int mode);
+int vfsub_rmdir(struct inode *dir, struct path *path);
 
 /* ---------------------------------------------------------------------- */
 
