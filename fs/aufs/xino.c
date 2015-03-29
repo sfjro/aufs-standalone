@@ -22,7 +22,6 @@
  *   + remount with xino/noxino options
  */
 
-#include <linux/sched/signal.h>
 #include <linux/seq_file.h>
 #include <linux/statfs.h>
 #include <linux/uaccess.h>

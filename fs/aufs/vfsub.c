@@ -8,7 +8,6 @@
  */
 
 #include <linux/namei.h>
-#include <linux/cred.h>
 #include <linux/security.h>
 #include <linux/uaccess.h>
 #include "aufs.h"

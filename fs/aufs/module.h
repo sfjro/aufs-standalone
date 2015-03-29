@@ -104,6 +104,7 @@ AuStubVoid(au_procfs_fin, void);
 enum {
 	AuCache_DINFO,
 	AuCache_ICNTNR,
+	AuCache_HNOTIFY, /* must be last */
 	AuCache_Last
 };
 
@@ -135,6 +136,9 @@ extern struct kmem_cache *au_cache[AuCache_Last];
 
 AuCacheFuncs(dinfo, DINFO);
 AuCacheFuncs(icntnr, ICNTNR);
+#ifdef CONFIG_AUFS_HNOTIFY
+AuCacheFuncs(hnotify, HNOTIFY);
+#endif
 
 #endif /* __KERNEL__ */
 #endif /* __AUFS_MODULE_H__ */
