@@ -772,7 +772,7 @@ static int aufs_fill_super(struct super_block *sb, void *raw_data,
 	sb->s_flags |= SB_NOATIME | SB_NODIRATIME;
 	sb->s_flags |= SB_I_VERSION; /* do we really need this? */
 	sb->s_op = &aufs_sop;
-	sb->s_d_op = &simple_dentry_operations;  /* replace later */
+	sb->s_d_op = &aufs_dop;
 	sb->s_magic = AUFS_SUPER_MAGIC;
 	sb->s_maxbytes = 0;
 	sb->s_stack_depth = 1;
