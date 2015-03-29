@@ -123,6 +123,54 @@ out:
 	return err;
 }
 
+int vfsub_mkdir(struct inode *dir, struct path *path, int mode)
+{
+	int err;
+	struct dentry *d;
+	struct user_namespace *userns;
+
+	IMustLock(dir);
+
+	d = path->dentry;
+	path->dentry = d->d_parent;
+	err = security_path_mkdir(path, d, mode);
+	path->dentry = d;
+	if (unlikely(err))
+		goto out;
+	userns = mnt_user_ns(path->mnt);
+
+	lockdep_off();
+	err = vfs_mkdir(userns, dir, path->dentry, mode);
+	lockdep_on();
+
+out:
+	return err;
+}
+
+int vfsub_rmdir(struct inode *dir, struct path *path)
+{
+	int err;
+	struct dentry *d;
+	struct user_namespace *userns;
+
+	IMustLock(dir);
+
+	d = path->dentry;
+	path->dentry = d->d_parent;
+	err = security_path_rmdir(path, d);
+	path->dentry = d;
+	if (unlikely(err))
+		goto out;
+	userns = mnt_user_ns(path->mnt);
+
+	lockdep_off();
+	err = vfs_rmdir(userns, dir, path->dentry);
+	lockdep_on();
+
+out:
+	return err;
+}
+
 /* ---------------------------------------------------------------------- */
 
 /* todo: support mmap_sem? */
