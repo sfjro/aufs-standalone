@@ -255,19 +255,98 @@ void au_optstr_br_perm(au_br_perm_str_t *str, int perm)
 static match_table_t au_wbr_create_policy = {
 	{AuWbrCreate_TDP, "tdp"},
 	{AuWbrCreate_TDP, "top-down-parent"},
+	{AuWbrCreate_RR, "rr"},
+	{AuWbrCreate_RR, "round-robin"},
+	{AuWbrCreate_MFS, "mfs"},
+	{AuWbrCreate_MFS, "most-free-space"},
+	{AuWbrCreate_MFSV, "mfs:%d"},
+	{AuWbrCreate_MFSV, "most-free-space:%d"},
 
-	/* add more later */
+	/* top-down regardless the parent, and then mfs */
+	{AuWbrCreate_TDMFS, "tdmfs:%d"},
+	{AuWbrCreate_TDMFSV, "tdmfs:%d:%d"},
+
+	{AuWbrCreate_MFSRR, "mfsrr:%d"},
+	{AuWbrCreate_MFSRRV, "mfsrr:%d:%d"},
+	{AuWbrCreate_PMFS, "pmfs"},
+	{AuWbrCreate_PMFSV, "pmfs:%d"},
+	{AuWbrCreate_PMFSRR, "pmfsrr:%d"},
+	{AuWbrCreate_PMFSRRV, "pmfsrr:%d:%d"},
+
 	{-1, NULL}
 };
+
+static int au_wbr_mfs_wmark(substring_t *arg, char *str,
+			    struct au_opt_wbr_create *create)
+{
+	int err;
+	unsigned long long ull;
+
+	err = 0;
+	if (!match_u64(arg, &ull))
+		create->mfsrr_watermark = ull;
+	else {
+		pr_err("bad integer in %s\n", str);
+		err = -EINVAL;
+	}
+
+	return err;
+}
+
+static int au_wbr_mfs_sec(substring_t *arg, char *str,
+			  struct au_opt_wbr_create *create)
+{
+	int n, err;
+
+	err = 0;
+	if (!match_int(arg, &n) && 0 <= n && n <= AUFS_MFS_MAX_SEC)
+		create->mfs_second = n;
+	else {
+		pr_err("bad integer in %s\n", str);
+		err = -EINVAL;
+	}
+
+	return err;
+}
 
 static int noinline_for_stack
 au_wbr_create_val(char *str, struct au_opt_wbr_create *create)
 {
-	int err;
+	int err, e;
 	substring_t args[MAX_OPT_ARGS];
 
 	err = match_token(str, au_wbr_create_policy, args);
 	create->wbr_create = err;
+	switch (err) {
+	case AuWbrCreate_MFSRRV:
+	case AuWbrCreate_TDMFSV:
+	case AuWbrCreate_PMFSRRV:
+		e = au_wbr_mfs_wmark(&args[0], str, create);
+		if (!e)
+			e = au_wbr_mfs_sec(&args[1], str, create);
+		if (unlikely(e))
+			err = e;
+		break;
+	case AuWbrCreate_MFSRR:
+	case AuWbrCreate_TDMFS:
+	case AuWbrCreate_PMFSRR:
+		e = au_wbr_mfs_wmark(&args[0], str, create);
+		if (unlikely(e)) {
+			err = e;
+			break;
+		}
+		/*FALLTHROUGH*/
+	case AuWbrCreate_MFS:
+	case AuWbrCreate_PMFS:
+		create->mfs_second = AUFS_MFS_DEF_SEC;
+		break;
+	case AuWbrCreate_MFSV:
+	case AuWbrCreate_PMFSV:
+		e = au_wbr_mfs_sec(&args[0], str, create);
+		if (unlikely(e))
+			err = e;
+		break;
+	}
 
 	return err;
 }
@@ -280,6 +359,10 @@ const char *au_optstr_wbr_create(int wbr_create)
 static match_table_t au_wbr_copyup_policy = {
 	{AuWbrCopyup_TDP, "tdp"},
 	{AuWbrCopyup_TDP, "top-down-parent"},
+	{AuWbrCopyup_BUP, "bup"},
+	{AuWbrCopyup_BUP, "bottom-up-parent"},
+	{AuWbrCopyup_BU, "bu"},
+	{AuWbrCopyup_BU, "bottom-up"},
 	{-1, NULL}
 };
 
@@ -357,6 +440,24 @@ static void dump_opts(struct au_opts *opts)
 			u.create = &opt->wbr_create;
 			AuDbg("create %d, %s\n", u.create->wbr_create,
 				  au_optstr_wbr_create(u.create->wbr_create));
+			switch (u.create->wbr_create) {
+			case AuWbrCreate_MFSV:
+			case AuWbrCreate_PMFSV:
+				AuDbg("%d sec\n", u.create->mfs_second);
+				break;
+			case AuWbrCreate_MFSRR:
+			case AuWbrCreate_TDMFS:
+				AuDbg("%llu watermark\n",
+					  u.create->mfsrr_watermark);
+				break;
+			case AuWbrCreate_MFSRRV:
+			case AuWbrCreate_TDMFSV:
+			case AuWbrCreate_PMFSRRV:
+				AuDbg("%llu watermark, %d sec\n",
+					  u.create->mfsrr_watermark,
+					  u.create->mfs_second);
+				break;
+			}
 			break;
 		case Opt_wbr_copyup:
 			AuDbg("copyup %d, %s\n", opt->wbr_copyup,
@@ -665,6 +766,23 @@ static int au_opt_wbr_create(struct super_block *sb,
 
 	sbinfo->si_wbr_create = create->wbr_create;
 	sbinfo->si_wbr_create_ops = au_wbr_create_ops + create->wbr_create;
+	switch (create->wbr_create) {
+	case AuWbrCreate_MFSRRV:
+	case AuWbrCreate_MFSRR:
+	case AuWbrCreate_TDMFS:
+	case AuWbrCreate_TDMFSV:
+	case AuWbrCreate_PMFSRR:
+	case AuWbrCreate_PMFSRRV:
+		sbinfo->si_wbr_mfs.mfsrr_watermark = create->mfsrr_watermark;
+		/*FALLTHROUGH*/
+	case AuWbrCreate_MFS:
+	case AuWbrCreate_MFSV:
+	case AuWbrCreate_PMFS:
+	case AuWbrCreate_PMFSV:
+		sbinfo->si_wbr_mfs.mfs_expire
+			= msecs_to_jiffies(create->mfs_second * MSEC_PER_SEC);
+		break;
+	}
 
 	if (sbinfo->si_wbr_create_ops->init)
 		sbinfo->si_wbr_create_ops->init(sb); /* ignore */
