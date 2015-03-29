@@ -29,6 +29,7 @@ enum {
 	Opt_dio, Opt_nodio,
 	Opt_wbr_copyup, Opt_wbr_create,
 	Opt_verbose, Opt_noverbose,
+	Opt_sum, Opt_nosum, Opt_wsum,
 	Opt_dirperm1, Opt_nodirperm1,
 	Opt_acl, Opt_noacl,
 	Opt_tail, Opt_ignore, Opt_ignore_silent, Opt_err
@@ -93,6 +94,10 @@ static match_table_t options = {
 	{Opt_noverbose, "quiet"},
 	{Opt_noverbose, "q"},
 	{Opt_noverbose, "silent"},
+
+	{Opt_sum, "sum"},
+	{Opt_nosum, "nosum"},
+	{Opt_wsum, "wsum"},
 
 	{Opt_rdcache, "rdcache=%d"},
 	{Opt_rdblk, "rdblk=%d"},
@@ -593,6 +598,15 @@ static void dump_opts(struct au_opts *opts)
 		case Opt_noverbose:
 			AuLabel(noverbose);
 			break;
+		case Opt_sum:
+			AuLabel(sum);
+			break;
+		case Opt_nosum:
+			AuLabel(nosum);
+			break;
+		case Opt_wsum:
+			AuLabel(wsum);
+			break;
 		case Opt_wbr_create:
 			u.create = &opt->wbr_create;
 			AuDbg("create %d, %s\n", u.create->wbr_create,
@@ -1059,6 +1073,9 @@ int au_opts_parse(struct super_block *sb, char *str, struct au_opts *opts)
 		case Opt_nodio:
 		case Opt_verbose:
 		case Opt_noverbose:
+		case Opt_sum:
+		case Opt_nosum:
+		case Opt_wsum:
 		case Opt_rdblk_def:
 		case Opt_rdhash_def:
 		case Opt_acl:
@@ -1218,6 +1235,17 @@ static int au_opt_simple(struct super_block *sb, struct au_opt *opt,
 		break;
 	case Opt_noverbose:
 		au_opt_clr(sbinfo->si_mntflags, VERBOSE);
+		break;
+
+	case Opt_sum:
+		au_opt_set(sbinfo->si_mntflags, SUM);
+		break;
+	case Opt_wsum:
+		au_opt_clr(sbinfo->si_mntflags, SUM);
+		au_opt_set(sbinfo->si_mntflags, SUM_W);
+	case Opt_nosum:
+		au_opt_clr(sbinfo->si_mntflags, SUM);
+		au_opt_clr(sbinfo->si_mntflags, SUM_W);
 		break;
 
 	case Opt_wbr_create:

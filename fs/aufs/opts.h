@@ -28,6 +28,8 @@ struct file;
 #define AuOpt_PLINK		(1 << 6)	/* pseudo-link */
 #define AuOpt_DIRPERM1		(1 << 7)	/* ignore the lower dir's perm
 						   bits */
+#define AuOpt_SUM		(1 << 10)	/* summation for statfs(2) */
+#define AuOpt_SUM_W		(1 << 11)	/* unimplemented */
 #define AuOpt_VERBOSE		(1 << 13)	/* print the cause of error */
 #define AuOpt_DIO		(1 << 14)	/* direct io */
 
