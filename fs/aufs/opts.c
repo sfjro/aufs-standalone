@@ -24,6 +24,7 @@ enum {
 	Opt_trunc_xino, Opt_trunc_xino_v, Opt_notrunc_xino,
 	Opt_trunc_xino_path, Opt_itrunc_xino,
 	Opt_trunc_xib, Opt_notrunc_xib,
+	Opt_shwh, Opt_noshwh,
 	Opt_plink, Opt_noplink, Opt_list_plink,
 	Opt_udba,
 	Opt_dio, Opt_nodio,
@@ -97,6 +98,11 @@ static match_table_t options = {
 
 	{Opt_warn_perm, "warn_perm"},
 	{Opt_nowarn_perm, "nowarn_perm"},
+
+#ifdef CONFIG_AUFS_SHWH
+	{Opt_shwh, "shwh"},
+#endif
+	{Opt_noshwh, "noshwh"},
 
 	{Opt_dirperm1, "dirperm1"},
 	{Opt_nodirperm1, "nodirperm1"},
@@ -579,6 +585,12 @@ static void dump_opts(struct au_opts *opts)
 			break;
 		case Opt_notrunc_xib:
 			AuLabel(notrunc_xib);
+			break;
+		case Opt_shwh:
+			AuLabel(shwh);
+			break;
+		case Opt_noshwh:
+			AuLabel(noshwh);
 			break;
 		case Opt_dirperm1:
 			AuLabel(dirperm1);
@@ -1089,6 +1101,8 @@ int au_opts_parse(struct super_block *sb, char *str, struct au_opts *opts)
 		case Opt_noxino:
 		case Opt_trunc_xib:
 		case Opt_notrunc_xib:
+		case Opt_shwh:
+		case Opt_noshwh:
 		case Opt_dirperm1:
 		case Opt_nodirperm1:
 		case Opt_plink:
@@ -1313,6 +1327,13 @@ static int au_opt_simple(struct super_block *sb, struct au_opt *opt,
 		sbinfo->si_rdhash = AUFS_RDHASH_DEF;
 		break;
 
+	case Opt_shwh:
+		au_opt_set(sbinfo->si_mntflags, SHWH);
+		break;
+	case Opt_noshwh:
+		au_opt_clr(sbinfo->si_mntflags, SHWH);
+		break;
+
 	case Opt_dirperm1:
 		au_opt_set(sbinfo->si_mntflags, DIRPERM1);
 		break;
@@ -1482,6 +1503,8 @@ int au_opts_verify(struct super_block *sb, unsigned long sb_flags,
 	if (!(sb_flags & SB_RDONLY)) {
 		if (unlikely(!au_br_writable(au_sbr_perm(sb, 0))))
 			pr_warn("first branch should be rw\n");
+		if (unlikely(au_opt_test(sbinfo->si_mntflags, SHWH)))
+			pr_warn_once("shwh should be used with ro\n");
 	}
 
 	if (au_opt_test((sbinfo->si_mntflags | pending), UDBA_HNOTIFY)
