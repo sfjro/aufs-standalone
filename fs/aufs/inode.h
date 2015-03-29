@@ -174,6 +174,8 @@ int aufs_create(struct user_namespace *userns, struct inode *dir,
 		struct dentry *dentry, umode_t mode, bool want_excl);
 int aufs_tmpfile(struct user_namespace *userns, struct inode *dir,
 		 struct dentry *dentry, umode_t mode);
+int aufs_link(struct dentry *src_dentry, struct inode *dir,
+	      struct dentry *dentry);
 int aufs_mkdir(struct user_namespace *userns, struct inode *dir,
 	       struct dentry *dentry, umode_t mode);
 
