@@ -748,7 +748,6 @@ static int aufs_setattr(struct dentry *dentry, struct iattr *ia)
 		goto out_kfree;
 
 	if (ia->ia_valid & ATTR_FILE) {
-#if 0 /* re-commit later */
 		/* currently ftruncate(2) only */
 		AuDebugOn(!d_is_reg(dentry));
 		file = ia->ia_file;
@@ -758,10 +757,6 @@ static int aufs_setattr(struct dentry *dentry, struct iattr *ia)
 			goto out_si;
 		ia->ia_file = au_hf_top(file);
 		a->udba = AuOpt_UDBA_NONE;
-#else
-		err = -ENOSYS;
-		goto out_si;
-#endif
 	} else {
 		/* fchmod() doesn't pass ia_file */
 		a->udba = au_opt_udba(sb);
@@ -799,7 +794,6 @@ static int aufs_setattr(struct dentry *dentry, struct iattr *ia)
 	}
 
 	if (ia->ia_valid & ATTR_SIZE) {
-#if 0 /* re-commit later */
 		struct file *f;
 
 		if (ia->ia_size < i_size_read(inode))
@@ -812,9 +806,6 @@ static int aufs_setattr(struct dentry *dentry, struct iattr *ia)
 		inode_unlock(a->h_inode);
 		err = vfsub_trunc(&a->h_path, ia->ia_size, ia->ia_valid, f);
 		inode_lock_nested(a->h_inode, AuLsc_I_CHILD);
-#else
-		err = -ENOSYS;
-#endif
 	} else {
 		delegated = NULL;
 		while (1) {
