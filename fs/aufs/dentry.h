@@ -51,7 +51,7 @@ struct au_do_lookup_args {
 /* dentry.c */
 struct au_branch;
 struct dentry *au_sio_lkup_one(struct qstr *name, struct dentry *parent);
-int au_h_verify(struct dentry *h_dentry, struct inode *h_dir,
+int au_h_verify(struct dentry *h_dentry, unsigned int udba, struct inode *h_dir,
 		struct dentry *h_parent, struct au_branch *br);
 
 int au_lkup_dentry(struct dentry *dentry, aufs_bindex_t btop,
