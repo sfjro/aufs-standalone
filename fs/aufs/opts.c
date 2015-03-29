@@ -18,7 +18,7 @@ enum {
 	Opt_br,
 	Opt_add, Opt_del, Opt_mod, Opt_append, Opt_prepend,
 	Opt_idel, Opt_imod,
-	Opt_rdcache, Opt_rdblk, Opt_rdhash,
+	Opt_dirwh, Opt_rdcache, Opt_rdblk, Opt_rdhash,
 	Opt_rdblk_def, Opt_rdhash_def,
 	Opt_xino, Opt_noxino,
 	Opt_trunc_xino, Opt_trunc_xino_v, Opt_notrunc_xino,
@@ -53,6 +53,8 @@ static match_table_t options = {
 	{Opt_mod, "mod=%s"},
 	{Opt_mod, "mod:%s"},
 	/* {Opt_imod, "imod:%d:%s"}, */
+
+	{Opt_dirwh, "dirwh=%d"},
 
 	{Opt_xino, "xino=%s"},
 	{Opt_noxino, "noxino"},
@@ -517,6 +519,9 @@ static void dump_opts(struct au_opts *opts)
 			AuDbg("prepend {b%d, %s, 0x%x, %p}\n",
 				  u.add->bindex, u.add->pathname, u.add->perm,
 				  u.add->path.dentry);
+			break;
+		case Opt_dirwh:
+			AuDbg("dirwh %d\n", opt->dirwh);
 			break;
 		case Opt_rdcache:
 			AuDbg("rdcache %d\n", opt->rdcache);
@@ -990,6 +995,13 @@ int au_opts_parse(struct super_block *sb, char *str, struct au_opts *opts)
 			opt->type = token;
 			break;
 
+		case Opt_dirwh:
+			if (unlikely(match_int(&a->args[0], &opt->dirwh)))
+				break;
+			err = 0;
+			opt->type = token;
+			break;
+
 		case Opt_rdcache:
 			if (unlikely(match_int(&a->args[0], &n))) {
 				pr_err("bad integer in %s\n", opt_str);
@@ -1214,6 +1226,10 @@ static int au_opt_simple(struct super_block *sb, struct au_opt *opt,
 	case Opt_wbr_copyup:
 		sbinfo->si_wbr_copyup = opt->wbr_copyup;
 		sbinfo->si_wbr_copyup_ops = au_wbr_copyup_ops + opt->wbr_copyup;
+		break;
+
+	case Opt_dirwh:
+		sbinfo->si_dirwh = opt->dirwh;
 		break;
 
 	case Opt_rdcache:
