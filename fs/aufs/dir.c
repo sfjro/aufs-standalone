@@ -85,14 +85,14 @@ static void au_do_dir_ts(void *arg)
 	if (err)
 		goto out_unlock;
 	hdir = au_hi(dir, btop);
-	inode_lock_nested(hdir->hi_inode, AuLsc_I_PARENT);
+	au_hn_inode_lock_nested(hdir, AuLsc_I_PARENT);
 	h_dir = au_h_iptr(dir, btop);
 	if (h_dir->i_nlink
 	    && timespec64_compare(&h_dir->i_mtime, &dt.dt_mtime) < 0) {
 		dt.dt_h_path = h_path;
 		au_dtime_revert(&dt);
 	}
-	inode_unlock(hdir->hi_inode);
+	au_hn_inode_unlock(hdir);
 	vfsub_mnt_drop_write(h_path.mnt);
 	au_cpup_attr_timesizes(dir);
 
