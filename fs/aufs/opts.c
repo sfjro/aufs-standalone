@@ -29,6 +29,7 @@ enum {
 	Opt_dio, Opt_nodio,
 	Opt_wbr_copyup, Opt_wbr_create,
 	Opt_verbose, Opt_noverbose,
+	Opt_dirperm1, Opt_nodirperm1,
 	Opt_acl, Opt_noacl,
 	Opt_tail, Opt_ignore, Opt_ignore_silent, Opt_err
 };
@@ -80,6 +81,9 @@ static match_table_t options = {
 
 	{Opt_dio, "dio"},
 	{Opt_nodio, "nodio"},
+
+	{Opt_dirperm1, "dirperm1"},
+	{Opt_nodirperm1, "nodirperm1"},
 
 	{Opt_verbose, "verbose"},
 	{Opt_verbose, "v"},
@@ -552,6 +556,12 @@ static void dump_opts(struct au_opts *opts)
 			break;
 		case Opt_notrunc_xib:
 			AuLabel(notrunc_xib);
+			break;
+		case Opt_dirperm1:
+			AuLabel(dirperm1);
+			break;
+		case Opt_nodirperm1:
+			AuLabel(nodirperm1);
 			break;
 		case Opt_plink:
 			AuLabel(plink);
@@ -1028,6 +1038,8 @@ int au_opts_parse(struct super_block *sb, char *str, struct au_opts *opts)
 		case Opt_noxino:
 		case Opt_trunc_xib:
 		case Opt_notrunc_xib:
+		case Opt_dirperm1:
+		case Opt_nodirperm1:
 		case Opt_plink:
 		case Opt_noplink:
 		case Opt_list_plink:
@@ -1221,6 +1233,13 @@ static int au_opt_simple(struct super_block *sb, struct au_opt *opt,
 		sbinfo->si_rdhash = AUFS_RDHASH_DEF;
 		break;
 
+	case Opt_dirperm1:
+		au_opt_set(sbinfo->si_mntflags, DIRPERM1);
+		break;
+	case Opt_nodirperm1:
+		au_opt_clr(sbinfo->si_mntflags, DIRPERM1);
+		break;
+
 	case Opt_trunc_xino:
 		au_opt_set(sbinfo->si_mntflags, TRUNC_XINO);
 		break;
@@ -1362,6 +1381,14 @@ int au_opts_verify(struct super_block *sb, unsigned long sb_flags,
 		if (unlikely(!au_br_writable(au_sbr_perm(sb, 0))))
 			pr_warn("first branch should be rw\n");
 	}
+
+	if (au_opt_test((sbinfo->si_mntflags | pending), UDBA_HNOTIFY)
+	    && !au_opt_test(sbinfo->si_mntflags, XINO))
+		pr_warn_once("udba=*notify requires xino\n");
+
+	if (au_opt_test(sbinfo->si_mntflags, DIRPERM1))
+		pr_warn_once("dirperm1 breaks the protection"
+			     " by the permission bits on the lower branch\n");
 
 	err = 0;
 	root = sb->s_root;
