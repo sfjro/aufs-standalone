@@ -216,6 +216,9 @@ static void au_fsctx_dump(struct au_opts *opts)
 				  u.add->path.dentry);
 			break;
 
+		case Opt_dirwh:
+			AuDbg("dirwh %d\n", opt->dirwh);
+			break;
 		case Opt_rdcache:
 			AuDbg("rdcache %d\n", opt->rdcache);
 			break;
@@ -330,6 +333,8 @@ const struct fs_parameter_spec aufs_fsctx_paramspec[] = {
 	/* fsparam_s32("idel", Opt_idel), */
 	fsparam_path("mod", Opt_mod),
 	/* fsparam_string("imod", Opt_imod), */
+
+	fsparam_s32("dirwh", Opt_dirwh),
 
 	fsparam_path("xino", Opt_xino),
 	fsparam_flag("noxino", Opt_noxino),
@@ -809,6 +814,11 @@ static int au_fsctx_parse_param(struct fs_context *fc, struct fs_parameter *para
 		}
 		err = au_fsctx_parse_xino_itrunc(fc, &opt->xino_itrunc,
 						 result.int_32);
+		break;
+
+	case Opt_dirwh:
+		err = 0;
+		opt->dirwh = result.int_32;
 		break;
 
 	case Opt_rdcache:
