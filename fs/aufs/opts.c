@@ -22,6 +22,7 @@ enum {
 	Opt_trunc_xino, Opt_trunc_xino_v, Opt_notrunc_xino,
 	Opt_trunc_xino_path, Opt_itrunc_xino,
 	Opt_trunc_xib, Opt_notrunc_xib,
+	Opt_plink, Opt_noplink, Opt_list_plink,
 	Opt_tail, Opt_ignore, Opt_ignore_silent, Opt_err
 };
 
@@ -39,6 +40,18 @@ static match_table_t options = {
 	/* {Opt_zxino, "zxino=%s"}, */
 	{Opt_trunc_xib, "trunc_xib"},
 	{Opt_notrunc_xib, "notrunc_xib"},
+
+#ifdef CONFIG_PROC_FS
+	{Opt_plink, "plink"},
+#else
+	{Opt_ignore_silent, "plink"},
+#endif
+
+	{Opt_noplink, "noplink"},
+
+#ifdef CONFIG_AUFS_DEBUG
+	{Opt_list_plink, "list_plink"},
+#endif
 
 	/* internal use for the scripts */
 	{Opt_ignore_silent, "si=%s"},
@@ -238,6 +251,15 @@ static void dump_opts(struct au_opts *opts)
 			break;
 		case Opt_notrunc_xib:
 			AuLabel(notrunc_xib);
+			break;
+		case Opt_plink:
+			AuLabel(plink);
+			break;
+		case Opt_noplink:
+			AuLabel(noplink);
+			break;
+		case Opt_list_plink:
+			AuLabel(list_plink);
 			break;
 		default:
 			BUG();
@@ -462,6 +484,9 @@ int au_opts_parse(struct super_block *sb, char *str, struct au_opts *opts)
 		case Opt_noxino:
 		case Opt_trunc_xib:
 		case Opt_notrunc_xib:
+		case Opt_plink:
+		case Opt_noplink:
+		case Opt_list_plink:
 			err = 0;
 			opt->type = token;
 			break;
@@ -514,6 +539,19 @@ static int au_opt_simple(struct super_block *sb, struct au_opt *opt,
 	err = 1; /* handled */
 	sbinfo = au_sbi(sb);
 	switch (opt->type) {
+	case Opt_plink:
+		au_opt_set(sbinfo->si_mntflags, PLINK);
+		break;
+	case Opt_noplink:
+		if (au_opt_test(sbinfo->si_mntflags, PLINK))
+			au_plink_put(sb, /*verbose*/1);
+		au_opt_clr(sbinfo->si_mntflags, PLINK);
+		break;
+	case Opt_list_plink:
+		if (au_opt_test(sbinfo->si_mntflags, PLINK))
+			au_plink_list(sb);
+		break;
+
 	case Opt_trunc_xino:
 		au_opt_set(sbinfo->si_mntflags, TRUNC_XINO);
 		break;

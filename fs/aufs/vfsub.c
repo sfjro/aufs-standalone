@@ -68,6 +68,46 @@ out:
 
 /* ---------------------------------------------------------------------- */
 
+static int au_test_nlink(struct inode *inode)
+{
+	const unsigned int link_max = UINT_MAX >> 1; /* rough margin */
+
+	if (!au_test_fs_no_limit_nlink(inode->i_sb)
+	    || inode->i_nlink < link_max)
+		return 0;
+	return -EMLINK;
+}
+
+int vfsub_link(struct dentry *src_dentry, struct inode *dir, struct path *path,
+	       struct inode **delegated_inode)
+{
+	int err;
+	struct dentry *d;
+
+	IMustLock(dir);
+
+	err = au_test_nlink(d_inode(src_dentry));
+	if (unlikely(err))
+		return err;
+
+	/* we don't call may_linkat() */
+	d = path->dentry;
+	path->dentry = d->d_parent;
+	err = security_path_link(src_dentry, path, d);
+	path->dentry = d;
+	if (unlikely(err))
+		goto out;
+
+	lockdep_off();
+	err = vfs_link(src_dentry, dir, path->dentry, delegated_inode);
+	lockdep_on();
+
+out:
+	return err;
+}
+
+/* ---------------------------------------------------------------------- */
+
 struct unlink_args {
 	int *errp;
 	struct inode *dir;

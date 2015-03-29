@@ -22,8 +22,10 @@ struct file;
 #define AuOpt_XINO		1		/* external inode number bitmap
 						   and translation table */
 #define AuOpt_TRUNC_XINO	(1 << 1)	/* truncate xino files */
+#define AuOpt_PLINK		(1 << 6)	/* pseudo-link */
 
-#define AuOpt_Def	AuOpt_XINO
+#define AuOpt_Def	(AuOpt_XINO \
+			 | AuOpt_PLINK)
 
 #define au_opt_test(flags, name)	(flags & AuOpt_##name)
 #define au_opt_set(flags, name) do { \
@@ -32,6 +34,15 @@ struct file;
 #define au_opt_clr(flags, name) do { \
 	((flags) &= ~AuOpt_##name); \
 } while (0)
+
+static inline unsigned int au_opts_plink(unsigned int mntflags)
+{
+#ifdef CONFIG_PROC_FS
+	return mntflags;
+#else
+	return mntflags & ~AuOpt_PLINK;
+#endif
+}
 
 /* ---------------------------------------------------------------------- */
 
