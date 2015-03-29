@@ -28,6 +28,7 @@ enum {
 	Opt_plink, Opt_noplink, Opt_list_plink,
 	Opt_udba,
 	Opt_dio, Opt_nodio,
+	Opt_diropq_a, Opt_diropq_w,
 	Opt_warn_perm, Opt_nowarn_perm,
 	Opt_wbr_copyup, Opt_wbr_create,
 	Opt_verbose, Opt_noverbose,
@@ -95,6 +96,11 @@ static match_table_t options = {
 	{Opt_ignore, "dirren"},
 	{Opt_ignore_silent, "nodirren"},
 #endif
+
+	{Opt_diropq_a, "diropq=always"},
+	{Opt_diropq_a, "diropq=a"},
+	{Opt_diropq_w, "diropq=whiteouted"},
+	{Opt_diropq_w, "diropq=w"},
 
 	{Opt_warn_perm, "warn_perm"},
 	{Opt_nowarn_perm, "nowarn_perm"},
@@ -617,6 +623,12 @@ static void dump_opts(struct au_opts *opts)
 		case Opt_nodio:
 			AuLabel(nodio);
 			break;
+		case Opt_diropq_a:
+			AuLabel(diropq_a);
+			break;
+		case Opt_diropq_w:
+			AuLabel(diropq_w);
+			break;
 		case Opt_warn_perm:
 			AuLabel(warn_perm);
 			break;
@@ -1110,6 +1122,8 @@ int au_opts_parse(struct super_block *sb, char *str, struct au_opts *opts)
 		case Opt_list_plink:
 		case Opt_dio:
 		case Opt_nodio:
+		case Opt_diropq_a:
+		case Opt_diropq_w:
 		case Opt_warn_perm:
 		case Opt_nowarn_perm:
 		case Opt_verbose:
@@ -1271,6 +1285,13 @@ static int au_opt_simple(struct super_block *sb, struct au_opt *opt,
 	case Opt_nodio:
 		au_opt_clr(sbinfo->si_mntflags, DIO);
 		au_fset_opts(opts->flags, REFRESH_DYAOP);
+		break;
+
+	case Opt_diropq_a:
+		au_opt_set(sbinfo->si_mntflags, ALWAYS_DIROPQ);
+		break;
+	case Opt_diropq_w:
+		au_opt_clr(sbinfo->si_mntflags, ALWAYS_DIROPQ);
 		break;
 
 	case Opt_warn_perm:
