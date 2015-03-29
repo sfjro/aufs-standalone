@@ -14,6 +14,7 @@
 
 #include <linux/slab.h>
 #include "debug.h"
+#include "dentry.h"
 #include "inode.h"
 
 void *au_krealloc(void *p, unsigned int new_sz, gfp_t gfp, int may_shrink);
@@ -80,6 +81,7 @@ static inline int au_kmidx_sub(size_t sz, size_t new_sz)
 
 /* kmem cache */
 enum {
+	AuCache_DINFO,
 	AuCache_ICNTNR,
 	AuCache_Last
 };
@@ -110,6 +112,7 @@ extern struct kmem_cache *au_cache[AuCache_Last];
 	{ /* au_cache_free_##name##_norcu(p); */			\
 		au_cache_free_##name##_rcu(p); }
 
+AuCacheFuncs(dinfo, DINFO);
 AuCacheFuncs(icntnr, ICNTNR);
 
 #endif /* __KERNEL__ */
