@@ -120,6 +120,7 @@ struct au_opt {
 		struct au_opt_xino	xino;
 		struct au_opt_xino_itrunc xino_itrunc;
 		struct au_opt_add	add;
+		int			udba;
 		struct au_opt_wbr_create wbr_create;
 		int			wbr_copyup;
 		/* add more later */
@@ -139,6 +140,7 @@ struct au_opts {
 	struct au_opt	*opt;
 	int		max_opt;
 
+	unsigned int	given_udba;
 	unsigned int	flags;
 	unsigned long	sb_flags;
 };
