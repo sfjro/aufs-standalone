@@ -14,6 +14,8 @@
 
 #include <linux/fs.h>
 #include <linux/mount.h>
+#include <linux/posix_acl.h>
+#include <linux/xattr.h>
 #include "debug.h"
 
 /* ---------------------------------------------------------------------- */
@@ -170,6 +172,20 @@ static inline int vfsub_update_time(struct inode *h_inode,
 	/* no vfsub_update_h_iattr() since we don't have struct path */
 }
 
+#ifdef CONFIG_FS_POSIX_ACL
+static inline int vfsub_acl_chmod(struct inode *h_inode, umode_t h_mode)
+{
+	int err;
+
+	err = posix_acl_chmod(h_inode, h_mode);
+	if (err == -EOPNOTSUPP)
+		err = 0;
+	return err;
+}
+#else
+AuStubInt0(vfsub_acl_chmod, struct inode *h_inode, umode_t h_mode);
+#endif
+
 /*
  * re-use branch fs's ioctl(FICLONE) while aufs itself doesn't support such
  * ioctl.
@@ -212,6 +228,31 @@ int vfsub_unlink(struct inode *dir, struct path *path,
 static inline int vfsub_getattr(const struct path *path, struct kstat *st)
 {
 	return vfs_getattr(path, st, STATX_BASIC_STATS, AT_STATX_SYNC_AS_STAT);
+}
+
+/* ---------------------------------------------------------------------- */
+
+static inline int vfsub_setxattr(struct dentry *dentry, const char *name,
+				 const void *value, size_t size, int flags)
+{
+	int err;
+
+	lockdep_off();
+	err = vfs_setxattr(dentry, name, value, size, flags);
+	lockdep_on();
+
+	return err;
+}
+
+static inline int vfsub_removexattr(struct dentry *dentry, const char *name)
+{
+	int err;
+
+	lockdep_off();
+	err = vfs_removexattr(dentry, name);
+	lockdep_on();
+
+	return err;
 }
 
 #endif /* __KERNEL__ */

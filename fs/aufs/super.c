@@ -234,6 +234,8 @@ static int aufs_show_options(struct seq_file *m, struct dentry *dentry)
 } while (0)
 
 	sb = dentry->d_sb;
+	if (sb->s_flags & SB_POSIXACL)
+		seq_puts(m, ",acl");
 #if 0
 	if (sb->s_flags & SB_I_VERSION)
 		seq_puts(m, ",i_version");
@@ -811,6 +813,8 @@ static int aufs_fill_super(struct super_block *sb, void *raw_data,
 	sb->s_magic = AUFS_SUPER_MAGIC;
 	sb->s_maxbytes = 0;
 	sb->s_stack_depth = 1;
+	au_export_init(sb);
+	au_xattr_init(sb);
 
 	err = alloc_root(sb);
 	if (unlikely(err)) {

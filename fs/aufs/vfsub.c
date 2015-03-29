@@ -9,7 +9,6 @@
 
 #include <linux/namei.h>
 #include <linux/security.h>
-#include <linux/uaccess.h>
 #include "aufs.h"
 
 int vfsub_sync_filesystem(struct super_block *h_sb, int wait)
