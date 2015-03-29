@@ -612,8 +612,7 @@ au_opts_parse_xino_itrunc_path(struct super_block *sb,
 
 	xino_itrunc->bindex = -1;
 	root = sb->s_root;
-	si_read_lock(sb, AuLock_FLUSH);
-	di_read_lock_child(root, /*flags*/0);
+	aufs_read_lock(root, AuLock_FLUSH);
 	bbot = au_sbbot(sb);
 	for (bindex = 0; bindex <= bbot; bindex++) {
 		if (au_h_dptr(root, bindex) == path.dentry) {
@@ -621,8 +620,7 @@ au_opts_parse_xino_itrunc_path(struct super_block *sb,
 			break;
 		}
 	}
-	di_read_unlock(root, /*flags*/0);
-	si_read_unlock(sb);
+	aufs_read_unlock(root, !AuLock_IR);
 	path_put(&path);
 
 	if (unlikely(xino_itrunc->bindex < 0)) {
@@ -714,16 +712,13 @@ int au_opts_parse(struct super_block *sb, char *str, struct au_opts *opts)
 				break;
 			}
 			u.xino_itrunc->bindex = n;
-			si_read_lock(sb, AuLock_FLUSH);
-			di_read_lock_child(root, !AuLock_IR);
+			aufs_read_lock(root, AuLock_FLUSH);
 			if (n < 0 || au_sbbot(sb) < n) {
 				pr_err("out of bounds, %d\n", n);
-				di_read_unlock(root, !AuLock_IR);
-				si_read_unlock(sb);
+				aufs_read_unlock(root, !AuLock_IR);
 				break;
 			}
-			di_read_unlock(root, !AuLock_IR);
-			si_read_unlock(sb);
+			aufs_read_unlock(root, !AuLock_IR);
 			err = 0;
 			opt->type = token;
 			break;

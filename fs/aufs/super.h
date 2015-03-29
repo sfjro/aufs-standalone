@@ -149,6 +149,7 @@ struct au_sbinfo {
 #define AuLock_FLUSH		(1 << 3)	/* wait for 'nowait' tasks */
 #define AuLock_NOPLM		(1 << 5)	/* return err in plm mode */
 #define AuLock_NOPLMW		(1 << 6)	/* wait for plm mode ends */
+#define AuLock_GEN		(1 << 7)	/* test digen/iigen */
 #define au_ftest_lock(flags, name)	((flags) & AuLock_##name)
 #define au_fset_lock(flags, name) \
 	do { (flags) |= AuLock_##name; } while (0)
@@ -158,6 +159,7 @@ struct au_sbinfo {
 /* ---------------------------------------------------------------------- */
 
 /* super.c */
+extern struct file_system_type aufs_fs_type;
 struct inode *au_iget_locked(struct super_block *sb, ino_t ino);
 
 /* sbinfo.c */
@@ -170,6 +172,10 @@ aufs_bindex_t au_new_br_id(struct super_block *sb);
 
 int si_read_lock(struct super_block *sb, int flags);
 int si_write_lock(struct super_block *sb, int flags);
+int aufs_read_lock(struct dentry *dentry, int flags);
+void aufs_read_unlock(struct dentry *dentry, int flags);
+void aufs_write_lock(struct dentry *dentry);
+void aufs_write_unlock(struct dentry *dentry);
 
 /* wbr_policy.c */
 extern struct au_wbr_copyup_operations au_wbr_copyup_ops[];
