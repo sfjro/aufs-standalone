@@ -30,6 +30,7 @@ struct file;
 						   bits */
 #define AuOpt_SUM		(1 << 10)	/* summation for statfs(2) */
 #define AuOpt_SUM_W		(1 << 11)	/* unimplemented */
+#define AuOpt_WARN_PERM		(1 << 12)	/* warn when add-branch */
 #define AuOpt_VERBOSE		(1 << 13)	/* print the cause of error */
 #define AuOpt_DIO		(1 << 14)	/* direct io */
 #define AuOpt_DIRREN		(1 << 15)	/* directory rename */
@@ -47,7 +48,7 @@ struct file;
 			 | AuOpt_UDBA_REVAL \
 			 | AuOpt_PLINK \
 			 /* | AuOpt_DIRPERM1 */ \
-			)
+			 | AuOpt_WARN_PERM)
 #define AuOptMask_UDBA	(AuOpt_UDBA_NONE \
 			 | AuOpt_UDBA_REVAL \
 			 | AuOpt_UDBA_HNOTIFY)
