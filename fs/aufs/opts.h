@@ -25,6 +25,7 @@ enum {
 	Opt_trunc_xino, Opt_trunc_xino_v,
 	Opt_trunc_xino_path, Opt_itrunc_xino,
 	Opt_trunc_xib,
+	Opt_shwh,
 	Opt_plink, Opt_list_plink,
 	Opt_udba,
 	Opt_dio,
@@ -47,6 +48,7 @@ enum {
 #define AuOpt_UDBA_NONE		(1 << 2)	/* users direct branch access */
 #define AuOpt_UDBA_REVAL	(1 << 3)
 #define AuOpt_UDBA_HNOTIFY	(1 << 4)
+#define AuOpt_SHWH		(1 << 5)	/* show whiteout */
 #define AuOpt_PLINK		(1 << 6)	/* pseudo-link */
 #define AuOpt_DIRPERM1		(1 << 7)	/* ignore the lower dir's perm
 						   bits */
@@ -64,6 +66,10 @@ enum {
 #ifndef CONFIG_AUFS_DIRREN
 #undef AuOpt_DIRREN
 #define AuOpt_DIRREN		0
+#endif
+#ifndef CONFIG_AUFS_SHWH
+#undef AuOpt_SHWH
+#define AuOpt_SHWH		0
 #endif
 
 #define AuOpt_Def	(AuOpt_XINO \
