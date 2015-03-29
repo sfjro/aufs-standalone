@@ -59,6 +59,30 @@ out:
 
 /* ---------------------------------------------------------------------- */
 
+int vfsub_create(struct inode *dir, struct path *path, int mode, bool want_excl)
+{
+	int err;
+	struct dentry *d;
+	struct user_namespace *userns;
+
+	IMustLock(dir);
+
+	d = path->dentry;
+	path->dentry = d->d_parent;
+	err = security_path_mknod(path, d, mode, 0);
+	path->dentry = d;
+	if (unlikely(err))
+		goto out;
+	userns = mnt_user_ns(path->mnt);
+
+	lockdep_off();
+	err = vfs_create(userns, dir, path->dentry, mode, want_excl);
+	lockdep_on();
+
+out:
+	return err;
+}
+
 static int au_test_nlink(struct inode *inode)
 {
 	const unsigned int link_max = UINT_MAX >> 1; /* rough margin */
