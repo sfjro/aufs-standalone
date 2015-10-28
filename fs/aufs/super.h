@@ -156,6 +156,8 @@ struct au_sbinfo {
  * if it is false, refreshing dirs at access time is unnecessary
  */
 #define AuSi_FAILED_REFRESH_DIR	1
+/* add later */
+#define AuSi_NO_DREVAL		(1 << 2)	/* disable all d_revalidate */
 
 static inline unsigned char au_do_ftest_si(struct au_sbinfo *sbi,
 					   unsigned int flag)
