@@ -154,6 +154,8 @@ struct au_sbinfo {
  * if it is false, refreshing dirs at access time is unnecessary
  */
 #define AuSi_FAILED_REFRESH_DIR	1
+/* add later */
+#define AuSi_NO_DREVAL		(1 << 2)	/* disable all d_revalidate */
 
 static inline unsigned char au_do_ftest_si(struct au_sbinfo *sbi,
 					   unsigned int flag)
@@ -205,7 +207,7 @@ void *au_array_alloc(unsigned long long *hint, au_arraycb_t cb,
 struct inode **au_iarray_alloc(struct super_block *sb, unsigned long long *max);
 void au_iarray_free(struct inode **a, unsigned long long max);
 
-void au_remount_refresh(struct super_block *sb);
+void au_remount_refresh(struct super_block *sb, unsigned int do_dop);
 extern const struct super_operations aufs_sop;
 int au_alloc_root(struct super_block *sb);
 extern struct file_system_type aufs_fs_type;
