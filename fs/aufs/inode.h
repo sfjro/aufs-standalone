@@ -135,7 +135,8 @@ enum {
 	AuIop_OTHER,
 	AuIop_Last
 };
-extern struct inode_operations aufs_iop[AuIop_Last]; /* not const */
+extern struct inode_operations aufs_iop[AuIop_Last], /* not const */
+	aufs_iop_nogetattr[AuIop_Last];
 
 /* au_wr_dir flags */
 #define AuWrDir_ADD_ENTRY	1
