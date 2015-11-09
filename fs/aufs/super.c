@@ -460,7 +460,7 @@ static int au_do_refresh(struct dentry *dentry, unsigned int dir_flags,
 
 static int au_do_refresh_d(struct dentry *dentry, unsigned int sigen,
 			   struct au_sbinfo *sbinfo,
-			   const unsigned int dir_flags, unsigned int do_dop)
+			   const unsigned int dir_flags, unsigned int do_idop)
 {
 	int err;
 	struct dentry *parent;
@@ -484,7 +484,7 @@ static int au_do_refresh_d(struct dentry *dentry, unsigned int sigen,
 	dput(parent);
 
 	if (!err) {
-		if (do_dop)
+		if (do_idop)
 			au_refresh_dop(dentry, /*force_reval*/0);
 	} else
 		au_refresh_dop(dentry, /*force_reval*/1);
@@ -493,7 +493,7 @@ static int au_do_refresh_d(struct dentry *dentry, unsigned int sigen,
 	return err;
 }
 
-static int au_refresh_d(struct super_block *sb, unsigned int do_dop)
+static int au_refresh_d(struct super_block *sb, unsigned int do_idop)
 {
 	int err, i, j, ndentry, e;
 	unsigned int sigen;
@@ -504,7 +504,7 @@ static int au_refresh_d(struct super_block *sb, unsigned int do_dop)
 	struct dentry *root = sb->s_root;
 	const unsigned int dir_flags = au_hi_flags(d_inode(root), /*isdir*/1);
 
-	if (do_dop)
+	if (do_idop)
 		au_refresh_dop(root, /*force_reval*/0);
 
 	err = au_dpages_init(&dpages, GFP_NOFS);
@@ -523,7 +523,7 @@ static int au_refresh_d(struct super_block *sb, unsigned int do_dop)
 		for (j = 0; j < ndentry; j++) {
 			d = dentries[j];
 			e = au_do_refresh_d(d, sigen, sbinfo, dir_flags,
-					    do_dop);
+					    do_idop);
 			if (unlikely(e && !err))
 				err = e;
 			/* go on even err */
@@ -536,7 +536,7 @@ out:
 	return err;
 }
 
-static int au_refresh_i(struct super_block *sb)
+static int au_refresh_i(struct super_block *sb, unsigned int do_idop)
 {
 	int err, e;
 	unsigned int sigen;
@@ -554,17 +554,22 @@ static int au_refresh_i(struct super_block *sb)
 		inode = array[ull];
 		if (unlikely(!inode))
 			break;
+
+		e = 0;
+		ii_write_lock_child(inode);
 		if (au_iigen(inode, NULL) != sigen) {
-			ii_write_lock_child(inode);
 			e = au_refresh_hinode_self(inode);
-			ii_write_unlock(inode);
 			if (unlikely(e)) {
+				au_refresh_iop(inode, /*force_getattr*/1);
 				pr_err("error %d, i%lu\n", e, inode->i_ino);
 				if (!err)
 					err = e;
 				/* go on even if err */
 			}
 		}
+		if (!e && do_idop)
+			au_refresh_iop(inode, /*force_getattr*/0);
+		ii_write_unlock(inode);
 	}
 
 	au_iarray_free(array, max);
@@ -573,7 +578,7 @@ out:
 	return err;
 }
 
-static void au_remount_refresh(struct super_block *sb, unsigned int do_dop)
+static void au_remount_refresh(struct super_block *sb, unsigned int do_idop)
 {
 	int err, e;
 	unsigned int udba;
@@ -604,20 +609,25 @@ static void au_remount_refresh(struct super_block *sb, unsigned int do_dop)
 	}
 	au_hn_reset(inode, au_hi_flags(inode, /*isdir*/1));
 
-	if (do_dop) {
+	if (do_idop) {
 		if (au_ftest_si(sbi, NO_DREVAL)) {
 			AuDebugOn(sb->s_d_op == &aufs_dop_noreval);
 			sb->s_d_op = &aufs_dop_noreval;
+			AuDebugOn(sbi->si_iop_array == aufs_iop_nogetattr);
+			sbi->si_iop_array = aufs_iop_nogetattr;
 		} else {
 			AuDebugOn(sb->s_d_op == &aufs_dop);
 			sb->s_d_op = &aufs_dop;
+			AuDebugOn(sbi->si_iop_array == aufs_iop);
+			sbi->si_iop_array = aufs_iop;
 		}
-		pr_info("reset to %ps\n", sb->s_d_op);
+		pr_info("reset to %ps and %ps\n",
+			sb->s_d_op, sbi->si_iop_array);
 	}
 
 	di_write_unlock(root);
-	err = au_refresh_d(sb, do_dop);
-	e = au_refresh_i(sb);
+	err = au_refresh_d(sb, do_idop);
+	e = au_refresh_i(sb, do_idop);
 	if (unlikely(e && !err))
 		err = e;
 	/* aufs_write_lock() calls ..._child() */
@@ -693,7 +703,7 @@ static int aufs_remount_fs(struct super_block *sb, int *flags, char *data)
 	au_opts_free(&opts);
 
 	if (au_ftest_opts(opts.flags, REFRESH))
-		au_remount_refresh(sb, au_ftest_opts(opts.flags, REFRESH_DOP));
+		au_remount_refresh(sb, au_ftest_opts(opts.flags, REFRESH_IDOP));
 
 	if (au_ftest_opts(opts.flags, REFRESH_DYAOP)) {
 		mntflags = au_mntflags(sb);
@@ -830,6 +840,8 @@ static int aufs_fill_super(struct super_block *sb, void *raw_data,
 		sb->s_d_op = &aufs_dop_noreval;
 		pr_info("%ps\n", sb->s_d_op);
 		au_refresh_dop(root, /*force_reval*/0);
+		sbinfo->si_iop_array = aufs_iop_nogetattr;
+		au_refresh_iop(inode, /*force_getattr*/0);
 	}
 	aufs_write_unlock(root);
 	inode_unlock(inode);
