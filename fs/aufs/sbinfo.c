@@ -17,6 +17,7 @@ void au_si_free(struct kobject *kobj)
 {
 	int i;
 	struct au_sbinfo *sbinfo;
+	char *locked __maybe_unused; /* debug only */
 
 	sbinfo = container_of(kobj, struct au_sbinfo, si_kobj);
 	for (i = 0; i < AuPlink_NHASH; i++)
@@ -75,6 +76,7 @@ int au_si_alloc(struct super_block *sb)
 	/* leave other members for sysaufs and si_mnt. */
 	sbinfo->si_sb = sb;
 	sb->s_fs_info = sbinfo;
+	si_pid_set(sb);
 	return 0; /* success */
 
 out_br:
