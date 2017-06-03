@@ -96,7 +96,7 @@ out:
 
 static int au_cmoo(struct dentry *dentry)
 {
-	int err, cmoo;
+	int err, cmoo, matched;
 	unsigned int udba;
 	struct path h_path;
 	struct au_pin pin;
@@ -111,6 +111,8 @@ static int au_cmoo(struct dentry *dentry)
 	struct inode *delegated;
 	struct super_block *sb;
 	struct au_sbinfo *sbinfo;
+	struct au_fhsm *fhsm;
+	pid_t pid;
 	struct au_branch *br;
 	struct dentry *parent;
 	struct au_hinode *hdir;
@@ -127,6 +129,16 @@ static int au_cmoo(struct dentry *dentry)
 
 	sb = dentry->d_sb;
 	sbinfo = au_sbi(sb);
+	fhsm = &sbinfo->si_fhsm;
+	pid = au_fhsm_pid(fhsm);
+	rcu_read_lock();
+	matched = (pid
+		   && (current->pid == pid
+		       || rcu_dereference(current->real_parent)->pid == pid));
+	rcu_read_unlock();
+	if (matched)
+		goto out;
+
 	br = au_sbr(sb, cpg.bsrc);
 	cmoo = au_br_cmoo(br->br_perm);
 	if (!cmoo)

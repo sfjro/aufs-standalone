@@ -159,7 +159,7 @@ struct au_opt {
 		int			udba;
 		struct au_opt_wbr_create wbr_create;
 		int			wbr_copyup;
-		/* add more later */
+		unsigned int		fhsm_second;
 	};
 };
 
