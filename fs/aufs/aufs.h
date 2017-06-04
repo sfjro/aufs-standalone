@@ -34,6 +34,7 @@
 #include "rwsem.h"
 #include "super.h"
 #include "vfsub.h"
+#include "wkq.h"
 
 #endif /* __KERNEL__ */
 #endif /* __AUFS_H__ */
