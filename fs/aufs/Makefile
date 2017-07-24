@@ -27,4 +27,5 @@ aufs-$(CONFIG_AUFS_HFSNOTIFY) += hfsnotify.o
 aufs-$(CONFIG_AUFS_EXPORT) += export.o
 aufs-$(CONFIG_AUFS_XATTR) += xattr.o
 aufs-$(CONFIG_FS_POSIX_ACL) += posix_acl.o
+aufs-$(CONFIG_AUFS_DIRREN) += dirren.o
 aufs-$(CONFIG_AUFS_DEBUG) += debug.o
