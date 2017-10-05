@@ -12,7 +12,9 @@
 
 #ifdef __KERNEL__
 
+#include "inode.h"
 #include "module.h"
+#include "super.h"
 /* add more later */
 
 #endif /* __KERNEL__ */
