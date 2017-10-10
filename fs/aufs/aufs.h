@@ -22,14 +22,18 @@
 
 #include "debug.h"
 
+#include "branch.h"
 #include "cpup.h"
 #include "dcsub.h"
 #include "dentry.h"
 #include "fstype.h"
 #include "inode.h"
+#include "lcnt.h"
 #include "module.h"
+#include "opts.h"
 #include "rwsem.h"
 #include "super.h"
+#include "vfsub.h"
 
 #endif /* __KERNEL__ */
 #endif /* __AUFS_H__ */
