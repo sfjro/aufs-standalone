@@ -21,6 +21,7 @@ struct file;
 /* mount flags */
 #define AuOpt_XINO		1		/* external inode number bitmap
 						   and translation table */
+#define AuOpt_TRUNC_XINO	(1 << 1)	/* truncate xino files */
 
 #define AuOpt_Def	AuOpt_XINO
 
@@ -46,19 +47,33 @@ struct au_opt_xino {
 	struct file	*file;
 };
 
+struct au_opt_xino_itrunc {
+	aufs_bindex_t	bindex;
+};
+
 struct au_opt {
 	int type;
 	union {
 		struct au_opt_xino	xino;
+		struct au_opt_xino_itrunc xino_itrunc;
 		struct au_opt_add	add;
 		/* add more later */
 	};
 };
 
+/* opts flags */
+#define AuOpts_TRUNC_XIB	(1 << 2)
+#define au_ftest_opts(flags, name)	((flags) & AuOpts_##name)
+#define au_fset_opts(flags, name) \
+	do { (flags) |= AuOpts_##name; } while (0)
+#define au_fclr_opts(flags, name) \
+	do { (flags) &= ~AuOpts_##name; } while (0)
+
 struct au_opts {
 	struct au_opt	*opt;
 	int		max_opt;
 
+	unsigned int	flags;
 	unsigned long	sb_flags;
 };
 
