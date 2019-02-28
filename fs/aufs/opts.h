@@ -14,6 +14,24 @@
 
 #include <linux/path.h>
 
+/* ---------------------------------------------------------------------- */
+
+/* mount flags */
+#define AuOpt_XINO		1		/* external inode number bitmap
+						   and translation table */
+
+#define AuOpt_Def	AuOpt_XINO
+
+#define au_opt_test(flags, name)	(flags & AuOpt_##name)
+#define au_opt_set(flags, name) do { \
+	((flags) |= AuOpt_##name); \
+} while (0)
+#define au_opt_clr(flags, name) do { \
+	((flags) &= ~AuOpt_##name); \
+} while (0)
+
+/* ---------------------------------------------------------------------- */
+
 struct au_opt_add {
 	aufs_bindex_t	bindex;
 	char		*pathname;
