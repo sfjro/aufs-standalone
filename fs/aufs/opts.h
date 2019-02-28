@@ -14,6 +14,8 @@
 
 #include <linux/path.h>
 
+struct file;
+
 /* ---------------------------------------------------------------------- */
 
 /* mount flags */
@@ -39,9 +41,15 @@ struct au_opt_add {
 	struct path	path;
 };
 
+struct au_opt_xino {
+	char		*path;
+	struct file	*file;
+};
+
 struct au_opt {
 	int type;
 	union {
+		struct au_opt_xino	xino;
 		struct au_opt_add	add;
 		/* add more later */
 	};
