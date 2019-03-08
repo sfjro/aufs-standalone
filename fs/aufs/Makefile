@@ -1,10 +1,10 @@
 # SPDX-License-Identifier: GPL-2.0
 
-include ${srctree}/${src}/magic.mk
+include ${src}/magic.mk
 ifeq (${CONFIG_AUFS_FS},m)
-include ${srctree}/${src}/conf.mk
+include ${src}/conf.mk
 endif
--include ${srctree}/${src}/priv_def.mk
+-include ${src}/priv_def.mk
 
 # cf. include/linux/kernel.h
 # enable pr_debug
