@@ -535,7 +535,7 @@ out:
 /* ---------------------------------------------------------------------- */
 
 int au_hnotify(struct inode *h_dir, struct au_hnotify *hnotify, u32 mask,
-	       struct qstr *h_child_qstr, struct inode *h_child_inode)
+	       const struct qstr *h_child_qstr, struct inode *h_child_inode)
 {
 	int err, len;
 	unsigned int flags[AuHnLast], f;
