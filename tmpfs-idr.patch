@@ -20,7 +20,7 @@ index 20d815a33145..64354e89a701 100644
  	umode_t mode;		    /* Mount mode for root directory */
  	unsigned char huge;	    /* Whether to try for hugepages */
 diff --git a/mm/shmem.c b/mm/shmem.c
-index 2275a0ff7c30..0d0105d2d208 100644
+index 1bb3b8dc8bb2..fa8f3dfa77c1 100644
 --- a/mm/shmem.c
 +++ b/mm/shmem.c
 @@ -113,11 +113,14 @@ static unsigned long shmem_default_max_blocks(void)
@@ -200,7 +200,7 @@ index 2275a0ff7c30..0d0105d2d208 100644
  	sbinfo->mode = 0777 | S_ISVTX;
  	sbinfo->uid = current_fsuid();
  	sbinfo->gid = current_fsgid();
-@@ -3664,6 +3676,15 @@ static void shmem_destroy_inodecache(void)
+@@ -3662,6 +3674,15 @@ static void shmem_destroy_inodecache(void)
  	kmem_cache_destroy(shmem_inode_cachep);
  }
  
@@ -216,7 +216,7 @@ index 2275a0ff7c30..0d0105d2d208 100644
  static const struct address_space_operations shmem_aops = {
  	.writepage	= shmem_writepage,
  	.set_page_dirty	= __set_page_dirty_no_writeback,
-@@ -3794,6 +3815,7 @@ int __init shmem_init(void)
+@@ -3793,6 +3814,7 @@ int __init shmem_init(void)
  		pr_err("Could not kern_mount tmpfs\n");
  		goto out1;
  	}

@@ -2,7 +2,7 @@ SPDX-License-Identifier: GPL-2.0
 aufs5.x-rcN lockdep patch
 
 diff --git a/include/linux/lockdep.h b/include/linux/lockdep.h
-index 470795d9f4a2..42bf321d9181 100644
+index 5a945d18a72a..c6def416ec11 100644
 --- a/include/linux/lockdep.h
 +++ b/include/linux/lockdep.h
 @@ -17,7 +17,7 @@ struct lockdep_map;
@@ -15,10 +15,10 @@ index 470795d9f4a2..42bf321d9181 100644
  #include <linux/types.h>
  
 diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 92de98d9c634..0d2eeaa651e4 100644
+index 67dccde036a2..7344fb25a11f 100644
 --- a/kernel/locking/lockdep.c
 +++ b/kernel/locking/lockdep.c
-@@ -4495,6 +4501,7 @@ void lockdep_reset(void)
+@@ -4587,6 +4593,7 @@ void lockdep_reset(void)
  		INIT_HLIST_HEAD(chainhash_table + i);
  	raw_local_irq_restore(flags);
  }
@@ -27,10 +27,10 @@ index 92de98d9c634..0d2eeaa651e4 100644
  /* Remove a class from a lock chain. Must be called with the graph lock held. */
  static void remove_class_from_lock_chain(struct pending_free *pf,
 diff --git a/kernel/locking/lockdep_internals.h b/kernel/locking/lockdep_internals.h
-index d4c197425f68..a103700a63bd 100644
+index 150ec3f0c5b5..e65c1d0b1ac1 100644
 --- a/kernel/locking/lockdep_internals.h
 +++ b/kernel/locking/lockdep_internals.h
-@@ -71,15 +71,15 @@ enum {
+@@ -93,15 +93,15 @@ static const unsigned long LOCKF_USED_IN_IRQ_READ =
  #define MAX_LOCKDEP_CHAINS_BITS	15
  #define MAX_STACK_TRACE_ENTRIES	262144UL
  #else
