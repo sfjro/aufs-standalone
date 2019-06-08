@@ -15,10 +15,10 @@ index 9c8ca6cd3ce4..2ae2c94aceca 100644
  		rc = 0;
  	}
 diff --git a/fs/proc/nommu.c b/fs/proc/nommu.c
-index 3b63be64e436..fb9913bf3d10 100644
+index 14c2badb8fd9..65afe5287e43 100644
 --- a/fs/proc/nommu.c
 +++ b/fs/proc/nommu.c
-@@ -45,7 +45,10 @@ static int nommu_region_show(struct seq_file *m, struct vm_region *region)
+@@ -41,7 +41,10 @@ static int nommu_region_show(struct seq_file *m, struct vm_region *region)
  	file = region->vm_file;
  
  	if (file) {
@@ -125,7 +125,7 @@ index 8ec38b11b361..d3f5492a2611 100644
  
  	atomic_long_t swap_readahead_info;
 diff --git a/kernel/fork.c b/kernel/fork.c
-index b2b87d450b80..c97d53f7c49a 100644
+index 75675b9bf6df..dc333a5e6926 100644
 --- a/kernel/fork.c
 +++ b/kernel/fork.c
 @@ -549,7 +549,7 @@ static __latent_entropy int dup_mmap(struct mm_struct *mm,
