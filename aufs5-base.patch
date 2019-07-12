@@ -2,7 +2,7 @@ SPDX-License-Identifier: GPL-2.0
 aufs5.x-rcN base patch
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index a6954776a37e..c30c2d323711 100644
+index 677ef41cb012..c2a7491ddc68 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
 @@ -2769,6 +2769,19 @@ F:	include/linux/audit.h
@@ -90,7 +90,7 @@ index 3d40771e8e7c..d62303c5472a 100644
  		return error;
  
 diff --git a/fs/inode.c b/fs/inode.c
-index df6542ec3b88..407d7b45e2ee 100644
+index 2bf21e2c90fc..9b908c37971f 100644
 --- a/fs/inode.c
 +++ b/fs/inode.c
 @@ -1670,7 +1670,7 @@ EXPORT_SYMBOL(generic_update_time);
@@ -103,7 +103,7 @@ index df6542ec3b88..407d7b45e2ee 100644
  	int (*update_time)(struct inode *, struct timespec64 *, int);
  
 diff --git a/fs/namespace.c b/fs/namespace.c
-index b26778bdc236..b460383a4228 100644
+index 6fbc9126367a..101dda59f39c 100644
 --- a/fs/namespace.c
 +++ b/fs/namespace.c
 @@ -770,6 +770,12 @@ static inline int check_mnt(struct mount *mnt)

@@ -2,7 +2,7 @@ SPDX-License-Identifier: GPL-2.0
 aufs5.x-rcN mmap patch
 
 diff --git a/fs/proc/base.c b/fs/proc/base.c
-index 9c8ca6cd3ce4..2ae2c94aceca 100644
+index 255f6754c70d..2c009be14898 100644
 --- a/fs/proc/base.c
 +++ b/fs/proc/base.c
 @@ -2014,7 +2014,7 @@ static int map_files_get_link(struct dentry *dentry, struct path *path)
@@ -72,10 +72,10 @@ index 36bf0f2e102e..8df6cbc58756 100644
  		ino = inode->i_ino;
  		pgoff = (loff_t)vma->vm_pgoff << PAGE_SHIFT;
 diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 0e8834ac32b7..b3f42f01aaf0 100644
+index dd0b5f4e1e45..22030c24191e 100644
 --- a/include/linux/mm.h
 +++ b/include/linux/mm.h
-@@ -1542,6 +1542,28 @@ static inline void unmap_shared_mapping_range(struct address_space *mapping,
+@@ -1553,6 +1553,28 @@ static inline void unmap_shared_mapping_range(struct address_space *mapping,
  	unmap_mapping_range(mapping, holebegin, holelen, 0);
  }
  
@@ -125,10 +125,10 @@ index 8ec38b11b361..d3f5492a2611 100644
  
  	atomic_long_t swap_readahead_info;
 diff --git a/kernel/fork.c b/kernel/fork.c
-index 75675b9bf6df..dc333a5e6926 100644
+index fe83343da24b..1ef95aa1dc6e 100644
 --- a/kernel/fork.c
 +++ b/kernel/fork.c
-@@ -549,7 +549,7 @@ static __latent_entropy int dup_mmap(struct mm_struct *mm,
+@@ -553,7 +553,7 @@ static __latent_entropy int dup_mmap(struct mm_struct *mm,
  			struct inode *inode = file_inode(file);
  			struct address_space *mapping = file->f_mapping;
  
@@ -151,10 +151,10 @@ index ac5e5ba78874..5decb22d13a0 100644
  # Give 'page_alloc' its own module-parameter namespace
  page-alloc-y := page_alloc.o
 diff --git a/mm/filemap.c b/mm/filemap.c
-index df2006ba0cfa..d5221dedfe56 100644
+index 6dd9a2274c80..ede6d4892a9c 100644
 --- a/mm/filemap.c
 +++ b/mm/filemap.c
-@@ -2671,7 +2671,7 @@ vm_fault_t filemap_page_mkwrite(struct vm_fault *vmf)
+@@ -2701,7 +2701,7 @@ vm_fault_t filemap_page_mkwrite(struct vm_fault *vmf)
  	vm_fault_t ret = VM_FAULT_LOCKED;
  
  	sb_start_pagefault(inode->i_sb);
