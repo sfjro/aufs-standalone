@@ -627,9 +627,7 @@ out:
 
 static void au_pin_hdir_set_owner(struct au_pin *p, struct task_struct *task)
 {
-#if !defined(CONFIG_RWSEM_GENERIC_SPINLOCK) && defined(CONFIG_RWSEM_SPIN_ON_OWNER)
-	p->hdir->hi_inode->i_rwsem.owner = task;
-#endif
+	atomic_long_set(&p->hdir->hi_inode->i_rwsem.owner, (long)task);
 }
 
 void au_pin_hdir_acquire_nest(struct au_pin *p)
