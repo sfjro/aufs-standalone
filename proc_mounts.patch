@@ -1,9 +1,9 @@
 SPDX-License-Identifier: GPL-2.0
 diff --git a/fs/mount.h b/fs/mount.h
-index 6250de544760..29abfea2db50 100644
+index 711a4093e475..e8eae71ade24 100644
 --- a/fs/mount.h
 +++ b/fs/mount.h
-@@ -131,9 +131,7 @@ struct proc_mounts {
+@@ -133,9 +133,7 @@ struct proc_mounts {
  	struct mnt_namespace *ns;
  	struct path root;
  	int (*show)(struct seq_file *, struct vfsmount *);
@@ -15,10 +15,10 @@ index 6250de544760..29abfea2db50 100644
  
  extern const struct seq_operations mounts_op;
 diff --git a/fs/namespace.c b/fs/namespace.c
-index 6fbc9126367a..36d8b8ac5be5 100644
+index d28d30b13043..0f4bbbdb137d 100644
 --- a/fs/namespace.c
 +++ b/fs/namespace.c
-@@ -1260,46 +1260,78 @@ struct vfsmount *mnt_clone_internal(const struct path *path)
+@@ -1246,46 +1246,78 @@ struct vfsmount *mnt_clone_internal(const struct path *path)
  
  #ifdef CONFIG_PROC_FS
  /* iterator; we want it to have access to namespace_sem, thus here... */
