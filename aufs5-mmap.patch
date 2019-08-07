@@ -138,7 +138,7 @@ index 2852d0e76ea3..7b7f676b6465 100644
  				atomic_dec(&inode->i_writecount);
  			i_mmap_lock_write(mapping);
 diff --git a/mm/Makefile b/mm/Makefile
-index 338e528ad436..ee91e8c78606 100644
+index d0b295c3b764..6156cd3d1ab0 100644
 --- a/mm/Makefile
 +++ b/mm/Makefile
 @@ -39,7 +39,7 @@ obj-y			:= filemap.o mempool.o oom_kill.o fadvise.o \

@@ -2,10 +2,10 @@ SPDX-License-Identifier: GPL-2.0
 aufs5.x-rcN base patch
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 6426db5198f0..332a330a8614 100644
+index a2c343ee3b2c..1ee4be465c71 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -2818,6 +2818,19 @@ F:	include/linux/audit.h
+@@ -2822,6 +2822,19 @@ F:	include/linux/audit.h
  F:	include/uapi/linux/audit.h
  F:	kernel/audit*
  
@@ -26,7 +26,7 @@ index 6426db5198f0..332a330a8614 100644
  M:	Miguel Ojeda Sandonis <miguel.ojeda.sandonis@gmail.com>
  S:	Maintained
 diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index 44c9985f352a..fc0584d8b8fd 100644
+index 3036883fc9f8..a07d1ffa9347 100644
 --- a/drivers/block/loop.c
 +++ b/drivers/block/loop.c
 @@ -738,6 +738,24 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
@@ -194,7 +194,7 @@ index 4d1ff010bc5a..457f4e4a5cc1 100644
  	if (wait)
  		sync_inodes_sb(sb);
 diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 56b8e358af5c..5e914b18a5a2 100644
+index 997a530ff4e9..3dbec51c2037 100644
 --- a/include/linux/fs.h
 +++ b/include/linux/fs.h
 @@ -1331,6 +1331,7 @@ extern void fasync_free(struct fasync_struct *);
