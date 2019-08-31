@@ -2,7 +2,7 @@ SPDX-License-Identifier: GPL-2.0
 aufs5.x-rcN base patch
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index a2c343ee3b2c..1ee4be465c71 100644
+index e81e60bd7c26..b9167b5d7574 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
 @@ -2822,6 +2822,19 @@ F:	include/linux/audit.h
@@ -26,7 +26,7 @@ index a2c343ee3b2c..1ee4be465c71 100644
  M:	Miguel Ojeda Sandonis <miguel.ojeda.sandonis@gmail.com>
  S:	Maintained
 diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index 3036883fc9f8..a07d1ffa9347 100644
+index ab7ca5989097..80d06084b043 100644
 --- a/drivers/block/loop.c
 +++ b/drivers/block/loop.c
 @@ -738,6 +738,24 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
