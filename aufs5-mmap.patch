@@ -105,10 +105,10 @@ index 0334ca97c584..3bdae823daee 100644
  		void *buf, int len, unsigned int gup_flags);
  extern int access_remote_vm(struct mm_struct *mm, unsigned long addr,
 diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
-index 3a37a89eb7a7..cb5e5ebe4dcf 100644
+index 6a7a1083b6fb..461db8843e32 100644
 --- a/include/linux/mm_types.h
 +++ b/include/linux/mm_types.h
-@@ -253,6 +253,7 @@ struct vm_region {
+@@ -262,6 +262,7 @@ struct vm_region {
  	unsigned long	vm_top;		/* region allocated to here */
  	unsigned long	vm_pgoff;	/* the offset in vm_file corresponding to vm_start */
  	struct file	*vm_file;	/* the backing file or NULL */
@@ -116,7 +116,7 @@ index 3a37a89eb7a7..cb5e5ebe4dcf 100644
  
  	int		vm_usage;	/* region usage count (access under nommu_region_sem) */
  	bool		vm_icache_flushed : 1; /* true if the icache has been flushed for
-@@ -327,6 +328,7 @@ struct vm_area_struct {
+@@ -336,6 +337,7 @@ struct vm_area_struct {
  	unsigned long vm_pgoff;		/* Offset (within vm_file) in PAGE_SIZE
  					   units */
  	struct file * vm_file;		/* File we map to (can be NULL). */

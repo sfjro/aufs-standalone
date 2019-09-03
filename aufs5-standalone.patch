@@ -190,7 +190,7 @@ index a59abe3c669a..78809163ba03 100644
  long vfs_truncate(const struct path *path, loff_t length)
  {
 diff --git a/fs/read_write.c b/fs/read_write.c
-index f84e1d9c2434..967469cfaa47 100644
+index 3265bb84f152..5b2dbddb0efe 100644
 --- a/fs/read_write.c
 +++ b/fs/read_write.c
 @@ -468,6 +468,7 @@ ssize_t vfs_read(struct file *file, char __user *buf, size_t count, loff_t *pos)
