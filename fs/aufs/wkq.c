@@ -192,7 +192,7 @@ static void au_wkq_lockdep_post(struct au_wkinfo *wkinfo)
 	if (!hl)
 		return;
 	while ((p = *hl++)) /* assignment */
-		rwsem_release(p->instance, 0, /*p->acquire_ip*/_RET_IP_);
+		rwsem_release(p->instance, /*p->acquire_ip*/_RET_IP_);
 }
 #endif
 
