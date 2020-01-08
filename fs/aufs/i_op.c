@@ -643,7 +643,7 @@ void au_pin_hdir_release(struct au_pin *p)
 {
 	if (p->hdir) {
 		au_pin_hdir_set_owner(p, p->task);
-		rwsem_release(&p->hdir->hi_inode->i_rwsem.dep_map, 1, _RET_IP_);
+		rwsem_release(&p->hdir->hi_inode->i_rwsem.dep_map, _RET_IP_);
 	}
 }
 
