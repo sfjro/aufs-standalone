@@ -42,10 +42,9 @@ fs/aufs/aufs.ko:
 	@echo ${EXTRA_CFLAGS}
 	${MAKE} ${MakeMod} modules
 
-usr/include/linux/aufs_type.h: d = $(shell echo ${CURDIR} | cut -c2-)
-usr/include/linux/aufs_type.h:
-	${MAKE} -rR -C ${KDIR} \
-		-f scripts/Makefile.headersinst \
-		-f Makefile \
-		obj=${d}/include/uapi/linux dst=${d}/usr/include/linux
+usr/include/linux/aufs_type.h: ${KDIR}/scripts/headers_install.sh \
+				${CURDIR}/include/uapi/linux/aufs_type.h
+	${MAKE} -C ${KDIR} scripts_unifdef
+	mkdir -p $(dir $@)
+	cd ${KDIR} && $^ ${CURDIR}/$@
 	test -s $@
