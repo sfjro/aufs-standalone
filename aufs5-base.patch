@@ -2,10 +2,10 @@ SPDX-License-Identifier: GPL-2.0
 aufs5.x-rcN base patch
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 9d3a5c54a41d..f33398b47c42 100644
+index 8982c6e013b3..476cdc18e782 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -2832,6 +2832,19 @@ F:	include/linux/audit.h
+@@ -2877,6 +2877,19 @@ F:	include/linux/audit.h
  F:	include/uapi/linux/audit.h
  F:	kernel/audit*
  
@@ -26,10 +26,10 @@ index 9d3a5c54a41d..f33398b47c42 100644
  M:	Miguel Ojeda Sandonis <miguel.ojeda.sandonis@gmail.com>
  S:	Maintained
 diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index f6f77eaa7217..5e094699215e 100644
+index 739b372a5112..872e3b3a7693 100644
 --- a/drivers/block/loop.c
 +++ b/drivers/block/loop.c
-@@ -738,6 +738,24 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
+@@ -750,6 +750,24 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
  	return error;
  }
  
@@ -55,10 +55,10 @@ index f6f77eaa7217..5e094699215e 100644
  
  static ssize_t loop_attr_show(struct device *dev, char *page,
 diff --git a/fs/dcache.c b/fs/dcache.c
-index e88cf0554e65..7ce4ccf5a51c 100644
+index b280e07e162b..046000653e4d 100644
 --- a/fs/dcache.c
 +++ b/fs/dcache.c
-@@ -1264,7 +1264,7 @@ enum d_walk_ret {
+@@ -1266,7 +1266,7 @@ enum d_walk_ret {
   *
   * The @enter() callbacks are called with d_lock held.
   */
@@ -68,7 +68,7 @@ index e88cf0554e65..7ce4ccf5a51c 100644
  {
  	struct dentry *this_parent;
 diff --git a/fs/fcntl.c b/fs/fcntl.c
-index 3d40771e8e7c..d62303c5472a 100644
+index 9bc167562ee8..c01290dcb893 100644
 --- a/fs/fcntl.c
 +++ b/fs/fcntl.c
 @@ -32,7 +32,7 @@
@@ -90,10 +90,10 @@ index 3d40771e8e7c..d62303c5472a 100644
  		return error;
  
 diff --git a/fs/inode.c b/fs/inode.c
-index fef457a42882..aaeacde398ee 100644
+index 96d62d97694e..31796c1040d6 100644
 --- a/fs/inode.c
 +++ b/fs/inode.c
-@@ -1673,7 +1673,7 @@ EXPORT_SYMBOL(generic_update_time);
+@@ -1680,7 +1680,7 @@ EXPORT_SYMBOL(generic_update_time);
   * This does the actual work of updating an inodes time or version.  Must have
   * had called mnt_want_write() before calling this.
   */
@@ -103,7 +103,7 @@ index fef457a42882..aaeacde398ee 100644
  	int (*update_time)(struct inode *, struct timespec64 *, int);
  
 diff --git a/fs/namespace.c b/fs/namespace.c
-index 2adfe7b166a3..0f7e57e5f4b7 100644
+index 5e1bf611a9eb..c05ac2488abb 100644
 --- a/fs/namespace.c
 +++ b/fs/namespace.c
 @@ -776,6 +776,12 @@ static inline int check_mnt(struct mount *mnt)
@@ -153,10 +153,10 @@ index 5bbf587f5bc1..3265bb84f152 100644
  {
  	mm_segment_t old_fs;
 diff --git a/fs/splice.c b/fs/splice.c
-index 98412721f056..75b489fcb66f 100644
+index 3009652a41c8..d9bcc4a71a0a 100644
 --- a/fs/splice.c
 +++ b/fs/splice.c
-@@ -834,8 +834,8 @@ EXPORT_SYMBOL(generic_splice_sendpage);
+@@ -849,8 +849,8 @@ EXPORT_SYMBOL(generic_splice_sendpage);
  /*
   * Attempt to initiate a splice from pipe to file.
   */
@@ -167,7 +167,7 @@ index 98412721f056..75b489fcb66f 100644
  {
  	ssize_t (*splice_write)(struct pipe_inode_info *, struct file *,
  				loff_t *, size_t, unsigned int);
-@@ -851,9 +851,9 @@ static long do_splice_from(struct pipe_inode_info *pipe, struct file *out,
+@@ -866,9 +866,9 @@ static long do_splice_from(struct pipe_inode_info *pipe, struct file *out,
  /*
   * Attempt to initiate a splice from a file to a pipe.
   */
@@ -194,7 +194,7 @@ index 4d1ff010bc5a..457f4e4a5cc1 100644
  	if (wait)
  		sync_inodes_sb(sb);
 diff --git a/include/linux/fs.h b/include/linux/fs.h
-index e0d909d35763..3e997d7fc67f 100644
+index 98e0349adb52..712037492ea5 100644
 --- a/include/linux/fs.h
 +++ b/include/linux/fs.h
 @@ -1349,6 +1349,7 @@ extern void fasync_free(struct fasync_struct *);
@@ -205,7 +205,7 @@ index e0d909d35763..3e997d7fc67f 100644
  extern void __f_setown(struct file *filp, struct pid *, enum pid_type, int force);
  extern int f_setown(struct file *filp, unsigned long arg, int force);
  extern void f_delown(struct file *filp);
-@@ -1835,6 +1836,7 @@ struct file_operations {
+@@ -1842,6 +1843,7 @@ struct file_operations {
  	ssize_t (*sendpage) (struct file *, struct page *, int, size_t, loff_t *, int);
  	unsigned long (*get_unmapped_area)(struct file *, unsigned long, unsigned long, unsigned long, unsigned long);
  	int (*check_flags)(int);
@@ -213,7 +213,7 @@ index e0d909d35763..3e997d7fc67f 100644
  	int (*flock) (struct file *, int, struct file_lock *);
  	ssize_t (*splice_write)(struct pipe_inode_info *, struct file *, loff_t *, size_t, unsigned int);
  	ssize_t (*splice_read)(struct file *, loff_t *, struct pipe_inode_info *, size_t, unsigned int);
-@@ -1905,6 +1907,12 @@ ssize_t rw_copy_check_uvector(int type, const struct iovec __user * uvector,
+@@ -1912,6 +1914,12 @@ ssize_t rw_copy_check_uvector(int type, const struct iovec __user * uvector,
  			      struct iovec *fast_pointer,
  			      struct iovec **ret_pointer);
  
@@ -226,7 +226,7 @@ index e0d909d35763..3e997d7fc67f 100644
  extern ssize_t __vfs_read(struct file *, char __user *, size_t, loff_t *);
  extern ssize_t vfs_read(struct file *, char __user *, size_t, loff_t *);
  extern ssize_t vfs_write(struct file *, const char __user *, size_t, loff_t *);
-@@ -2325,6 +2333,7 @@ extern int current_umask(void);
+@@ -2332,6 +2340,7 @@ extern int current_umask(void);
  extern void ihold(struct inode * inode);
  extern void iput(struct inode *);
  extern int generic_update_time(struct inode *, struct timespec64 *, int);
@@ -234,7 +234,7 @@ index e0d909d35763..3e997d7fc67f 100644
  
  /* /sys/fs */
  extern struct kobject *fs_kobj;
-@@ -2613,6 +2622,7 @@ static inline bool sb_is_blkdev_sb(struct super_block *sb)
+@@ -2620,6 +2629,7 @@ static inline bool sb_is_blkdev_sb(struct super_block *sb)
  	return false;
  }
  #endif
@@ -243,7 +243,7 @@ index e0d909d35763..3e997d7fc67f 100644
  extern const struct file_operations def_blk_fops;
  extern const struct file_operations def_chr_fops;
 diff --git a/include/linux/lockdep.h b/include/linux/lockdep.h
-index b8a835fd611b..f452521f2e05 100644
+index c50d01ef1414..4f4677020360 100644
 --- a/include/linux/lockdep.h
 +++ b/include/linux/lockdep.h
 @@ -331,6 +331,8 @@ static inline int lockdep_match_key(struct lockdep_map *lock,
@@ -255,7 +255,7 @@ index b8a835fd611b..f452521f2e05 100644
  /*
   * Acquire a lock.
   *
-@@ -473,6 +475,7 @@ struct lockdep_map { };
+@@ -472,6 +474,7 @@ struct lockdep_map { };
  
  #define lockdep_depth(tsk)	(0)
  
@@ -298,7 +298,7 @@ index 74b4911ac16d..19789fbea567 100644
 +			 unsigned int flags);
  #endif
 diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 233459c03b5a..407c08ac8ac8 100644
+index 32282e7112d3..9d1b34c71e3c 100644
 --- a/kernel/locking/lockdep.c
 +++ b/kernel/locking/lockdep.c
 @@ -153,7 +153,7 @@ static

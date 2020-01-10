@@ -2,7 +2,7 @@ SPDX-License-Identifier: GPL-2.0
 aufs5.x-rcN lockdep patch
 
 diff --git a/include/linux/lockdep.h b/include/linux/lockdep.h
-index f452521f2e05..8043dba1cceb 100644
+index 4f4677020360..1aef2c1047a3 100644
 --- a/include/linux/lockdep.h
 +++ b/include/linux/lockdep.h
 @@ -17,7 +17,7 @@ struct lockdep_map;
@@ -15,10 +15,10 @@ index f452521f2e05..8043dba1cceb 100644
  #include <linux/types.h>
  
 diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index d7f71842f8a2..f1a630b92260 100644
+index bfa1670007fe..736d3350b173 100644
 --- a/kernel/locking/lockdep.c
 +++ b/kernel/locking/lockdep.c
-@@ -4767,6 +4773,7 @@ void lockdep_reset(void)
+@@ -4764,6 +4770,7 @@ void lockdep_reset(void)
  		INIT_HLIST_HEAD(chainhash_table + i);
  	raw_local_irq_restore(flags);
  }
