@@ -125,7 +125,7 @@ index 270aa8fd2800..33848c2165e2 100644
  
  #ifdef CONFIG_SWAP
 diff --git a/kernel/fork.c b/kernel/fork.c
-index 2508a4f238a3..115953f242d9 100644
+index 080809560072..968e4dc2279f 100644
 --- a/kernel/fork.c
 +++ b/kernel/fork.c
 @@ -565,7 +565,7 @@ static __latent_entropy int dup_mmap(struct mm_struct *mm,
@@ -164,10 +164,10 @@ index bf6aa30be58d..32ca075c0c8b 100644
  	if (page->mapping != inode->i_mapping) {
  		unlock_page(page);
 diff --git a/mm/mmap.c b/mm/mmap.c
-index 9c648524e4dc..6a019dc6d654 100644
+index 71e4ffc83bcd..7256e8b985eb 100644
 --- a/mm/mmap.c
 +++ b/mm/mmap.c
-@@ -182,7 +182,7 @@ static struct vm_area_struct *remove_vma(struct vm_area_struct *vma)
+@@ -176,7 +176,7 @@ static struct vm_area_struct *remove_vma(struct vm_area_struct *vma)
  	if (vma->vm_ops && vma->vm_ops->close)
  		vma->vm_ops->close(vma);
  	if (vma->vm_file)
@@ -176,7 +176,7 @@ index 9c648524e4dc..6a019dc6d654 100644
  	mpol_put(vma_policy(vma));
  	vm_area_free(vma);
  	return next;
-@@ -915,7 +915,7 @@ int __vma_adjust(struct vm_area_struct *vma, unsigned long start,
+@@ -909,7 +909,7 @@ int __vma_adjust(struct vm_area_struct *vma, unsigned long start,
  	if (remove_next) {
  		if (file) {
  			uprobe_munmap(next, next->vm_start, next->vm_end);
@@ -185,7 +185,7 @@ index 9c648524e4dc..6a019dc6d654 100644
  		}
  		if (next->anon_vma)
  			anon_vma_merge(vma, next);
-@@ -1843,8 +1843,8 @@ unsigned long mmap_region(struct file *file, unsigned long addr,
+@@ -1837,8 +1837,8 @@ unsigned long mmap_region(struct file *file, unsigned long addr,
  	return addr;
  
  unmap_and_free_vma:
@@ -195,7 +195,7 @@ index 9c648524e4dc..6a019dc6d654 100644
  
  	/* Undo any partial mapping done by a device driver. */
  	unmap_region(mm, vma, prev, vma->vm_start, vma->vm_end);
-@@ -2673,7 +2673,7 @@ int __split_vma(struct mm_struct *mm, struct vm_area_struct *vma,
+@@ -2667,7 +2667,7 @@ int __split_vma(struct mm_struct *mm, struct vm_area_struct *vma,
  		goto out_free_mpol;
  
  	if (new->vm_file)
@@ -204,7 +204,7 @@ index 9c648524e4dc..6a019dc6d654 100644
  
  	if (new->vm_ops && new->vm_ops->open)
  		new->vm_ops->open(new);
-@@ -2692,7 +2692,7 @@ int __split_vma(struct mm_struct *mm, struct vm_area_struct *vma,
+@@ -2686,7 +2686,7 @@ int __split_vma(struct mm_struct *mm, struct vm_area_struct *vma,
  	if (new->vm_ops && new->vm_ops->close)
  		new->vm_ops->close(new);
  	if (new->vm_file)
@@ -213,7 +213,7 @@ index 9c648524e4dc..6a019dc6d654 100644
  	unlink_anon_vmas(new);
   out_free_mpol:
  	mpol_put(vma_policy(new));
-@@ -2884,7 +2884,7 @@ SYSCALL_DEFINE5(remap_file_pages, unsigned long, start, unsigned long, size,
+@@ -2878,7 +2878,7 @@ SYSCALL_DEFINE5(remap_file_pages, unsigned long, start, unsigned long, size,
  	struct vm_area_struct *vma;
  	unsigned long populate = 0;
  	unsigned long ret = -EINVAL;
@@ -222,7 +222,7 @@ index 9c648524e4dc..6a019dc6d654 100644
  
  	pr_warn_once("%s (%d) uses deprecated remap_file_pages() syscall. See Documentation/vm/remap_file_pages.rst.\n",
  		     current->comm, current->pid);
-@@ -2959,10 +2959,27 @@ SYSCALL_DEFINE5(remap_file_pages, unsigned long, start, unsigned long, size,
+@@ -2953,10 +2953,27 @@ SYSCALL_DEFINE5(remap_file_pages, unsigned long, start, unsigned long, size,
  		}
  	}
  
@@ -251,7 +251,7 @@ index 9c648524e4dc..6a019dc6d654 100644
  out:
  	up_write(&mm->mmap_sem);
  	if (populate)
-@@ -3253,7 +3270,7 @@ struct vm_area_struct *copy_vma(struct vm_area_struct **vmap,
+@@ -3247,7 +3264,7 @@ struct vm_area_struct *copy_vma(struct vm_area_struct **vmap,
  		if (anon_vma_clone(new_vma, vma))
  			goto out_free_mempol;
  		if (new_vma->vm_file)
