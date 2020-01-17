@@ -15,17 +15,9 @@ index f452521f2e05..8043dba1cceb 100644
  #include <linux/types.h>
  
 diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index d7f71842f8a2..f1a630b92260 100644
+index d7f71842f8a2..d6b199d92b49 100644
 --- a/kernel/locking/lockdep.c
 +++ b/kernel/locking/lockdep.c
-@@ -4767,6 +4773,7 @@ void lockdep_reset(void)
- 		INIT_HLIST_HEAD(chainhash_table + i);
- 	raw_local_irq_restore(flags);
- }
-+/* EXPORT_SYMBOL_GPL(lock_reset); */
- 
- /* Remove a class from a lock chain. Must be called with the graph lock held. */
- static void remove_class_from_lock_chain(struct pending_free *pf,
 diff --git a/kernel/locking/lockdep_internals.h b/kernel/locking/lockdep_internals.h
 index 18d85aebbb57..1fe552a33fb1 100644
 --- a/kernel/locking/lockdep_internals.h
