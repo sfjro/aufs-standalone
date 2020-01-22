@@ -72,7 +72,7 @@ index 7907e6419e57..d17209cf52bc 100644
  		ino = inode->i_ino;
  		pgoff = (loff_t)vma->vm_pgoff << PAGE_SHIFT;
 diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 80a9162b406c..b62eb5096595 100644
+index cfaa8feecfe8..b66c4c536ac5 100644
 --- a/include/linux/mm.h
 +++ b/include/linux/mm.h
 @@ -1495,6 +1495,28 @@ static inline void unmap_shared_mapping_range(struct address_space *mapping,
@@ -306,7 +306,7 @@ index bd2b4e5ef144..acdab5253263 100644
  
 diff --git a/mm/prfile.c b/mm/prfile.c
 new file mode 100644
-index 000000000000..024cdcfae1b1
+index 000000000000..00d51187c325
 --- /dev/null
 +++ b/mm/prfile.c
 @@ -0,0 +1,86 @@
@@ -318,7 +318,7 @@ index 000000000000..024cdcfae1b1
 + *
 + * See Documentation/filesystems/aufs/design/06mmap.txt
 + *
-+ * Copyright (c) 2014-2019 Junjro R. Okajima
++ * Copyright (c) 2014-2020 Junjro R. Okajima
 + * Copyright (c) 2014 Ian Campbell
 + */
 +

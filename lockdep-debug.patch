@@ -15,7 +15,7 @@ index 4f4677020360..1aef2c1047a3 100644
  #include <linux/types.h>
  
 diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index bfa1670007fe..cfab08627d58 100644
+index d9bc5cbe9078..30cdce225406 100644
 --- a/kernel/locking/lockdep.c
 +++ b/kernel/locking/lockdep.c
 diff --git a/kernel/locking/lockdep_internals.h b/kernel/locking/lockdep_internals.h

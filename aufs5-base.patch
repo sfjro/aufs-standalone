@@ -2,7 +2,7 @@ SPDX-License-Identifier: GPL-2.0
 aufs5.x-rcN base patch
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 4017e6b760be..1ca1b5218744 100644
+index cf6ccca6e61c..c3b9b0d405fd 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
 @@ -2877,6 +2877,19 @@ F:	include/linux/audit.h
@@ -298,7 +298,7 @@ index 74b4911ac16d..19789fbea567 100644
 +			 unsigned int flags);
  #endif
 diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 32282e7112d3..9d1b34c71e3c 100644
+index 32406ef0d6a2..e52169c2086b 100644
 --- a/kernel/locking/lockdep.c
 +++ b/kernel/locking/lockdep.c
 @@ -153,7 +153,7 @@ static
