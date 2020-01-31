@@ -1,0 +1,43 @@
+SPDX-License-Identifier: GPL-2.0
+aufs5.5 lockdep patch
+
+diff --git a/include/linux/lockdep.h b/include/linux/lockdep.h
+index 4f4677020360..1aef2c1047a3 100644
+--- a/include/linux/lockdep.h
++++ b/include/linux/lockdep.h
+@@ -17,7 +17,7 @@ struct lockdep_map;
+ extern int prove_locking;
+ extern int lock_stat;
+ 
+-#define MAX_LOCKDEP_SUBCLASSES		8UL
++#define MAX_LOCKDEP_SUBCLASSES		(8UL + 4)
+ 
+ #include <linux/types.h>
+ 
+diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
+index d9bc5cbe9078..30cdce225406 100644
+--- a/kernel/locking/lockdep.c
++++ b/kernel/locking/lockdep.c
+diff --git a/kernel/locking/lockdep_internals.h b/kernel/locking/lockdep_internals.h
+index 18d85aebbb57..1fe552a33fb1 100644
+--- a/kernel/locking/lockdep_internals.h
++++ b/kernel/locking/lockdep_internals.h
+@@ -94,15 +94,15 @@ static const unsigned long LOCKF_USED_IN_IRQ_READ =
+ #define MAX_STACK_TRACE_ENTRIES	262144UL
+ #define STACK_TRACE_HASH_SIZE	8192
+ #else
+-#define MAX_LOCKDEP_ENTRIES	32768UL
++#define MAX_LOCKDEP_ENTRIES	(32768UL << 5)
+ 
+-#define MAX_LOCKDEP_CHAINS_BITS	16
++#define MAX_LOCKDEP_CHAINS_BITS	(16 + 5)
+ 
+ /*
+  * Stack-trace: tightly packed array of stack backtrace
+  * addresses. Protected by the hash_lock.
+  */
+-#define MAX_STACK_TRACE_ENTRIES	524288UL
++#define MAX_STACK_TRACE_ENTRIES	(524288UL << 5)
+ #define STACK_TRACE_HASH_SIZE	16384
+ #endif
+ 
