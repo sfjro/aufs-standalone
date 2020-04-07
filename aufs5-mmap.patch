@@ -72,7 +72,7 @@ index 7907e6419e57..d17209cf52bc 100644
  		ino = inode->i_ino;
  		pgoff = (loff_t)vma->vm_pgoff << PAGE_SHIFT;
 diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 52269e56c514..32aa6b1ea1d2 100644
+index c54fb96cb1e6..393304f0526d 100644
 --- a/include/linux/mm.h
 +++ b/include/linux/mm.h
 @@ -1487,6 +1487,28 @@ static inline void unmap_shared_mapping_range(struct address_space *mapping,
@@ -125,7 +125,7 @@ index c28911c3afa8..23d069c0e171 100644
  
  #ifdef CONFIG_SWAP
 diff --git a/kernel/fork.c b/kernel/fork.c
-index 60a1295f4384..44682dd97ca6 100644
+index d90af13431c7..01316a9e226f 100644
 --- a/kernel/fork.c
 +++ b/kernel/fork.c
 @@ -565,7 +565,7 @@ static __latent_entropy int dup_mmap(struct mm_struct *mm,
@@ -261,10 +261,10 @@ index d681a20eb4ea..36c80ae89cee 100644
  			new_vma->vm_ops->open(new_vma);
  		vma_link(mm, new_vma, prev, rb_link, rb_parent);
 diff --git a/mm/nommu.c b/mm/nommu.c
-index bd2b4e5ef144..acdab5253263 100644
+index 318df4e236c9..7f051e86ea1d 100644
 --- a/mm/nommu.c
 +++ b/mm/nommu.c
-@@ -563,7 +563,7 @@ static void __put_nommu_region(struct vm_region *region)
+@@ -567,7 +567,7 @@ static void __put_nommu_region(struct vm_region *region)
  		up_write(&nommu_region_sem);
  
  		if (region->vm_file)
@@ -273,7 +273,7 @@ index bd2b4e5ef144..acdab5253263 100644
  
  		/* IO memory and memory shared directly out of the pagecache
  		 * from ramfs/tmpfs mustn't be released here */
-@@ -695,7 +695,7 @@ static void delete_vma(struct mm_struct *mm, struct vm_area_struct *vma)
+@@ -699,7 +699,7 @@ static void delete_vma(struct mm_struct *mm, struct vm_area_struct *vma)
  	if (vma->vm_ops && vma->vm_ops->close)
  		vma->vm_ops->close(vma);
  	if (vma->vm_file)
@@ -282,7 +282,7 @@ index bd2b4e5ef144..acdab5253263 100644
  	put_nommu_region(vma->vm_region);
  	vm_area_free(vma);
  }
-@@ -1218,7 +1218,7 @@ unsigned long do_mmap(struct file *file,
+@@ -1222,7 +1222,7 @@ unsigned long do_mmap(struct file *file,
  					goto error_just_free;
  				}
  			}
@@ -291,7 +291,7 @@ index bd2b4e5ef144..acdab5253263 100644
  			kmem_cache_free(vm_region_jar, region);
  			region = pregion;
  			result = start;
-@@ -1295,10 +1295,10 @@ unsigned long do_mmap(struct file *file,
+@@ -1299,10 +1299,10 @@ unsigned long do_mmap(struct file *file,
  	up_write(&nommu_region_sem);
  error:
  	if (region->vm_file)

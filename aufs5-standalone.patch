@@ -34,7 +34,7 @@ index db17be51b112..4bb61917a29a 100644
  #ifdef CONFIG_USELIB
  /*
 diff --git a/fs/fcntl.c b/fs/fcntl.c
-index b0935c67bd1e..07251ba86c31 100644
+index 0b28a37f7e50..f2c90a416b75 100644
 --- a/fs/fcntl.c
 +++ b/fs/fcntl.c
 @@ -85,6 +85,7 @@ int setfl(int fd, struct file *filp, unsigned long arg)
@@ -66,10 +66,10 @@ index 30d55c9a1744..34b9bbf4c556 100644
  void __init files_init(void)
  {
 diff --git a/fs/inode.c b/fs/inode.c
-index c5a5578773d4..5995e737f64a 100644
+index 7700c5e4783b..6284b41fcf3f 100644
 --- a/fs/inode.c
 +++ b/fs/inode.c
-@@ -1693,6 +1693,7 @@ int update_time(struct inode *inode, struct timespec64 *time, int flags)
+@@ -1694,6 +1694,7 @@ int update_time(struct inode *inode, struct timespec64 *time, int flags)
  		return inode->i_op->update_time(inode, time, flags);
  	return generic_update_time(inode, time, flags);
  }
@@ -118,7 +118,7 @@ index 133f723aca07..0b9f7f6d8390 100644
  /*
   * Drop a reference to a group.  Free it if it's through.
 diff --git a/fs/open.c b/fs/open.c
-index 0788b3715731..cec8ceac6f16 100644
+index b69d6eed67e6..cb777a1888f7 100644
 --- a/fs/open.c
 +++ b/fs/open.c
 @@ -65,6 +65,7 @@ int do_truncate(struct dentry *dentry, loff_t length, unsigned int time_attrs,

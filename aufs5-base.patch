@@ -2,7 +2,7 @@ SPDX-License-Identifier: GPL-2.0
 aufs5.x-rcN base patch
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index fcd79fc38928..9751b7b48696 100644
+index 5a5332b3591d..51301c0ab275 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
 @@ -2919,6 +2919,19 @@ F:	include/linux/audit.h
@@ -68,7 +68,7 @@ index b280e07e162b..046000653e4d 100644
  {
  	struct dentry *this_parent;
 diff --git a/fs/fcntl.c b/fs/fcntl.c
-index 9bc167562ee8..b0935c67bd1e 100644
+index 2e4c0fa2074b..0b28a37f7e50 100644
 --- a/fs/fcntl.c
 +++ b/fs/fcntl.c
 @@ -32,7 +32,7 @@
@@ -90,10 +90,10 @@ index 9bc167562ee8..b0935c67bd1e 100644
  		return error;
  
 diff --git a/fs/inode.c b/fs/inode.c
-index 7d57068b6b7a..c5a5578773d4 100644
+index 93d9252a00ab..7700c5e4783b 100644
 --- a/fs/inode.c
 +++ b/fs/inode.c
-@@ -1687,7 +1687,7 @@ EXPORT_SYMBOL(generic_update_time);
+@@ -1688,7 +1688,7 @@ EXPORT_SYMBOL(generic_update_time);
   * This does the actual work of updating an inodes time or version.  Must have
   * had called mnt_want_write() before calling this.
   */
@@ -194,10 +194,10 @@ index 4d1ff010bc5a..457f4e4a5cc1 100644
  	if (wait)
  		sync_inodes_sb(sb);
 diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 3cd4fe6b845e..6d1e37a014f3 100644
+index abedbffe2c9e..944485ac54b4 100644
 --- a/include/linux/fs.h
 +++ b/include/linux/fs.h
-@@ -1349,6 +1349,7 @@ extern void fasync_free(struct fasync_struct *);
+@@ -1350,6 +1350,7 @@ extern void fasync_free(struct fasync_struct *);
  /* can be called from interrupts */
  extern void kill_fasync(struct fasync_struct **, int, int);
  
@@ -205,7 +205,7 @@ index 3cd4fe6b845e..6d1e37a014f3 100644
  extern void __f_setown(struct file *filp, struct pid *, enum pid_type, int force);
  extern int f_setown(struct file *filp, unsigned long arg, int force);
  extern void f_delown(struct file *filp);
-@@ -1841,6 +1842,7 @@ struct file_operations {
+@@ -1842,6 +1843,7 @@ struct file_operations {
  	ssize_t (*sendpage) (struct file *, struct page *, int, size_t, loff_t *, int);
  	unsigned long (*get_unmapped_area)(struct file *, unsigned long, unsigned long, unsigned long, unsigned long);
  	int (*check_flags)(int);
@@ -213,7 +213,7 @@ index 3cd4fe6b845e..6d1e37a014f3 100644
  	int (*flock) (struct file *, int, struct file_lock *);
  	ssize_t (*splice_write)(struct pipe_inode_info *, struct file *, loff_t *, size_t, unsigned int);
  	ssize_t (*splice_read)(struct file *, loff_t *, struct pipe_inode_info *, size_t, unsigned int);
-@@ -1911,6 +1913,12 @@ ssize_t rw_copy_check_uvector(int type, const struct iovec __user * uvector,
+@@ -1912,6 +1914,12 @@ ssize_t rw_copy_check_uvector(int type, const struct iovec __user * uvector,
  			      struct iovec *fast_pointer,
  			      struct iovec **ret_pointer);
  
@@ -226,7 +226,7 @@ index 3cd4fe6b845e..6d1e37a014f3 100644
  extern ssize_t __vfs_read(struct file *, char __user *, size_t, loff_t *);
  extern ssize_t vfs_read(struct file *, char __user *, size_t, loff_t *);
  extern ssize_t vfs_write(struct file *, const char __user *, size_t, loff_t *);
-@@ -2343,6 +2351,7 @@ extern int current_umask(void);
+@@ -2344,6 +2352,7 @@ extern int current_umask(void);
  extern void ihold(struct inode * inode);
  extern void iput(struct inode *);
  extern int generic_update_time(struct inode *, struct timespec64 *, int);
@@ -234,7 +234,7 @@ index 3cd4fe6b845e..6d1e37a014f3 100644
  
  /* /sys/fs */
  extern struct kobject *fs_kobj;
-@@ -2627,6 +2636,7 @@ static inline bool sb_is_blkdev_sb(struct super_block *sb)
+@@ -2628,6 +2637,7 @@ static inline bool sb_is_blkdev_sb(struct super_block *sb)
  	return false;
  }
  #endif

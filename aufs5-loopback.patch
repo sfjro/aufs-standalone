@@ -228,10 +228,10 @@ index 589dd0122020..801e0a7faec5 100644
  
  /* ---------------------------------------------------------------------- */
 diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 6d1e37a014f3..ce2c9b4bae13 100644
+index 944485ac54b4..eccc62765e95 100644
 --- a/include/linux/fs.h
 +++ b/include/linux/fs.h
-@@ -1979,6 +1979,10 @@ struct super_operations {
+@@ -1980,6 +1980,10 @@ struct super_operations {
  				  struct shrink_control *);
  	long (*free_cached_objects)(struct super_block *,
  				    struct shrink_control *);
