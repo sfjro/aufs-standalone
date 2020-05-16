@@ -16,7 +16,7 @@ index 711a4093e475..a5703d5c7205 100644
  
  extern const struct seq_operations mounts_op;
 diff --git a/fs/namespace.c b/fs/namespace.c
-index 85b5f7bea82e..ff398173c36f 100644
+index a28e4db075ed..14fdd03edd0a 100644
 --- a/fs/namespace.c
 +++ b/fs/namespace.c
 @@ -1246,46 +1246,80 @@ struct vfsmount *mnt_clone_internal(const struct path *path)
