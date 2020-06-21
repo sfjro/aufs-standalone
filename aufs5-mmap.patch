@@ -2,7 +2,7 @@ SPDX-License-Identifier: GPL-2.0
 aufs5.4 mmap patch
 
 diff --git a/fs/proc/base.c b/fs/proc/base.c
-index ebea9501afb8..dc7edc5f7267 100644
+index ebea9501afb84..dc7edc5f7267d 100644
 --- a/fs/proc/base.c
 +++ b/fs/proc/base.c
 @@ -2037,7 +2037,7 @@ static int map_files_get_link(struct dentry *dentry, struct path *path)
@@ -15,7 +15,7 @@ index ebea9501afb8..dc7edc5f7267 100644
  		rc = 0;
  	}
 diff --git a/fs/proc/nommu.c b/fs/proc/nommu.c
-index 14c2badb8fd9..65afe5287e43 100644
+index 14c2badb8fd93..65afe5287e43e 100644
 --- a/fs/proc/nommu.c
 +++ b/fs/proc/nommu.c
 @@ -41,7 +41,10 @@ static int nommu_region_show(struct seq_file *m, struct vm_region *region)
@@ -31,7 +31,7 @@ index 14c2badb8fd9..65afe5287e43 100644
  		ino = inode->i_ino;
  	}
 diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
-index 9442631fd4af..1fa8a5fcdeee 100644
+index 9442631fd4afc..1fa8a5fcdeeec 100644
 --- a/fs/proc/task_mmu.c
 +++ b/fs/proc/task_mmu.c
 @@ -309,7 +309,10 @@ show_map_vma(struct seq_file *m, struct vm_area_struct *vma)
@@ -56,7 +56,7 @@ index 9442631fd4af..1fa8a5fcdeee 100644
  	struct mempolicy *pol;
  	char buffer[64];
 diff --git a/fs/proc/task_nommu.c b/fs/proc/task_nommu.c
-index 7907e6419e57..d17209cf52bc 100644
+index 7907e6419e572..d17209cf52bc3 100644
 --- a/fs/proc/task_nommu.c
 +++ b/fs/proc/task_nommu.c
 @@ -155,7 +155,10 @@ static int nommu_vma_show(struct seq_file *m, struct vm_area_struct *vma)
@@ -72,7 +72,7 @@ index 7907e6419e57..d17209cf52bc 100644
  		ino = inode->i_ino;
  		pgoff = (loff_t)vma->vm_pgoff << PAGE_SHIFT;
 diff --git a/include/linux/mm.h b/include/linux/mm.h
-index a2adf95b3f9c..70e1dccc1283 100644
+index a2adf95b3f9c5..70e1dccc1283d 100644
 --- a/include/linux/mm.h
 +++ b/include/linux/mm.h
 @@ -1510,6 +1510,28 @@ static inline void unmap_shared_mapping_range(struct address_space *mapping,
@@ -105,7 +105,7 @@ index a2adf95b3f9c..70e1dccc1283 100644
  		void *buf, int len, unsigned int gup_flags);
  extern int access_remote_vm(struct mm_struct *mm, unsigned long addr,
 diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
-index 270aa8fd2800..33848c2165e2 100644
+index 270aa8fd2800b..33848c2165e21 100644
 --- a/include/linux/mm_types.h
 +++ b/include/linux/mm_types.h
 @@ -267,6 +267,7 @@ struct vm_region {
@@ -125,7 +125,7 @@ index 270aa8fd2800..33848c2165e2 100644
  
  #ifdef CONFIG_SWAP
 diff --git a/kernel/fork.c b/kernel/fork.c
-index 13b38794efb5..ede7225bae95 100644
+index 13b38794efb56..ede7225bae956 100644
 --- a/kernel/fork.c
 +++ b/kernel/fork.c
 @@ -562,7 +562,7 @@ static __latent_entropy int dup_mmap(struct mm_struct *mm,
@@ -138,7 +138,7 @@ index 13b38794efb5..ede7225bae95 100644
  				atomic_dec(&inode->i_writecount);
  			i_mmap_lock_write(mapping);
 diff --git a/mm/Makefile b/mm/Makefile
-index d996846697ef..fbadb91df4e4 100644
+index d996846697ef5..fbadb91df4e4e 100644
 --- a/mm/Makefile
 +++ b/mm/Makefile
 @@ -42,7 +42,7 @@ obj-y			:= filemap.o mempool.o oom_kill.o fadvise.o \
@@ -151,7 +151,7 @@ index d996846697ef..fbadb91df4e4 100644
  # Give 'page_alloc' its own module-parameter namespace
  page-alloc-y := page_alloc.o
 diff --git a/mm/filemap.c b/mm/filemap.c
-index 85b7d087eb45..115275a4a0e2 100644
+index 85b7d087eb45a..115275a4a0e27 100644
 --- a/mm/filemap.c
 +++ b/mm/filemap.c
 @@ -2696,7 +2696,7 @@ vm_fault_t filemap_page_mkwrite(struct vm_fault *vmf)
@@ -164,7 +164,7 @@ index 85b7d087eb45..115275a4a0e2 100644
  	if (page->mapping != inode->i_mapping) {
  		unlock_page(page);
 diff --git a/mm/mmap.c b/mm/mmap.c
-index a7d8c84d19b7..9c350dc3f570 100644
+index a7d8c84d19b71..9c350dc3f5703 100644
 --- a/mm/mmap.c
 +++ b/mm/mmap.c
 @@ -182,7 +182,7 @@ static struct vm_area_struct *remove_vma(struct vm_area_struct *vma)
@@ -261,7 +261,7 @@ index a7d8c84d19b7..9c350dc3f570 100644
  			new_vma->vm_ops->open(new_vma);
  		vma_link(mm, new_vma, prev, rb_link, rb_parent);
 diff --git a/mm/nommu.c b/mm/nommu.c
-index 99b7ec318824..de5b6cd162fe 100644
+index 99b7ec318824c..de5b6cd162fea 100644
 --- a/mm/nommu.c
 +++ b/mm/nommu.c
 @@ -552,7 +552,7 @@ static void __put_nommu_region(struct vm_region *region)
@@ -306,7 +306,7 @@ index 99b7ec318824..de5b6cd162fe 100644
  
 diff --git a/mm/prfile.c b/mm/prfile.c
 new file mode 100644
-index 000000000000..00d51187c325
+index 0000000000000..00d51187c3250
 --- /dev/null
 +++ b/mm/prfile.c
 @@ -0,0 +1,86 @@
