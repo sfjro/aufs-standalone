@@ -2,7 +2,7 @@ SPDX-License-Identifier: GPL-2.0
 aufs5.1 lockdep patch
 
 diff --git a/include/linux/lockdep.h b/include/linux/lockdep.h
-index 470795d9f4a2..42bf321d9181 100644
+index 470795d9f4a28..42bf321d91817 100644
 --- a/include/linux/lockdep.h
 +++ b/include/linux/lockdep.h
 @@ -17,7 +17,7 @@ struct lockdep_map;
@@ -15,11 +15,11 @@ index 470795d9f4a2..42bf321d9181 100644
  #include <linux/types.h>
  
 diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 92de98d9c634..82764fbac637 100644
+index 92de98d9c6347..82764fbac6371 100644
 --- a/kernel/locking/lockdep.c
 +++ b/kernel/locking/lockdep.c
 diff --git a/kernel/locking/lockdep_internals.h b/kernel/locking/lockdep_internals.h
-index d4c197425f68..a103700a63bd 100644
+index d4c197425f68a..a103700a63bd7 100644
 --- a/kernel/locking/lockdep_internals.h
 +++ b/kernel/locking/lockdep_internals.h
 @@ -71,15 +71,15 @@ enum {

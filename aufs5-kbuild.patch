@@ -2,7 +2,7 @@ SPDX-License-Identifier: GPL-2.0
 aufs5.1 kbuild patch
 
 diff --git a/fs/Kconfig b/fs/Kconfig
-index 3e6d3101f3ff..8b099435d01d 100644
+index 3e6d3101f3ff0..8b099435d01d1 100644
 --- a/fs/Kconfig
 +++ b/fs/Kconfig
 @@ -261,6 +261,7 @@ source "fs/romfs/Kconfig"
@@ -14,7 +14,7 @@ index 3e6d3101f3ff..8b099435d01d 100644
  endif # MISC_FILESYSTEMS
  
 diff --git a/fs/Makefile b/fs/Makefile
-index 427fec226fae..e5ec0a044931 100644
+index 427fec226faeb..e5ec0a0449316 100644
 --- a/fs/Makefile
 +++ b/fs/Makefile
 @@ -129,3 +129,4 @@ obj-$(CONFIG_F2FS_FS)		+= f2fs/
