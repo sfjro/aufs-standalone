@@ -2,7 +2,7 @@ SPDX-License-Identifier: GPL-2.0
 aufs5.6 base patch
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 5a5332b3591d..51301c0ab275 100644
+index 5a5332b3591d7..51301c0ab2756 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
 @@ -2919,6 +2919,19 @@ F:	include/linux/audit.h
@@ -26,7 +26,7 @@ index 5a5332b3591d..51301c0ab275 100644
  M:	Miguel Ojeda Sandonis <miguel.ojeda.sandonis@gmail.com>
  S:	Maintained
 diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index 739b372a5112..872e3b3a7693 100644
+index 739b372a51128..872e3b3a7693e 100644
 --- a/drivers/block/loop.c
 +++ b/drivers/block/loop.c
 @@ -750,6 +750,24 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
@@ -55,7 +55,7 @@ index 739b372a5112..872e3b3a7693 100644
  
  static ssize_t loop_attr_show(struct device *dev, char *page,
 diff --git a/fs/dcache.c b/fs/dcache.c
-index b280e07e162b..046000653e4d 100644
+index b280e07e162b1..046000653e4d8 100644
 --- a/fs/dcache.c
 +++ b/fs/dcache.c
 @@ -1266,7 +1266,7 @@ enum d_walk_ret {
@@ -68,7 +68,7 @@ index b280e07e162b..046000653e4d 100644
  {
  	struct dentry *this_parent;
 diff --git a/fs/fcntl.c b/fs/fcntl.c
-index 2e4c0fa2074b..0b28a37f7e50 100644
+index 2e4c0fa2074b0..0b28a37f7e505 100644
 --- a/fs/fcntl.c
 +++ b/fs/fcntl.c
 @@ -32,7 +32,7 @@
@@ -90,7 +90,7 @@ index 2e4c0fa2074b..0b28a37f7e50 100644
  		return error;
  
 diff --git a/fs/inode.c b/fs/inode.c
-index 93d9252a00ab..7700c5e4783b 100644
+index 93d9252a00ab4..7700c5e4783b9 100644
 --- a/fs/inode.c
 +++ b/fs/inode.c
 @@ -1688,7 +1688,7 @@ EXPORT_SYMBOL(generic_update_time);
@@ -103,7 +103,7 @@ index 93d9252a00ab..7700c5e4783b 100644
  	if (inode->i_op->update_time)
  		return inode->i_op->update_time(inode, time, flags);
 diff --git a/fs/namespace.c b/fs/namespace.c
-index 85b5f7bea82e..c742051ba969 100644
+index 85b5f7bea82e7..c742051ba9699 100644
 --- a/fs/namespace.c
 +++ b/fs/namespace.c
 @@ -776,6 +776,12 @@ static inline int check_mnt(struct mount *mnt)
@@ -120,7 +120,7 @@ index 85b5f7bea82e..c742051ba969 100644
   * vfsmount lock must be held for write
   */
 diff --git a/fs/read_write.c b/fs/read_write.c
-index 59d819c5b92e..bcb853105beb 100644
+index 59d819c5b92e6..bcb853105beba 100644
 --- a/fs/read_write.c
 +++ b/fs/read_write.c
 @@ -498,6 +498,28 @@ static ssize_t __vfs_write(struct file *file, const char __user *p,
@@ -153,7 +153,7 @@ index 59d819c5b92e..bcb853105beb 100644
  {
  	mm_segment_t old_fs;
 diff --git a/fs/splice.c b/fs/splice.c
-index d671936d0aad..b1f536d03c09 100644
+index d671936d0aad6..b1f536d03c09f 100644
 --- a/fs/splice.c
 +++ b/fs/splice.c
 @@ -849,8 +849,8 @@ EXPORT_SYMBOL(generic_splice_sendpage);
@@ -181,7 +181,7 @@ index d671936d0aad..b1f536d03c09 100644
  	ssize_t (*splice_read)(struct file *, loff_t *,
  			       struct pipe_inode_info *, size_t, unsigned int);
 diff --git a/fs/sync.c b/fs/sync.c
-index 4d1ff010bc5a..457f4e4a5cc1 100644
+index 4d1ff010bc5af..457f4e4a5cc1f 100644
 --- a/fs/sync.c
 +++ b/fs/sync.c
 @@ -28,7 +28,7 @@
@@ -194,7 +194,7 @@ index 4d1ff010bc5a..457f4e4a5cc1 100644
  	if (wait)
  		sync_inodes_sb(sb);
 diff --git a/include/linux/fs.h b/include/linux/fs.h
-index abedbffe2c9e..944485ac54b4 100644
+index abedbffe2c9e4..944485ac54b4e 100644
 --- a/include/linux/fs.h
 +++ b/include/linux/fs.h
 @@ -1350,6 +1350,7 @@ extern void fasync_free(struct fasync_struct *);
@@ -243,7 +243,7 @@ index abedbffe2c9e..944485ac54b4 100644
  extern const struct file_operations def_blk_fops;
  extern const struct file_operations def_chr_fops;
 diff --git a/include/linux/lockdep.h b/include/linux/lockdep.h
-index 664f52c6dd4c..f2208851f527 100644
+index 664f52c6dd4c1..f2208851f5270 100644
 --- a/include/linux/lockdep.h
 +++ b/include/linux/lockdep.h
 @@ -331,6 +331,8 @@ static inline int lockdep_match_key(struct lockdep_map *lock,
@@ -264,7 +264,7 @@ index 664f52c6dd4c..f2208851f527 100644
  
  #define lockdep_assert_held(l)			do { (void)(l); } while (0)
 diff --git a/include/linux/mnt_namespace.h b/include/linux/mnt_namespace.h
-index 35942084cd40..24f5fd1a789d 100644
+index 35942084cd40d..24f5fd1a789de 100644
 --- a/include/linux/mnt_namespace.h
 +++ b/include/linux/mnt_namespace.h
 @@ -6,11 +6,14 @@
@@ -283,7 +283,7 @@ index 35942084cd40..24f5fd1a789d 100644
  extern const struct file_operations proc_mountinfo_operations;
  extern const struct file_operations proc_mountstats_operations;
 diff --git a/include/linux/splice.h b/include/linux/splice.h
-index 74b4911ac16d..19789fbea567 100644
+index 74b4911ac16dd..19789fbea5675 100644
 --- a/include/linux/splice.h
 +++ b/include/linux/splice.h
 @@ -87,4 +87,10 @@ extern void splice_shrink_spd(struct splice_pipe_desc *);
@@ -298,7 +298,7 @@ index 74b4911ac16d..19789fbea567 100644
 +			 unsigned int flags);
  #endif
 diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 32406ef0d6a2..e52169c2086b 100644
+index 32406ef0d6a2d..e52169c2086b4 100644
 --- a/kernel/locking/lockdep.c
 +++ b/kernel/locking/lockdep.c
 @@ -153,7 +153,7 @@ static
