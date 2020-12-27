@@ -2,27 +2,18 @@ SPDX-License-Identifier: GPL-2.0
 aufs5.x-rcN lockdep patch
 
 diff --git a/include/linux/lockdep.h b/include/linux/lockdep.h
-index e5eda5226fbc7..761f87256a9f1 100644
+index 93bb861981675..acde7be2848cf 100644
 --- a/include/linux/lockdep.h
 +++ b/include/linux/lockdep.h
-@@ -17,7 +17,7 @@ struct lockdep_map;
- extern int prove_locking;
- extern int lock_stat;
- 
--#define MAX_LOCKDEP_SUBCLASSES		8UL
-+#define MAX_LOCKDEP_SUBCLASSES		(8UL + 4)
- 
- #include <linux/types.h>
- 
 diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 715ba9c1b91ae..9caea35fb9579 100644
+index be002c3a30833..38e997d6c0474 100644
 --- a/kernel/locking/lockdep.c
 +++ b/kernel/locking/lockdep.c
 diff --git a/kernel/locking/lockdep_internals.h b/kernel/locking/lockdep_internals.h
-index baca699b94e91..11ebf13738f40 100644
+index de49f9e1c11ba..df5b79a3122b9 100644
 --- a/kernel/locking/lockdep_internals.h
 +++ b/kernel/locking/lockdep_internals.h
-@@ -94,15 +94,15 @@ static const unsigned long LOCKF_USED_IN_IRQ_READ =
+@@ -99,15 +99,15 @@ static const unsigned long LOCKF_USED_IN_IRQ_READ =
  #define MAX_STACK_TRACE_ENTRIES	262144UL
  #define STACK_TRACE_HASH_SIZE	8192
  #else
