@@ -31,7 +31,7 @@ index 13452b32e2bd5..38acccfef9d49 100644
  		ino = inode->i_ino;
  	}
 diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
-index ee5a235b30562..80a46dcede7be 100644
+index 602e3a52884d8..a36614b84de16 100644
 --- a/fs/proc/task_mmu.c
 +++ b/fs/proc/task_mmu.c
 @@ -280,7 +280,10 @@ show_map_vma(struct seq_file *m, struct vm_area_struct *vma)
@@ -46,7 +46,7 @@ index ee5a235b30562..80a46dcede7be 100644
  		dev = inode->i_sb->s_dev;
  		ino = inode->i_ino;
  		pgoff = ((loff_t)vma->vm_pgoff) << PAGE_SHIFT;
-@@ -1855,7 +1858,7 @@ static int show_numa_map(struct seq_file *m, void *v)
+@@ -1862,7 +1865,7 @@ static int show_numa_map(struct seq_file *m, void *v)
  	struct proc_maps_private *proc_priv = &numa_priv->proc_maps;
  	struct vm_area_struct *vma = v;
  	struct numa_maps *md = &numa_priv->md;
@@ -125,7 +125,7 @@ index 07d9acb5b19c4..2f395ab624f38 100644
  
  #ifdef CONFIG_SWAP
 diff --git a/kernel/fork.c b/kernel/fork.c
-index 37720a6d04eaa..982a6863ecfc6 100644
+index d66cd1014211b..a2addc21d63fc 100644
 --- a/kernel/fork.c
 +++ b/kernel/fork.c
 @@ -555,7 +555,7 @@ static __latent_entropy int dup_mmap(struct mm_struct *mm,
@@ -151,10 +151,10 @@ index b6cd2fffa4922..784e2cebe1eac 100644
  # Give 'page_alloc' its own module-parameter namespace
  page-alloc-y := page_alloc.o
 diff --git a/mm/filemap.c b/mm/filemap.c
-index 5c9d564317a5c..40c4c2587e242 100644
+index aa0e0fb046700..d883a19f4237e 100644
 --- a/mm/filemap.c
 +++ b/mm/filemap.c
-@@ -2989,7 +2989,7 @@ vm_fault_t filemap_page_mkwrite(struct vm_fault *vmf)
+@@ -2993,7 +2993,7 @@ vm_fault_t filemap_page_mkwrite(struct vm_fault *vmf)
  	vm_fault_t ret = VM_FAULT_LOCKED;
  
  	sb_start_pagefault(mapping->host->i_sb);

@@ -2,10 +2,10 @@ SPDX-License-Identifier: GPL-2.0
 aufs5.x-rcN base patch
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 6eff4f720c721..7565ff817bef8 100644
+index 667d03852191f..752948aa5d7c8 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -3019,6 +3019,19 @@ F:	include/linux/audit.h
+@@ -3017,6 +3017,19 @@ F:	include/linux/audit.h
  F:	include/uapi/linux/audit.h
  F:	kernel/audit*
  
@@ -103,7 +103,7 @@ index 6442d97d9a4ab..e4a25c3fa9e55 100644
  	if (inode->i_op->update_time)
  		return inode->i_op->update_time(inode, time, flags);
 diff --git a/fs/namespace.c b/fs/namespace.c
-index d2db7dfe232b3..6c617ee06d723 100644
+index 9d33909d0f9e3..3e16fc64df8b8 100644
 --- a/fs/namespace.c
 +++ b/fs/namespace.c
 @@ -792,6 +792,12 @@ static inline int check_mnt(struct mount *mnt)
@@ -245,7 +245,7 @@ index a55179fd60fc3..8e21c53cf8831 100644
 +			 unsigned int flags);
  #endif
 diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index c1418b47f625a..7f006a47790cf 100644
+index bdaf4829098c0..5c3bff75de111 100644
 --- a/kernel/locking/lockdep.c
 +++ b/kernel/locking/lockdep.c
 @@ -188,7 +188,7 @@ static
