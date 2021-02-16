@@ -2,7 +2,7 @@ SPDX-License-Identifier: GPL-2.0
 aufs5.x-rcN kbuild patch
 
 diff --git a/fs/Kconfig b/fs/Kconfig
-index aa4c122823018..b29bad13b2491 100644
+index da524c4d7b7e0..50ab89368c2b5 100644
 --- a/fs/Kconfig
 +++ b/fs/Kconfig
 @@ -288,6 +288,7 @@ source "fs/sysv/Kconfig"
