@@ -2,7 +2,7 @@ SPDX-License-Identifier: GPL-2.0
 aufs5.x-rcN loopback patch
 
 diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index 39d539df0349d..4109efe2f6a3a 100644
+index 01ca256575fb2..f5a76bacf6c85 100644
 --- a/drivers/block/loop.c
 +++ b/drivers/block/loop.c
 @@ -646,6 +646,15 @@ static inline void loop_update_dio(struct loop_device *lo)
@@ -67,7 +67,7 @@ index 39d539df0349d..4109efe2f6a3a 100644
  		loop_reread_partitions(lo, bdev);
  	return 0;
 @@ -758,6 +778,8 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
- 	mutex_unlock(&loop_ctl_mutex);
+ 	mutex_unlock(&lo->lo_mutex);
  	if (file)
  		fput(file);
 +	if (virt_file)
@@ -122,7 +122,7 @@ index 39d539df0349d..4109efe2f6a3a 100644
  	gfp_t gfp = lo->old_gfp_mask;
  	struct block_device *bdev = lo->lo_device;
  	int err = 0;
-@@ -1235,6 +1267,7 @@ static int __loop_clr_fd(struct loop_device *lo, bool release)
+@@ -1238,6 +1270,7 @@ static int __loop_clr_fd(struct loop_device *lo, bool release)
  
  	spin_lock_irq(&lo->lo_lock);
  	lo->lo_backing_file = NULL;
@@ -130,7 +130,7 @@ index 39d539df0349d..4109efe2f6a3a 100644
  	spin_unlock_irq(&lo->lo_lock);
  
  	loop_release_xfer(lo);
-@@ -1317,6 +1350,8 @@ static int __loop_clr_fd(struct loop_device *lo, bool release)
+@@ -1319,6 +1352,8 @@ static int __loop_clr_fd(struct loop_device *lo, bool release)
  	 */
  	if (filp)
  		fput(filp);
@@ -140,7 +140,7 @@ index 39d539df0349d..4109efe2f6a3a 100644
  }
  
 diff --git a/drivers/block/loop.h b/drivers/block/loop.h
-index af75a5ee40944..1d847cb194ff6 100644
+index a3c04f310672e..161c3c5d1c22b 100644
 --- a/drivers/block/loop.h
 +++ b/drivers/block/loop.h
 @@ -46,7 +46,7 @@ struct loop_device {
@@ -212,7 +212,7 @@ index 94f4f80ae33bf..ca1194354aff4 100644
  
  #endif /* __KERNEL__ */
 diff --git a/fs/aufs/super.c b/fs/aufs/super.c
-index 589dd01220201..801e0a7faec59 100644
+index d252963a87b53..ecfc5fc96ad8c 100644
 --- a/fs/aufs/super.c
 +++ b/fs/aufs/super.c
 @@ -844,7 +844,10 @@ static const struct super_operations aufs_sop = {
@@ -228,10 +228,10 @@ index 589dd01220201..801e0a7faec59 100644
  
  /* ---------------------------------------------------------------------- */
 diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 91f3fbe5b57ff..ad1b2e44d538b 100644
+index 4fa4b24535fde..2aec4bc9f5aa1 100644
 --- a/include/linux/fs.h
 +++ b/include/linux/fs.h
-@@ -1965,6 +1965,10 @@ struct super_operations {
+@@ -2041,6 +2041,10 @@ struct super_operations {
  				  struct shrink_control *);
  	long (*free_cached_objects)(struct super_block *,
  				    struct shrink_control *);
