@@ -21,7 +21,7 @@ index d82b6f396588..ff9c7acfedc8 100644
  	umode_t mode;		    /* Mount mode for root directory */
  	unsigned char huge;	    /* Whether to try for hugepages */
 diff --git a/mm/shmem.c b/mm/shmem.c
-index 7c6b6d8f6c39..889d4a603217 100644
+index 7c6b6d8f6c39..2990e627cf6c 100644
 --- a/mm/shmem.c
 +++ b/mm/shmem.c
 @@ -109,7 +109,7 @@ struct shmem_falloc {
@@ -203,11 +203,10 @@ index 7c6b6d8f6c39..889d4a603217 100644
  	sbinfo->max_blocks = ctx->blocks;
  	sbinfo->free_inodes = sbinfo->max_inodes = ctx->inodes;
  	if (sb->s_flags & SB_KERNMOUNT) {
-@@ -3860,7 +3871,16 @@ static void shmem_destroy_inodecache(void)
+@@ -3860,6 +3871,15 @@ static void shmem_destroy_inodecache(void)
  	kmem_cache_destroy(shmem_inode_cachep);
  }
  
--const struct address_space_operations shmem_aops = {
 +static __init void shmem_no_idr(struct super_block *sb)
 +{
 +	struct shmem_sb_info *sbinfo;
@@ -217,10 +216,9 @@ index 7c6b6d8f6c39..889d4a603217 100644
 +	idr_destroy(&sbinfo->idr);
 +}
 +
-+static const struct address_space_operations shmem_aops = {
+ const struct address_space_operations shmem_aops = {
  	.writepage	= shmem_writepage,
  	.set_page_dirty	= __set_page_dirty_no_writeback,
- #ifdef CONFIG_TMPFS
 @@ -4001,6 +4021,7 @@ int __init shmem_init(void)
  		pr_err("Could not kern_mount tmpfs\n");
  		goto out1;
