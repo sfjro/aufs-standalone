@@ -6,7 +6,7 @@ index 20c46305e057e..17362f35d3845 100644
 --- a/include/linux/lockdep.h
 +++ b/include/linux/lockdep.h
 diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index ac177ade7d9bd..d5dacc66ec2ec 100644
+index 185531f89239a..7432e0c97366e 100644
 --- a/kernel/locking/lockdep.c
 +++ b/kernel/locking/lockdep.c
 diff --git a/kernel/locking/lockdep_internals.h b/kernel/locking/lockdep_internals.h
