@@ -2,10 +2,10 @@ SPDX-License-Identifier: GPL-2.0
 aufs5.x-rcN loopback patch
 
 diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index 01ca256575fb2..f5a76bacf6c85 100644
+index 794a8a1341989..0e5664a6753e5 100644
 --- a/drivers/block/loop.c
 +++ b/drivers/block/loop.c
-@@ -646,6 +646,15 @@ static inline void loop_update_dio(struct loop_device *lo)
+@@ -647,6 +647,15 @@ static inline void loop_update_dio(struct loop_device *lo)
  				lo->use_dio);
  }
  
@@ -21,7 +21,7 @@ index 01ca256575fb2..f5a76bacf6c85 100644
  static void loop_reread_partitions(struct loop_device *lo,
  				   struct block_device *bdev)
  {
-@@ -701,6 +710,7 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
+@@ -702,6 +711,7 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
  			  unsigned int arg)
  {
  	struct file	*file = NULL, *old_file;
@@ -29,7 +29,7 @@ index 01ca256575fb2..f5a76bacf6c85 100644
  	int		error;
  	bool		partscan;
  
-@@ -720,12 +730,19 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
+@@ -721,12 +731,19 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
  	file = fget(arg);
  	if (!file)
  		goto out_err;
@@ -49,7 +49,7 @@ index 01ca256575fb2..f5a76bacf6c85 100644
  
  	error = -EINVAL;
  
-@@ -737,6 +754,7 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
+@@ -738,6 +755,7 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
  	blk_mq_freeze_queue(lo->lo_queue);
  	mapping_set_gfp_mask(old_file->f_mapping, lo->old_gfp_mask);
  	lo->lo_backing_file = file;
@@ -57,7 +57,7 @@ index 01ca256575fb2..f5a76bacf6c85 100644
  	lo->old_gfp_mask = mapping_gfp_mask(file->f_mapping);
  	mapping_set_gfp_mask(file->f_mapping,
  			     lo->old_gfp_mask & ~(__GFP_IO|__GFP_FS));
-@@ -750,6 +768,8 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
+@@ -751,6 +769,8 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
  	 * dependency.
  	 */
  	fput(old_file);
@@ -66,7 +66,7 @@ index 01ca256575fb2..f5a76bacf6c85 100644
  	if (partscan)
  		loop_reread_partitions(lo, bdev);
  	return 0;
-@@ -758,6 +778,8 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
+@@ -759,6 +779,8 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
  	mutex_unlock(&lo->lo_mutex);
  	if (file)
  		fput(file);
@@ -75,7 +75,7 @@ index 01ca256575fb2..f5a76bacf6c85 100644
  	return error;
  }
  
-@@ -1084,7 +1106,7 @@ static int loop_configure(struct loop_device *lo, fmode_t mode,
+@@ -1085,7 +1107,7 @@ static int loop_configure(struct loop_device *lo, fmode_t mode,
  			  struct block_device *bdev,
  			  const struct loop_config *config)
  {
@@ -84,7 +84,7 @@ index 01ca256575fb2..f5a76bacf6c85 100644
  	struct inode	*inode;
  	struct address_space *mapping;
  	int		error;
-@@ -1099,6 +1121,12 @@ static int loop_configure(struct loop_device *lo, fmode_t mode,
+@@ -1100,6 +1122,12 @@ static int loop_configure(struct loop_device *lo, fmode_t mode,
  	file = fget(config->fd);
  	if (!file)
  		goto out;
@@ -97,7 +97,7 @@ index 01ca256575fb2..f5a76bacf6c85 100644
  
  	/*
  	 * If we don't hold exclusive handle for the device, upgrade to it
-@@ -1153,6 +1181,7 @@ static int loop_configure(struct loop_device *lo, fmode_t mode,
+@@ -1154,6 +1182,7 @@ static int loop_configure(struct loop_device *lo, fmode_t mode,
  	lo->use_dio = lo->lo_flags & LO_FLAGS_DIRECT_IO;
  	lo->lo_device = bdev;
  	lo->lo_backing_file = file;
@@ -105,7 +105,7 @@ index 01ca256575fb2..f5a76bacf6c85 100644
  	lo->old_gfp_mask = mapping_gfp_mask(mapping);
  	mapping_set_gfp_mask(mapping, lo->old_gfp_mask & ~(__GFP_IO|__GFP_FS));
  
-@@ -1203,6 +1232,8 @@ static int loop_configure(struct loop_device *lo, fmode_t mode,
+@@ -1204,6 +1233,8 @@ static int loop_configure(struct loop_device *lo, fmode_t mode,
  		bd_abort_claiming(bdev, loop_configure);
  out_putf:
  	fput(file);
@@ -114,7 +114,7 @@ index 01ca256575fb2..f5a76bacf6c85 100644
  out:
  	/* This is safe: open() is still holding a reference. */
  	module_put(THIS_MODULE);
-@@ -1212,6 +1243,7 @@ static int loop_configure(struct loop_device *lo, fmode_t mode,
+@@ -1213,6 +1244,7 @@ static int loop_configure(struct loop_device *lo, fmode_t mode,
  static int __loop_clr_fd(struct loop_device *lo, bool release)
  {
  	struct file *filp = NULL;
@@ -122,7 +122,7 @@ index 01ca256575fb2..f5a76bacf6c85 100644
  	gfp_t gfp = lo->old_gfp_mask;
  	struct block_device *bdev = lo->lo_device;
  	int err = 0;
-@@ -1238,6 +1270,7 @@ static int __loop_clr_fd(struct loop_device *lo, bool release)
+@@ -1239,6 +1271,7 @@ static int __loop_clr_fd(struct loop_device *lo, bool release)
  
  	spin_lock_irq(&lo->lo_lock);
  	lo->lo_backing_file = NULL;
@@ -130,7 +130,7 @@ index 01ca256575fb2..f5a76bacf6c85 100644
  	spin_unlock_irq(&lo->lo_lock);
  
  	loop_release_xfer(lo);
-@@ -1319,6 +1352,8 @@ static int __loop_clr_fd(struct loop_device *lo, bool release)
+@@ -1320,6 +1353,8 @@ static int __loop_clr_fd(struct loop_device *lo, bool release)
  	 */
  	if (filp)
  		fput(filp);
@@ -228,10 +228,10 @@ index d252963a87b53..ecfc5fc96ad8c 100644
  
  /* ---------------------------------------------------------------------- */
 diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 4fa4b24535fde..2aec4bc9f5aa1 100644
+index 93eb43e002d97..8b392f6b36a62 100644
 --- a/include/linux/fs.h
 +++ b/include/linux/fs.h
-@@ -2041,6 +2041,10 @@ struct super_operations {
+@@ -2178,6 +2178,10 @@ struct super_operations {
  				  struct shrink_control *);
  	long (*free_cached_objects)(struct super_block *,
  				    struct shrink_control *);
