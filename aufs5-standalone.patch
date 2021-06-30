@@ -78,7 +78,7 @@ index f24d21236ad01..78de5b5dc0840 100644
  /**
   *	atime_needs_update	-	update the access time
 diff --git a/fs/namespace.c b/fs/namespace.c
-index 099e89c81af7c..3e46b53795b1e 100644
+index 07e6c53964fc6..df3e9a94be95b 100644
 --- a/fs/namespace.c
 +++ b/fs/namespace.c
 @@ -438,6 +438,7 @@ void __mnt_drop_write(struct vfsmount *mnt)
@@ -194,7 +194,7 @@ index 5c8c5175b385c..ff7e9ff774b73 100644
  ssize_t
  __vfs_getxattr(struct dentry *dentry, struct inode *inode, const char *name,
 diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index dce278159546c..5b0c571dbca2f 100644
+index 1fe4df55b20d1..ba35f874d8edf 100644
 --- a/kernel/locking/lockdep.c
 +++ b/kernel/locking/lockdep.c
 @@ -210,6 +210,7 @@ inline struct lock_class *lockdep_hlock_class(struct held_lock *hlock)

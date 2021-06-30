@@ -2,7 +2,7 @@ SPDX-License-Identifier: GPL-2.0
 aufs5.x-rcN mmap patch
 
 diff --git a/fs/proc/base.c b/fs/proc/base.c
-index 3851bfcdba56e..d632ddd5f5ee8 100644
+index 9cbd915025ad7..8a47b17c557e4 100644
 --- a/fs/proc/base.c
 +++ b/fs/proc/base.c
 @@ -2183,7 +2183,7 @@ static int map_files_get_link(struct dentry *dentry, struct path *path)
@@ -72,10 +72,10 @@ index a6d21fc0033c6..02c2de31196e0 100644
  		ino = inode->i_ino;
  		pgoff = (loff_t)vma->vm_pgoff << PAGE_SHIFT;
 diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 322ec61d0da79..ae6f0584e4c98 100644
+index 8ae31622deeff..2509428185f01 100644
 --- a/include/linux/mm.h
 +++ b/include/linux/mm.h
-@@ -1798,6 +1798,28 @@ static inline void unmap_shared_mapping_range(struct address_space *mapping,
+@@ -1801,6 +1801,28 @@ static inline void unmap_shared_mapping_range(struct address_space *mapping,
  	unmap_mapping_range(mapping, holebegin, holelen, 0);
  }
  
@@ -105,7 +105,7 @@ index 322ec61d0da79..ae6f0584e4c98 100644
  		void *buf, int len, unsigned int gup_flags);
  extern int access_remote_vm(struct mm_struct *mm, unsigned long addr,
 diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
-index 6613b26a88946..e94df45b5483a 100644
+index 8f0fb62e8975c..5043c0702c108 100644
 --- a/include/linux/mm_types.h
 +++ b/include/linux/mm_types.h
 @@ -279,6 +279,7 @@ struct vm_region {
@@ -125,7 +125,7 @@ index 6613b26a88946..e94df45b5483a 100644
  
  #ifdef CONFIG_SWAP
 diff --git a/kernel/fork.c b/kernel/fork.c
-index dc06afd725cbd..66f1486e63e35 100644
+index a070caed5c8ed..0eae46741b79f 100644
 --- a/kernel/fork.c
 +++ b/kernel/fork.c
 @@ -559,7 +559,7 @@ static __latent_entropy int dup_mmap(struct mm_struct *mm,

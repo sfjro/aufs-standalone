@@ -2,7 +2,7 @@ SPDX-License-Identifier: GPL-2.0
 aufs5.x-rcN loopback patch
 
 diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index 794a8a1341989..0e5664a6753e5 100644
+index daa7ad5a35fd7..fdc6b69de5d75 100644
 --- a/drivers/block/loop.c
 +++ b/drivers/block/loop.c
 @@ -647,6 +647,15 @@ static inline void loop_update_dio(struct loop_device *lo)
@@ -140,10 +140,10 @@ index 794a8a1341989..0e5664a6753e5 100644
  }
  
 diff --git a/drivers/block/loop.h b/drivers/block/loop.h
-index a3c04f310672e..161c3c5d1c22b 100644
+index 5beb959b94d36..6dacad2b83147 100644
 --- a/drivers/block/loop.h
 +++ b/drivers/block/loop.h
-@@ -46,7 +46,7 @@ struct loop_device {
+@@ -47,7 +47,7 @@ struct loop_device {
  	int		(*ioctl)(struct loop_device *, int cmd, 
  				 unsigned long arg); 
  

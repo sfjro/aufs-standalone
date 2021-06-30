@@ -2,7 +2,7 @@ SPDX-License-Identifier: GPL-2.0
 aufs5.x-rcN base patch
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index bd7aff0c120f2..7c4bc08596e0b 100644
+index 0cce91cd56243..717b6a2402f9d 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
 @@ -3040,6 +3040,19 @@ F:	include/uapi/linux/audit.h
@@ -26,7 +26,7 @@ index bd7aff0c120f2..7c4bc08596e0b 100644
  M:	Miguel Ojeda <ojeda@kernel.org>
  S:	Maintained
 diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index d58d68f3c7cd0..794a8a1341989 100644
+index 76e12f3482a91..daa7ad5a35fd7 100644
 --- a/drivers/block/loop.c
 +++ b/drivers/block/loop.c
 @@ -762,6 +762,24 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
@@ -103,7 +103,7 @@ index c93500d84264d..f24d21236ad01 100644
  	if (inode->i_op->update_time)
  		return inode->i_op->update_time(inode, time, flags);
 diff --git a/fs/namespace.c b/fs/namespace.c
-index f63337828e1c4..099e89c81af7c 100644
+index c3f1a78ba3697..07e6c53964fc6 100644
 --- a/fs/namespace.c
 +++ b/fs/namespace.c
 @@ -807,6 +807,12 @@ static inline int check_mnt(struct mount *mnt)
@@ -245,7 +245,7 @@ index a55179fd60fc3..8e21c53cf8831 100644
 +			 unsigned int flags);
  #endif
 diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 48d736aa03b24..dce278159546c 100644
+index e32313072506d..1fe4df55b20d1 100644
 --- a/kernel/locking/lockdep.c
 +++ b/kernel/locking/lockdep.c
 @@ -189,7 +189,7 @@ static
