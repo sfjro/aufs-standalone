@@ -22,10 +22,10 @@ index bc5095b734f58..9508bd57a3bc0 100644
  /**
   * d_ancestor - search for an ancestor
 diff --git a/fs/exec.c b/fs/exec.c
-index 18594f11c31fe..ac38c0424d2a3 100644
+index 38f63451b9282..7710637ed0bc9 100644
 --- a/fs/exec.c
 +++ b/fs/exec.c
-@@ -114,6 +114,7 @@ bool path_noexec(const struct path *path)
+@@ -111,6 +111,7 @@ bool path_noexec(const struct path *path)
  	return (path->mnt->mnt_flags & MNT_NOEXEC) ||
  	       (path->mnt->mnt_sb->s_iflags & SB_I_NOEXEC);
  }
@@ -78,7 +78,7 @@ index f24d21236ad01..78de5b5dc0840 100644
  /**
   *	atime_needs_update	-	update the access time
 diff --git a/fs/namespace.c b/fs/namespace.c
-index 07e6c53964fc6..df3e9a94be95b 100644
+index ef402e2779f27..30164020f906e 100644
 --- a/fs/namespace.c
 +++ b/fs/namespace.c
 @@ -438,6 +438,7 @@ void __mnt_drop_write(struct vfsmount *mnt)
@@ -118,7 +118,7 @@ index fb89c351295d6..460ad19c2570a 100644
  /*
   * Drop a reference to a group.  Free it if it's through.
 diff --git a/fs/open.c b/fs/open.c
-index e53af13b5835f..f37da065e6544 100644
+index 94bef26ff1b61..33412587d76dd 100644
 --- a/fs/open.c
 +++ b/fs/open.c
 @@ -65,6 +65,7 @@ int do_truncate(struct user_namespace *mnt_userns, struct dentry *dentry,
@@ -194,7 +194,7 @@ index 5c8c5175b385c..ff7e9ff774b73 100644
  ssize_t
  __vfs_getxattr(struct dentry *dentry, struct inode *inode, const char *name,
 diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 1fe4df55b20d1..ba35f874d8edf 100644
+index e0aaf34974df5..d7b737731d4ef 100644
 --- a/kernel/locking/lockdep.c
 +++ b/kernel/locking/lockdep.c
 @@ -210,6 +210,7 @@ inline struct lock_class *lockdep_hlock_class(struct held_lock *hlock)
@@ -215,7 +215,7 @@ index 1698fbe6f0e13..081b05acadf82 100644
  }
 +EXPORT_SYMBOL_GPL(task_work_run);
 diff --git a/security/security.c b/security/security.c
-index b38155b2de83f..386c2741886ce 100644
+index 09533cbb7221d..b35b18913e4be 100644
 --- a/security/security.c
 +++ b/security/security.c
 @@ -1146,6 +1146,7 @@ int security_path_rmdir(const struct path *dir, struct dentry *dentry)

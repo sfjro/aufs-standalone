@@ -2,10 +2,10 @@ SPDX-License-Identifier: GPL-2.0
 aufs5.x-rcN base patch
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 0cce91cd56243..717b6a2402f9d 100644
+index a61f4f3b78a91..10df06370b3ae 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -3040,6 +3040,19 @@ F:	include/uapi/linux/audit.h
+@@ -3088,6 +3088,19 @@ F:	include/uapi/linux/audit.h
  F:	kernel/audit*
  F:	lib/*audit.c
  
@@ -26,10 +26,10 @@ index 0cce91cd56243..717b6a2402f9d 100644
  M:	Miguel Ojeda <ojeda@kernel.org>
  S:	Maintained
 diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index 76e12f3482a91..daa7ad5a35fd7 100644
+index f37b9e3d833c2..95ee02f0581f8 100644
 --- a/drivers/block/loop.c
 +++ b/drivers/block/loop.c
-@@ -762,6 +762,24 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
+@@ -758,6 +758,24 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
  	return error;
  }
  
@@ -103,7 +103,7 @@ index c93500d84264d..f24d21236ad01 100644
  	if (inode->i_op->update_time)
  		return inode->i_op->update_time(inode, time, flags);
 diff --git a/fs/namespace.c b/fs/namespace.c
-index c3f1a78ba3697..07e6c53964fc6 100644
+index ab4174a3c802b..ef402e2779f27 100644
 --- a/fs/namespace.c
 +++ b/fs/namespace.c
 @@ -807,6 +807,12 @@ static inline int check_mnt(struct mount *mnt)
@@ -161,7 +161,7 @@ index 1373a610dc784..b7b5a0a0df6ff 100644
  	if (wait)
  		sync_inodes_sb(sb);
 diff --git a/include/linux/fs.h b/include/linux/fs.h
-index c3c88fdb9b2a5..93eb43e002d97 100644
+index 640574294216c..ffeed3ccd2d62 100644
 --- a/include/linux/fs.h
 +++ b/include/linux/fs.h
 @@ -1335,6 +1335,7 @@ extern void fasync_free(struct fasync_struct *);
@@ -180,7 +180,7 @@ index c3c88fdb9b2a5..93eb43e002d97 100644
  	int (*flock) (struct file *, int, struct file_lock *);
  	ssize_t (*splice_write)(struct pipe_inode_info *, struct file *, loff_t *, size_t, unsigned int);
  	ssize_t (*splice_read)(struct file *, loff_t *, struct pipe_inode_info *, size_t, unsigned int);
-@@ -2565,6 +2567,7 @@ extern int current_umask(void);
+@@ -2564,6 +2566,7 @@ extern int current_umask(void);
  extern void ihold(struct inode * inode);
  extern void iput(struct inode *);
  extern int generic_update_time(struct inode *, struct timespec64 *, int);
@@ -188,7 +188,7 @@ index c3c88fdb9b2a5..93eb43e002d97 100644
  
  /* /sys/fs */
  extern struct kobject *fs_kobj;
-@@ -2805,6 +2808,7 @@ static inline bool sb_is_blkdev_sb(struct super_block *sb)
+@@ -2810,6 +2813,7 @@ static inline bool sb_is_blkdev_sb(struct super_block *sb)
  }
  
  void emergency_thaw_all(void);
@@ -245,7 +245,7 @@ index a55179fd60fc3..8e21c53cf8831 100644
 +			 unsigned int flags);
  #endif
 diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index e32313072506d..1fe4df55b20d1 100644
+index bf1c00c881e48..e0aaf34974df5 100644
 --- a/kernel/locking/lockdep.c
 +++ b/kernel/locking/lockdep.c
 @@ -189,7 +189,7 @@ static
