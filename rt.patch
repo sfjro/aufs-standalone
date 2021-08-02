@@ -1,0 +1,34 @@
+commit fd493350bb6045819987c391f2c5dbfd1a44cb63
+Author: He Zhe <zhe.he@windriver.com>
+Date:   Thu Jul 29 14:53:56 2021 +0800
+
+    aufs: i_op: Add handling for au_pin_hdir_set_owner with RT kernel
+    
+    In RT kernel rw_semaphore uses rt_mutex whose owner should be set to the
+    task. Add a condition to handle both cases.
+    
+    fs/aufs/i_op.c: In function 'au_pin_hdir_set_owner':
+    fs/aufs/i_op.c:627:52: error: 'struct rw_semaphore' has no member named 'owner'
+    627 |         atomic_long_set(&p->hdir->hi_inode->i_rwsem.owner, (long)task);
+    |                                                    ^
+    
+    Signed-off-by: He Zhe <zhe.he@windriver.com>
+    Signed-off-by: J. R. Okajima <hooanon05g@gmail.com>
+    See-also: https://www.mail-archive.com/aufs-users@lists.sourceforge.net/msg05849.html
+
+diff --git a/fs/aufs/i_op.c b/fs/aufs/i_op.c
+index 75d7dd34ce185..86b0bd1129b88 100644
+--- a/fs/aufs/i_op.c
++++ b/fs/aufs/i_op.c
+@@ -620,7 +620,11 @@ int au_pin_hdir_relock(struct au_pin *p)
+ 
+ static void au_pin_hdir_set_owner(struct au_pin *p, struct task_struct *task)
+ {
++#if IS_ENABLED(CONFIG_PREEMPT_RT)
++	p->hdir->hi_inode->i_rwsem.rtmutex.owner = task;
++#else
+ 	atomic_long_set(&p->hdir->hi_inode->i_rwsem.owner, (long)task);
++#endif
+ }
+ 
+ void au_pin_hdir_acquire_nest(struct au_pin *p)
