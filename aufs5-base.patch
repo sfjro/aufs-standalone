@@ -2,10 +2,10 @@ SPDX-License-Identifier: GPL-2.0
 aufs5.x-rcN base patch
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index a61f4f3b78a91..10df06370b3ae 100644
+index c9467d2839f5e..f97da4f009ae2 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -3088,6 +3088,19 @@ F:	include/uapi/linux/audit.h
+@@ -3089,6 +3089,19 @@ F:	include/uapi/linux/audit.h
  F:	kernel/audit*
  F:	lib/*audit.c
  
@@ -26,10 +26,10 @@ index a61f4f3b78a91..10df06370b3ae 100644
  M:	Miguel Ojeda <ojeda@kernel.org>
  S:	Maintained
 diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index f37b9e3d833c2..95ee02f0581f8 100644
+index f0cdff0c5fbf4..e65f941a4181a 100644
 --- a/drivers/block/loop.c
 +++ b/drivers/block/loop.c
-@@ -758,6 +758,24 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
+@@ -810,6 +810,24 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
  	return error;
  }
  
@@ -68,7 +68,7 @@ index cf871a81f4fdc..bc5095b734f58 100644
  {
  	struct dentry *this_parent;
 diff --git a/fs/fcntl.c b/fs/fcntl.c
-index dfc72f15be7fc..d8a12eb63961d 100644
+index f946bec8f1f1b..a44da05bcb9a6 100644
 --- a/fs/fcntl.c
 +++ b/fs/fcntl.c
 @@ -33,7 +33,7 @@

@@ -72,10 +72,10 @@ index a6d21fc0033c6..02c2de31196e0 100644
  		ino = inode->i_ino;
  		pgoff = (loff_t)vma->vm_pgoff << PAGE_SHIFT;
 diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 57453dba41b94..74008c15418d4 100644
+index 7ca22e6e694a8..c7c40fd7f65a6 100644
 --- a/include/linux/mm.h
 +++ b/include/linux/mm.h
-@@ -1804,6 +1804,28 @@ static inline void unmap_shared_mapping_range(struct address_space *mapping,
+@@ -1805,6 +1805,28 @@ static inline void unmap_shared_mapping_range(struct address_space *mapping,
  	unmap_mapping_range(mapping, holebegin, holelen, 0);
  }
  

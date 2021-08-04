@@ -34,7 +34,7 @@ index 38f63451b9282..7710637ed0bc9 100644
  #ifdef CONFIG_USELIB
  /*
 diff --git a/fs/fcntl.c b/fs/fcntl.c
-index d8a12eb63961d..0532996186311 100644
+index a44da05bcb9a6..a9cf3ad532923 100644
 --- a/fs/fcntl.c
 +++ b/fs/fcntl.c
 @@ -86,6 +86,7 @@ int setfl(int fd, struct file *filp, unsigned long arg)

@@ -14,10 +14,10 @@ index a7749c126b8e2..12fd57d4aa57e 100644
  endif # MISC_FILESYSTEMS
  
 diff --git a/fs/Makefile b/fs/Makefile
-index 9c708e1fbe8fb..fde6be84a0830 100644
+index f98f3e691c376..5e9aaa284700e 100644
 --- a/fs/Makefile
 +++ b/fs/Makefile
-@@ -136,3 +136,4 @@ obj-$(CONFIG_EFIVAR_FS)		+= efivarfs/
+@@ -135,3 +135,4 @@ obj-$(CONFIG_EFIVAR_FS)		+= efivarfs/
  obj-$(CONFIG_EROFS_FS)		+= erofs/
  obj-$(CONFIG_VBOXSF_FS)		+= vboxsf/
  obj-$(CONFIG_ZONEFS_FS)		+= zonefs/
