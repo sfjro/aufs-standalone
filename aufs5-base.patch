@@ -2,7 +2,7 @@ SPDX-License-Identifier: GPL-2.0
 aufs5.x-rcN base patch
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index c9467d2839f5e..f97da4f009ae2 100644
+index d7b4f32875a94..6c23696108031 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
 @@ -3089,6 +3089,19 @@ F:	include/uapi/linux/audit.h
@@ -103,7 +103,7 @@ index c93500d84264d..f24d21236ad01 100644
  	if (inode->i_op->update_time)
  		return inode->i_op->update_time(inode, time, flags);
 diff --git a/fs/namespace.c b/fs/namespace.c
-index ab4174a3c802b..ef402e2779f27 100644
+index 97adcb5ab5d55..4f543907c8200 100644
 --- a/fs/namespace.c
 +++ b/fs/namespace.c
 @@ -807,6 +807,12 @@ static inline int check_mnt(struct mount *mnt)

@@ -125,7 +125,7 @@ index 52bbd2b7cb465..aeb888d448055 100644
  
  #ifdef CONFIG_SWAP
 diff --git a/kernel/fork.c b/kernel/fork.c
-index bc94b2cc59956..a99e566dc6c7c 100644
+index 44f4c2d83763f..dc1b528f962ce 100644
 --- a/kernel/fork.c
 +++ b/kernel/fork.c
 @@ -559,7 +559,7 @@ static __latent_entropy int dup_mmap(struct mm_struct *mm,
@@ -305,7 +305,7 @@ index 3a93d40548104..501a874fedcb0 100644
  
 diff --git a/mm/prfile.c b/mm/prfile.c
 new file mode 100644
-index 0000000000000..00d51187c3250
+index 0000000000000..511543ab1b418
 --- /dev/null
 +++ b/mm/prfile.c
 @@ -0,0 +1,86 @@
@@ -317,7 +317,7 @@ index 0000000000000..00d51187c3250
 + *
 + * See Documentation/filesystems/aufs/design/06mmap.txt
 + *
-+ * Copyright (c) 2014-2020 Junjro R. Okajima
++ * Copyright (c) 2014-2021 Junjro R. Okajima
 + * Copyright (c) 2014 Ian Campbell
 + */
 +
