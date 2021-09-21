@@ -22,7 +22,7 @@ index bc5095b734f58..9508bd57a3bc0 100644
  /**
   * d_ancestor - search for an ancestor
 diff --git a/fs/exec.c b/fs/exec.c
-index 38f63451b9282..7710637ed0bc9 100644
+index a098c133d8d74..7b6a249fd4778 100644
 --- a/fs/exec.c
 +++ b/fs/exec.c
 @@ -111,6 +111,7 @@ bool path_noexec(const struct path *path)
@@ -34,7 +34,7 @@ index 38f63451b9282..7710637ed0bc9 100644
  #ifdef CONFIG_USELIB
  /*
 diff --git a/fs/fcntl.c b/fs/fcntl.c
-index a44da05bcb9a6..a9cf3ad532923 100644
+index 02382fa9bd341..3418c60b90146 100644
 --- a/fs/fcntl.c
 +++ b/fs/fcntl.c
 @@ -86,6 +86,7 @@ int setfl(int fd, struct file *filp, unsigned long arg)
@@ -66,10 +66,10 @@ index 45437f8e1003e..786af52904fcf 100644
  void __init files_init(void)
  {
 diff --git a/fs/inode.c b/fs/inode.c
-index f24d21236ad01..78de5b5dc0840 100644
+index a30af3bd5ae1d..3b627be82eb89 100644
 --- a/fs/inode.c
 +++ b/fs/inode.c
-@@ -1784,6 +1784,7 @@ int update_time(struct inode *inode, struct timespec64 *time, int flags)
+@@ -1786,6 +1786,7 @@ int update_time(struct inode *inode, struct timespec64 *time, int flags)
  		return inode->i_op->update_time(inode, time, flags);
  	return generic_update_time(inode, time, flags);
  }
@@ -78,10 +78,10 @@ index f24d21236ad01..78de5b5dc0840 100644
  /**
   *	atime_needs_update	-	update the access time
 diff --git a/fs/namespace.c b/fs/namespace.c
-index 4f543907c8200..74d756a79cb72 100644
+index 1283670737826..db99365620118 100644
 --- a/fs/namespace.c
 +++ b/fs/namespace.c
-@@ -438,6 +438,7 @@ void __mnt_drop_write(struct vfsmount *mnt)
+@@ -439,6 +439,7 @@ void __mnt_drop_write(struct vfsmount *mnt)
  	mnt_dec_writers(real_mount(mnt));
  	preempt_enable();
  }
@@ -89,7 +89,7 @@ index 4f543907c8200..74d756a79cb72 100644
  
  /**
   * mnt_drop_write - give up write access to a mount
-@@ -812,6 +813,7 @@ int is_current_mnt_ns(struct vfsmount *mnt)
+@@ -813,6 +814,7 @@ int is_current_mnt_ns(struct vfsmount *mnt)
  {
  	return check_mnt(real_mount(mnt));
  }
@@ -97,7 +97,7 @@ index 4f543907c8200..74d756a79cb72 100644
  
  /*
   * vfsmount lock must be held for write
-@@ -2018,6 +2020,7 @@ int iterate_mounts(int (*f)(struct vfsmount *, void *), void *arg,
+@@ -2011,6 +2013,7 @@ int iterate_mounts(int (*f)(struct vfsmount *, void *), void *arg,
  	}
  	return 0;
  }
@@ -118,7 +118,7 @@ index fb89c351295d6..460ad19c2570a 100644
  /*
   * Drop a reference to a group.  Free it if it's through.
 diff --git a/fs/open.c b/fs/open.c
-index 94bef26ff1b61..33412587d76dd 100644
+index daa324606a41f..0d8bb2f1922a3 100644
 --- a/fs/open.c
 +++ b/fs/open.c
 @@ -65,6 +65,7 @@ int do_truncate(struct user_namespace *mnt_userns, struct dentry *dentry,
@@ -130,10 +130,10 @@ index 94bef26ff1b61..33412587d76dd 100644
  long vfs_truncate(const struct path *path, loff_t length)
  {
 diff --git a/fs/read_write.c b/fs/read_write.c
-index 9db7adf160d20..8dc93a57a933f 100644
+index af057c57bdc64..76017f8331fbf 100644
 --- a/fs/read_write.c
 +++ b/fs/read_write.c
-@@ -503,6 +503,7 @@ ssize_t vfs_read(struct file *file, char __user *buf, size_t count, loff_t *pos)
+@@ -492,6 +492,7 @@ ssize_t vfs_read(struct file *file, char __user *buf, size_t count, loff_t *pos)
  	inc_syscr(current);
  	return ret;
  }
@@ -141,7 +141,7 @@ index 9db7adf160d20..8dc93a57a933f 100644
  
  static ssize_t new_sync_write(struct file *filp, const char __user *buf, size_t len, loff_t *ppos)
  {
-@@ -613,6 +614,7 @@ ssize_t vfs_write(struct file *file, const char __user *buf, size_t count, loff_
+@@ -602,6 +603,7 @@ ssize_t vfs_write(struct file *file, const char __user *buf, size_t count, loff_
  	file_end_write(file);
  	return ret;
  }

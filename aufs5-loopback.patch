@@ -2,7 +2,7 @@ SPDX-License-Identifier: GPL-2.0
 aufs5.x-rcN loopback patch
 
 diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index e65f941a4181a..ce11efab143b7 100644
+index a62b132cbd551..79cf20555c2b1 100644
 --- a/drivers/block/loop.c
 +++ b/drivers/block/loop.c
 @@ -685,6 +685,15 @@ static inline void loop_update_dio(struct loop_device *lo)
@@ -49,7 +49,7 @@ index e65f941a4181a..ce11efab143b7 100644
  
  	error = -EINVAL;
  
-@@ -777,6 +795,7 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
+@@ -778,6 +796,7 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
  	blk_mq_freeze_queue(lo->lo_queue);
  	mapping_set_gfp_mask(old_file->f_mapping, lo->old_gfp_mask);
  	lo->lo_backing_file = file;
@@ -57,7 +57,7 @@ index e65f941a4181a..ce11efab143b7 100644
  	lo->old_gfp_mask = mapping_gfp_mask(file->f_mapping);
  	mapping_set_gfp_mask(file->f_mapping,
  			     lo->old_gfp_mask & ~(__GFP_IO|__GFP_FS));
-@@ -799,6 +818,8 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
+@@ -800,6 +819,8 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
  	 * dependency.
  	 */
  	fput(old_file);
@@ -66,7 +66,7 @@ index e65f941a4181a..ce11efab143b7 100644
  	if (partscan)
  		loop_reread_partitions(lo);
  	return 0;
-@@ -807,6 +828,8 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
+@@ -808,6 +829,8 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
  	loop_global_unlock(lo, is_loop);
  out_putf:
  	fput(file);
@@ -75,7 +75,7 @@ index e65f941a4181a..ce11efab143b7 100644
  	return error;
  }
  
-@@ -1207,6 +1230,7 @@ static int loop_configure(struct loop_device *lo, fmode_t mode,
+@@ -1208,6 +1231,7 @@ static int loop_configure(struct loop_device *lo, fmode_t mode,
  			  const struct loop_config *config)
  {
  	struct file *file = fget(config->fd);
@@ -83,7 +83,7 @@ index e65f941a4181a..ce11efab143b7 100644
  	struct inode *inode;
  	struct address_space *mapping;
  	int error;
-@@ -1222,6 +1246,13 @@ static int loop_configure(struct loop_device *lo, fmode_t mode,
+@@ -1223,6 +1247,13 @@ static int loop_configure(struct loop_device *lo, fmode_t mode,
  	/* This is safe, since we have a reference from open(). */
  	__module_get(THIS_MODULE);
  
@@ -97,7 +97,7 @@ index e65f941a4181a..ce11efab143b7 100644
  	/*
  	 * If we don't hold exclusive handle for the device, upgrade to it
  	 * here to avoid changing device under exclusive owner.
-@@ -1286,6 +1317,7 @@ static int loop_configure(struct loop_device *lo, fmode_t mode,
+@@ -1288,6 +1319,7 @@ static int loop_configure(struct loop_device *lo, fmode_t mode,
  	lo->use_dio = lo->lo_flags & LO_FLAGS_DIRECT_IO;
  	lo->lo_device = bdev;
  	lo->lo_backing_file = file;
@@ -105,7 +105,7 @@ index e65f941a4181a..ce11efab143b7 100644
  	lo->old_gfp_mask = mapping_gfp_mask(mapping);
  	mapping_set_gfp_mask(mapping, lo->old_gfp_mask & ~(__GFP_IO|__GFP_FS));
  
-@@ -1340,6 +1372,8 @@ static int loop_configure(struct loop_device *lo, fmode_t mode,
+@@ -1338,6 +1370,8 @@ static int loop_configure(struct loop_device *lo, fmode_t mode,
  		bd_abort_claiming(bdev, loop_configure);
  out_putf:
  	fput(file);
@@ -114,7 +114,7 @@ index e65f941a4181a..ce11efab143b7 100644
  	/* This is safe: open() is still holding a reference. */
  	module_put(THIS_MODULE);
  	return error;
-@@ -1348,6 +1382,7 @@ static int loop_configure(struct loop_device *lo, fmode_t mode,
+@@ -1346,6 +1380,7 @@ static int loop_configure(struct loop_device *lo, fmode_t mode,
  static int __loop_clr_fd(struct loop_device *lo, bool release)
  {
  	struct file *filp = NULL;
@@ -122,7 +122,7 @@ index e65f941a4181a..ce11efab143b7 100644
  	gfp_t gfp = lo->old_gfp_mask;
  	struct block_device *bdev = lo->lo_device;
  	int err = 0;
-@@ -1399,6 +1434,7 @@ static int __loop_clr_fd(struct loop_device *lo, bool release)
+@@ -1397,6 +1432,7 @@ static int __loop_clr_fd(struct loop_device *lo, bool release)
  
  	spin_lock_irq(&lo->lo_lock);
  	lo->lo_backing_file = NULL;
@@ -130,7 +130,7 @@ index e65f941a4181a..ce11efab143b7 100644
  	spin_unlock_irq(&lo->lo_lock);
  
  	loop_release_xfer(lo);
-@@ -1479,6 +1515,8 @@ static int __loop_clr_fd(struct loop_device *lo, bool release)
+@@ -1477,6 +1513,8 @@ static int __loop_clr_fd(struct loop_device *lo, bool release)
  	 */
  	if (filp)
  		fput(filp);
@@ -140,7 +140,7 @@ index e65f941a4181a..ce11efab143b7 100644
  }
  
 diff --git a/drivers/block/loop.h b/drivers/block/loop.h
-index 1988899db63ac..ff866d85aceac 100644
+index 04c88dd6eabd6..0ff3ba22ee170 100644
 --- a/drivers/block/loop.h
 +++ b/drivers/block/loop.h
 @@ -46,7 +46,7 @@ struct loop_device {
@@ -228,10 +228,10 @@ index ae38857541533..af32f0960e595 100644
  
  /* ---------------------------------------------------------------------- */
 diff --git a/include/linux/fs.h b/include/linux/fs.h
-index ffeed3ccd2d62..6a8e599051b77 100644
+index 376ddf1965aa2..adb8c854de599 100644
 --- a/include/linux/fs.h
 +++ b/include/linux/fs.h
-@@ -2177,6 +2177,10 @@ struct super_operations {
+@@ -2226,6 +2226,10 @@ struct super_operations {
  				  struct shrink_control *);
  	long (*free_cached_objects)(struct super_block *,
  				    struct shrink_control *);
