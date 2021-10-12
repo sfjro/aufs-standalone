@@ -255,7 +255,6 @@ static int au_dr_hino(struct super_block *sb, aufs_bindex_t bindex,
 	err = PTR_ERR(hinopath.dentry);
 	if (IS_ERR(hinopath.dentry))
 		goto out_unlock;
-	hinopath.mnt = path->mnt;
 
 	err = 0;
 	flags = O_RDONLY;
