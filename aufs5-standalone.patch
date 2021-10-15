@@ -66,10 +66,10 @@ index 45437f8e1003e..786af52904fcf 100644
  void __init files_init(void)
  {
 diff --git a/fs/inode.c b/fs/inode.c
-index a30af3bd5ae1d..3b627be82eb89 100644
+index 7e53985e62e5e..e36c5b2f96df7 100644
 --- a/fs/inode.c
 +++ b/fs/inode.c
-@@ -1786,6 +1786,7 @@ int update_time(struct inode *inode, struct timespec64 *time, int flags)
+@@ -1788,6 +1788,7 @@ int update_time(struct inode *inode, struct timespec64 *time, int flags)
  		return inode->i_op->update_time(inode, time, flags);
  	return generic_update_time(inode, time, flags);
  }

@@ -2,10 +2,10 @@ SPDX-License-Identifier: GPL-2.0
 aufs5.x-rcN base patch
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index ca6d6fde85cf8..236b1d7127613 100644
+index a4a0c2baaf274..cc2119bc60fd1 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -3117,6 +3117,19 @@ F:	include/uapi/linux/audit.h
+@@ -3122,6 +3122,19 @@ F:	include/uapi/linux/audit.h
  F:	kernel/audit*
  F:	lib/*audit.c
  
@@ -90,10 +90,10 @@ index 9c6c6a3e2de51..02382fa9bd341 100644
  		return error;
  
 diff --git a/fs/inode.c b/fs/inode.c
-index 37710ca863b57..a30af3bd5ae1d 100644
+index ed0cab8a32db1..7e53985e62e5e 100644
 --- a/fs/inode.c
 +++ b/fs/inode.c
-@@ -1780,7 +1780,7 @@ EXPORT_SYMBOL(generic_update_time);
+@@ -1782,7 +1782,7 @@ EXPORT_SYMBOL(generic_update_time);
   * This does the actual work of updating an inodes time or version.  Must have
   * had called mnt_want_write() before calling this.
   */
