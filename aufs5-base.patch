@@ -2,10 +2,10 @@ SPDX-License-Identifier: GPL-2.0
 aufs5.x-rcN base patch
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 3b79fd441dde8..3fb0a57f61b05 100644
+index 7a2345ce85213..4e9d85606024f 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -3122,6 +3122,19 @@ F:	include/uapi/linux/audit.h
+@@ -3169,6 +3169,19 @@ F:	include/uapi/linux/audit.h
  F:	kernel/audit*
  F:	lib/*audit.c
  
@@ -26,10 +26,10 @@ index 3b79fd441dde8..3fb0a57f61b05 100644
  M:	Miguel Ojeda <ojeda@kernel.org>
  S:	Maintained
 diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index 7bf4686af774e..a62b132cbd551 100644
+index a154cab6cd989..52776d48e306a 100644
 --- a/drivers/block/loop.c
 +++ b/drivers/block/loop.c
-@@ -811,6 +811,24 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
+@@ -635,6 +635,24 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
  	return error;
  }
  
@@ -89,19 +89,6 @@ index 9c6c6a3e2de51..02382fa9bd341 100644
  	if (error)
  		return error;
  
-diff --git a/fs/inode.c b/fs/inode.c
-index ed0cab8a32db1..7e53985e62e5e 100644
---- a/fs/inode.c
-+++ b/fs/inode.c
-@@ -1782,7 +1782,7 @@ EXPORT_SYMBOL(generic_update_time);
-  * This does the actual work of updating an inodes time or version.  Must have
-  * had called mnt_want_write() before calling this.
-  */
--static int update_time(struct inode *inode, struct timespec64 *time, int flags)
-+int update_time(struct inode *inode, struct timespec64 *time, int flags)
- {
- 	if (inode->i_op->update_time)
- 		return inode->i_op->update_time(inode, time, flags);
 diff --git a/fs/namespace.c b/fs/namespace.c
 index 659a8f39c61af..1283670737826 100644
 --- a/fs/namespace.c
@@ -147,24 +134,11 @@ index 5dbce4dcc1a7d..3e6ba363b7775 100644
  {
  	unsigned int p_space;
  	int ret;
-diff --git a/fs/sync.c b/fs/sync.c
-index 1373a610dc784..b7b5a0a0df6ff 100644
---- a/fs/sync.c
-+++ b/fs/sync.c
-@@ -28,7 +28,7 @@
-  * wait == 1 case since in that case write_inode() functions do
-  * sync_dirty_buffer() and thus effectively write one block at a time.
-  */
--static int __sync_filesystem(struct super_block *sb, int wait)
-+int __sync_filesystem(struct super_block *sb, int wait)
- {
- 	if (wait)
- 		sync_inodes_sb(sb);
 diff --git a/include/linux/fs.h b/include/linux/fs.h
-index e7a633353fd20..376ddf1965aa2 100644
+index 1cb616fc11053..02ce64c28ef15 100644
 --- a/include/linux/fs.h
 +++ b/include/linux/fs.h
-@@ -1381,6 +1381,7 @@ extern void fasync_free(struct fasync_struct *);
+@@ -1378,6 +1378,7 @@ extern void fasync_free(struct fasync_struct *);
  /* can be called from interrupts */
  extern void kill_fasync(struct fasync_struct **, int, int);
  
@@ -172,7 +146,7 @@ index e7a633353fd20..376ddf1965aa2 100644
  extern void __f_setown(struct file *filp, struct pid *, enum pid_type, int force);
  extern int f_setown(struct file *filp, unsigned long arg, int force);
  extern void f_delown(struct file *filp);
-@@ -2092,6 +2093,7 @@ struct file_operations {
+@@ -2091,6 +2092,7 @@ struct file_operations {
  	ssize_t (*sendpage) (struct file *, struct page *, int, size_t, loff_t *, int);
  	unsigned long (*get_unmapped_area)(struct file *, unsigned long, unsigned long, unsigned long, unsigned long);
  	int (*check_flags)(int);
@@ -180,7 +154,7 @@ index e7a633353fd20..376ddf1965aa2 100644
  	int (*flock) (struct file *, int, struct file_lock *);
  	ssize_t (*splice_write)(struct pipe_inode_info *, struct file *, loff_t *, size_t, unsigned int);
  	ssize_t (*splice_read)(struct file *, loff_t *, struct pipe_inode_info *, size_t, unsigned int);
-@@ -2613,6 +2615,7 @@ extern int current_umask(void);
+@@ -2614,6 +2616,7 @@ extern int current_umask(void);
  extern void ihold(struct inode * inode);
  extern void iput(struct inode *);
  extern int generic_update_time(struct inode *, struct timespec64 *, int);
@@ -188,7 +162,7 @@ index e7a633353fd20..376ddf1965aa2 100644
  
  /* /sys/fs */
  extern struct kobject *fs_kobj;
-@@ -2776,6 +2779,7 @@ static inline bool sb_is_blkdev_sb(struct super_block *sb)
+@@ -2777,6 +2780,7 @@ static inline bool sb_is_blkdev_sb(struct super_block *sb)
  }
  
  void emergency_thaw_all(void);
@@ -197,7 +171,7 @@ index e7a633353fd20..376ddf1965aa2 100644
  extern const struct file_operations def_blk_fops;
  extern const struct file_operations def_chr_fops;
 diff --git a/include/linux/lockdep.h b/include/linux/lockdep.h
-index 9fe165beb0f9e..e47f7e15eeaf7 100644
+index 467b94257105e..dab20282c82e2 100644
 --- a/include/linux/lockdep.h
 +++ b/include/linux/lockdep.h
 @@ -248,6 +248,8 @@ static inline int lockdep_match_key(struct lockdep_map *lock,
@@ -245,7 +219,7 @@ index a55179fd60fc3..8e21c53cf8831 100644
 +			 unsigned int flags);
  #endif
 diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index bf1c00c881e48..e0aaf34974df5 100644
+index 2270ec68f10a1..fbb8e650c1749 100644
 --- a/kernel/locking/lockdep.c
 +++ b/kernel/locking/lockdep.c
 @@ -189,7 +189,7 @@ static
