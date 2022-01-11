@@ -151,10 +151,10 @@ index d6c0042e3aa0d..1f11c655a632b 100644
  # Give 'page_alloc' its own module-parameter namespace
  page-alloc-y := page_alloc.o
 diff --git a/mm/filemap.c b/mm/filemap.c
-index daa0e23a6ee66..1c1f517516f26 100644
+index 39c4c46c61337..c9491cd04c85b 100644
 --- a/mm/filemap.c
 +++ b/mm/filemap.c
-@@ -3358,7 +3358,7 @@ vm_fault_t filemap_page_mkwrite(struct vm_fault *vmf)
+@@ -3356,7 +3356,7 @@ vm_fault_t filemap_page_mkwrite(struct vm_fault *vmf)
  	vm_fault_t ret = VM_FAULT_LOCKED;
  
  	sb_start_pagefault(mapping->host->i_sb);

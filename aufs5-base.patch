@@ -2,10 +2,10 @@ SPDX-License-Identifier: GPL-2.0
 aufs5.x-rcN base patch
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 5250298d28170..6b11c93d6750a 100644
+index dd36acc87ce62..0cfff91bfa5e2 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -3169,6 +3169,19 @@ F:	include/uapi/linux/audit.h
+@@ -3179,6 +3179,19 @@ F:	include/uapi/linux/audit.h
  F:	kernel/audit*
  F:	lib/*audit.c
  
@@ -26,7 +26,7 @@ index 5250298d28170..6b11c93d6750a 100644
  M:	Miguel Ojeda <ojeda@kernel.org>
  S:	Maintained
 diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index a154cab6cd989..52776d48e306a 100644
+index c3a36cfaa855a..4bcea5a2fc25f 100644
 --- a/drivers/block/loop.c
 +++ b/drivers/block/loop.c
 @@ -635,6 +635,24 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
@@ -90,7 +90,7 @@ index 9c6c6a3e2de51..02382fa9bd341 100644
  		return error;
  
 diff --git a/fs/namespace.c b/fs/namespace.c
-index 659a8f39c61af..1283670737826 100644
+index b696543adab84..c45740054bc7e 100644
 --- a/fs/namespace.c
 +++ b/fs/namespace.c
 @@ -808,6 +808,12 @@ static inline int check_mnt(struct mount *mnt)
@@ -135,7 +135,7 @@ index 5dbce4dcc1a7d..3e6ba363b7775 100644
  	unsigned int p_space;
  	int ret;
 diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 1cb616fc11053..02ce64c28ef15 100644
+index bbf812ce89a8c..ac21259fbeda6 100644
 --- a/include/linux/fs.h
 +++ b/include/linux/fs.h
 @@ -1378,6 +1378,7 @@ extern void fasync_free(struct fasync_struct *);
@@ -154,7 +154,7 @@ index 1cb616fc11053..02ce64c28ef15 100644
  	int (*flock) (struct file *, int, struct file_lock *);
  	ssize_t (*splice_write)(struct pipe_inode_info *, struct file *, loff_t *, size_t, unsigned int);
  	ssize_t (*splice_read)(struct file *, loff_t *, struct pipe_inode_info *, size_t, unsigned int);
-@@ -2614,6 +2616,7 @@ extern int current_umask(void);
+@@ -2613,6 +2615,7 @@ extern int current_umask(void);
  extern void ihold(struct inode * inode);
  extern void iput(struct inode *);
  extern int generic_update_time(struct inode *, struct timespec64 *, int);
@@ -162,7 +162,7 @@ index 1cb616fc11053..02ce64c28ef15 100644
  
  /* /sys/fs */
  extern struct kobject *fs_kobj;
-@@ -2777,6 +2780,7 @@ static inline bool sb_is_blkdev_sb(struct super_block *sb)
+@@ -2776,6 +2779,7 @@ static inline bool sb_is_blkdev_sb(struct super_block *sb)
  }
  
  void emergency_thaw_all(void);

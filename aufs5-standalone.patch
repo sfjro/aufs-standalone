@@ -66,7 +66,7 @@ index 45437f8e1003e..786af52904fcf 100644
  void __init files_init(void)
  {
 diff --git a/fs/namespace.c b/fs/namespace.c
-index 1283670737826..db99365620118 100644
+index c45740054bc7e..d3d7506356104 100644
 --- a/fs/namespace.c
 +++ b/fs/namespace.c
 @@ -439,6 +439,7 @@ void __mnt_drop_write(struct vfsmount *mnt)
