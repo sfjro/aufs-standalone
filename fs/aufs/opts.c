@@ -378,11 +378,6 @@ const char *au_optstr_wbr_copyup(int wbr_copyup)
 
 /* ---------------------------------------------------------------------- */
 
-void au_opts_free(struct au_opts *opts)
-{
-	/* empty */
-}
-
 int au_opt_add(struct au_opt *opt, char *opt_str, unsigned long sb_flags,
 	       aufs_bindex_t bindex)
 {
@@ -417,13 +412,6 @@ int au_opt_add(struct au_opt *opt, char *opt_str, unsigned long sb_flags,
 
 out:
 	return err;
-}
-
-/* called without aufs lock */
-int au_opts_parse(struct super_block *sb, char *str, struct au_opts *opts)
-{
-	/* empty */
-	return 0;
 }
 
 static int au_opt_wbr_create(struct super_block *sb,

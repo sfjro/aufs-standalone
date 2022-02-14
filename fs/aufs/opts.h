@@ -232,11 +232,9 @@ const char *au_optstr_wbr_create(int wbr_create);
 int au_wbr_copyup_val(char *str);
 const char *au_optstr_wbr_copyup(int wbr_copyup);
 
-void au_opts_free(struct au_opts *opts);
 int au_opt_add(struct au_opt *opt, char *opt_str, unsigned long sb_flags,
 	       aufs_bindex_t bindex);
 struct super_block;
-int au_opts_parse(struct super_block *sb, char *str, struct au_opts *opts);
 int au_opts_verify(struct super_block *sb, unsigned long sb_flags,
 		   unsigned int pending);
 int au_opts_mount(struct super_block *sb, struct au_opts *opts);

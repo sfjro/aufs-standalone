@@ -688,7 +688,7 @@ out:
 	return err;
 }
 
-static void au_remount_refresh(struct super_block *sb, unsigned int do_idop)
+void au_remount_refresh(struct super_block *sb, unsigned int do_idop)
 {
 	int err, e;
 	unsigned int udba;
@@ -749,91 +749,6 @@ static void au_remount_refresh(struct super_block *sb, unsigned int do_idop)
 		AuIOErr("refresh failed, ignored, %d\n", err);
 }
 
-/* stop extra interpretation of errno in mount(8), and strange error messages */
-static int cvt_err(int err)
-{
-	AuTraceErr(err);
-
-	switch (err) {
-	case -ENOENT:
-	case -ENOTDIR:
-	case -EEXIST:
-	case -EIO:
-		err = -EINVAL;
-	}
-	return err;
-}
-
-static int aufs_remount_fs(struct super_block *sb, int *flags, char *data)
-{
-	int err, do_dx;
-	unsigned int mntflags;
-	struct au_opts opts = {
-		.opt = NULL
-	};
-	struct dentry *root;
-	struct inode *inode;
-	struct au_sbinfo *sbinfo;
-
-	err = 0;
-	root = sb->s_root;
-	if (!data || !*data) {
-		err = si_write_lock(sb, AuLock_FLUSH | AuLock_NOPLM);
-		if (!err) {
-			di_write_lock_child(root);
-			err = au_opts_verify(sb, *flags, /*pending*/0);
-			aufs_write_unlock(root);
-		}
-		goto out;
-	}
-
-	err = -ENOMEM;
-	opts.opt = (void *)__get_free_page(GFP_NOFS);
-	if (unlikely(!opts.opt))
-		goto out;
-	opts.max_opt = PAGE_SIZE / sizeof(*opts.opt);
-	opts.flags = AuOpts_REMOUNT;
-	opts.sb_flags = *flags;
-
-	/* parse it before aufs lock */
-	err = au_opts_parse(sb, data, &opts);
-	if (unlikely(err))
-		goto out_opts;
-
-	sbinfo = au_sbi(sb);
-	inode = d_inode(root);
-	inode_lock(inode);
-	err = si_write_lock(sb, AuLock_FLUSH | AuLock_NOPLM);
-	if (unlikely(err))
-		goto out_mtx;
-	di_write_lock_child(root);
-
-	/* au_opts_remount() may return an error */
-	err = au_opts_remount(sb, &opts);
-	au_opts_free(&opts);
-
-	if (au_ftest_opts(opts.flags, REFRESH))
-		au_remount_refresh(sb, au_ftest_opts(opts.flags, REFRESH_IDOP));
-
-	if (au_ftest_opts(opts.flags, REFRESH_DYAOP)) {
-		mntflags = au_mntflags(sb);
-		do_dx = !!au_opt_test(mntflags, DIO);
-		au_dy_arefresh(do_dx);
-	}
-
-	au_fhsm_wrote_all(sb, /*force*/1); /* ?? */
-	aufs_write_unlock(root);
-
-out_mtx:
-	inode_unlock(inode);
-out_opts:
-	free_page((unsigned long)opts.opt);
-out:
-	err = cvt_err(err);
-	AuTraceErr(err);
-	return err;
-}
-
 const struct super_operations aufs_sop = {
 	.alloc_inode	= aufs_alloc_inode,
 	.destroy_inode	= aufs_destroy_inode,
@@ -843,8 +758,7 @@ const struct super_operations aufs_sop = {
 	.show_options	= aufs_show_options,
 	.statfs		= aufs_statfs,
 	.put_super	= aufs_put_super,
-	.sync_fs	= aufs_sync_fs,
-	.remount_fs	= aufs_remount_fs
+	.sync_fs	= aufs_sync_fs
 };
 
 /* ---------------------------------------------------------------------- */
