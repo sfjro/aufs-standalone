@@ -19,6 +19,101 @@ struct au_fsctx_opts {
 	struct au_opts opts;
 };
 
+/* stop extra interpretation of errno in mount(8), and strange error messages */
+static int cvt_err(int err)
+{
+	AuTraceErr(err);
+
+	switch (err) {
+	case -ENOENT:
+	case -ENOTDIR:
+	case -EEXIST:
+	case -EIO:
+		err = -EINVAL;
+	}
+	return err;
+}
+
+static int au_fsctx_fill_super(struct super_block *sb, struct fs_context *fc)
+{
+	int err;
+	struct au_fsctx_opts *a = fc->fs_private;
+	struct au_sbinfo *sbinfo = a->sbinfo;
+	struct dentry *root;
+	struct inode *inode;
+
+	sbinfo->si_sb = sb;
+	sb->s_fs_info = sbinfo;
+	kobject_get(&sbinfo->si_kobj);
+
+	__si_write_lock(sb);
+	si_pid_set(sb);
+	au_sbilist_add(sb);
+
+	/* all timestamps always follow the ones on the branch */
+	sb->s_flags |= SB_NOATIME | SB_NODIRATIME;
+	sb->s_flags |= SB_I_VERSION; /* do we really need this? */
+	sb->s_op = &aufs_sop;
+	sb->s_d_op = &aufs_dop;
+	sb->s_magic = AUFS_SUPER_MAGIC;
+	sb->s_maxbytes = 0;
+	sb->s_stack_depth = 1;
+	au_export_init(sb);
+	au_xattr_init(sb);
+
+	err = au_alloc_root(sb);
+	if (unlikely(err)) {
+		si_write_unlock(sb);
+		goto out;
+	}
+	root = sb->s_root;
+	inode = d_inode(root);
+	ii_write_lock_parent(inode);
+	aufs_write_unlock(root);
+
+	/* lock vfs_inode first, then aufs. */
+	inode_lock(inode);
+	aufs_write_lock(root);
+	err = au_opts_mount(sb, &a->opts);
+	AuTraceErr(err);
+	if (!err && au_ftest_si(sbinfo, NO_DREVAL)) {
+		sb->s_d_op = &aufs_dop_noreval;
+		/* infofc(fc, "%ps", sb->s_d_op); */
+		pr_info("%ps\n", sb->s_d_op);
+		au_refresh_dop(root, /*force_reval*/0);
+		sbinfo->si_iop_array = aufs_iop_nogetattr;
+		au_refresh_iop(inode, /*force_getattr*/0);
+	}
+	aufs_write_unlock(root);
+	inode_unlock(inode);
+	if (!err)
+		goto out; /* success */
+
+	dput(root);
+	sb->s_root = NULL;
+
+out:
+	if (unlikely(err))
+		kobject_put(&sbinfo->si_kobj);
+	AuTraceErr(err);
+	err = cvt_err(err);
+	AuTraceErr(err);
+	return err;
+}
+
+static int au_fsctx_get_tree(struct fs_context *fc)
+{
+	int err;
+
+	AuDbg("fc %p\n", fc);
+	err = get_tree_nodev(fc, au_fsctx_fill_super);
+
+	AuTraceErr(err);
+	return err;
+}
+
+/* ---------------------------------------------------------------------- */
+
 static void au_fsctx_dump(struct au_opts *opts)
 {
 #ifdef CONFIG_AUFS_DEBUG
@@ -1017,7 +1112,8 @@ static void au_fsctx_free(struct fs_context *fc)
 static const struct fs_context_operations au_fsctx_ops = {
 	.free			= au_fsctx_free,
 	.parse_param		= au_fsctx_parse_param,
-	.parse_monolithic	= au_fsctx_parse_monolithic
+	.parse_monolithic	= au_fsctx_parse_monolithic,
+	.get_tree		= au_fsctx_get_tree
 	/* re-commit later */
 };
 

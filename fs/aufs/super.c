@@ -834,7 +834,7 @@ out:
 	return err;
 }
 
-static const struct super_operations aufs_sop = {
+const struct super_operations aufs_sop = {
 	.alloc_inode	= aufs_alloc_inode,
 	.destroy_inode	= aufs_destroy_inode,
 	.free_inode	= aufs_free_inode,
@@ -849,7 +849,7 @@ static const struct super_operations aufs_sop = {
 
 /* ---------------------------------------------------------------------- */
 
-static int alloc_root(struct super_block *sb)
+int au_alloc_root(struct super_block *sb)
 {
 	int err;
 	struct inode *inode;
@@ -885,118 +885,7 @@ out:
 	return err;
 }
 
-static int aufs_fill_super(struct super_block *sb, void *raw_data,
-			   int silent __maybe_unused)
-{
-	int err;
-	struct au_opts opts = {
-		.opt = NULL
-	};
-	struct au_sbinfo *sbinfo;
-	struct dentry *root;
-	struct inode *inode;
-	char *arg = raw_data;
-
-	if (unlikely(!arg || !*arg)) {
-		err = -EINVAL;
-		pr_err("no arg\n");
-		goto out;
-	}
-
-	err = -ENOMEM;
-	opts.opt = (void *)__get_free_page(GFP_NOFS);
-	if (unlikely(!opts.opt))
-		goto out;
-	opts.max_opt = PAGE_SIZE / sizeof(*opts.opt);
-	opts.sb_flags = sb->s_flags;
-
-	sbinfo = au_si_alloc(sb);
-	AuDebugOn(!sbinfo);
-	err = PTR_ERR(sbinfo);
-	if (unlikely(IS_ERR(sbinfo)))
-		goto out_opts;
-
-	/* all timestamps always follow the ones on the branch */
-	sb->s_flags |= SB_NOATIME | SB_NODIRATIME;
-	sb->s_flags |= SB_I_VERSION; /* do we really need this? */
-	sb->s_op = &aufs_sop;
-	sb->s_d_op = &aufs_dop;
-	sb->s_magic = AUFS_SUPER_MAGIC;
-	sb->s_maxbytes = 0;
-	sb->s_stack_depth = 1;
-	au_export_init(sb);
-	au_xattr_init(sb);
-
-	err = alloc_root(sb);
-	if (unlikely(err)) {
-		si_write_unlock(sb);
-		goto out_info;
-	}
-	root = sb->s_root;
-	inode = d_inode(root);
-
-	/*
-	 * actually we can parse options regardless aufs lock here.
-	 * but at remount time, parsing must be done before aufs lock.
-	 * so we follow the same rule.
-	 */
-	ii_write_lock_parent(inode);
-	aufs_write_unlock(root);
-	err = au_opts_parse(sb, arg, &opts);
-	if (unlikely(err))
-		goto out_root;
-
-	/* lock vfs_inode first, then aufs. */
-	inode_lock(inode);
-	aufs_write_lock(root);
-	err = au_opts_mount(sb, &opts);
-	au_opts_free(&opts);
-	if (!err && au_ftest_si(sbinfo, NO_DREVAL)) {
-		sb->s_d_op = &aufs_dop_noreval;
-		pr_info("%ps\n", sb->s_d_op);
-		au_refresh_dop(root, /*force_reval*/0);
-		sbinfo->si_iop_array = aufs_iop_nogetattr;
-		au_refresh_iop(inode, /*force_getattr*/0);
-	}
-	aufs_write_unlock(root);
-	inode_unlock(inode);
-	if (!err)
-		goto out_opts; /* success */
-
-out_root:
-	dput(root);
-	sb->s_root = NULL;
-out_info:
-	kobject_put(&sbinfo->si_kobj);
-	sb->s_fs_info = NULL;
-out_opts:
-	free_page((unsigned long)opts.opt);
-out:
-	AuTraceErr(err);
-	err = cvt_err(err);
-	AuTraceErr(err);
-	return err;
-}
-
 /* ---------------------------------------------------------------------- */
-
-static struct dentry *aufs_mount(struct file_system_type *fs_type, int flags,
-				 const char *dev_name __maybe_unused,
-				 void *raw_data)
-{
-	struct dentry *root;
-
-	/* all timestamps always follow the ones on the branch */
-	/* mnt->mnt_flags |= MNT_NOATIME | MNT_NODIRATIME; */
-	root = mount_nodev(fs_type, flags, raw_data, aufs_fill_super);
-	if (IS_ERR(root))
-		goto out;
-
-	au_sbilist_add(root->d_sb);
-
-out:
-	return root;
-}
 
 static void aufs_kill_sb(struct super_block *sb)
 {
@@ -1044,7 +933,8 @@ struct file_system_type aufs_fs_type = {
 	.name		= AUFS_FSTYPE,
 	/* a race between rename and others */
 	.fs_flags	= FS_RENAME_DOES_D_MOVE,
-	.mount		= aufs_mount,
+	.init_fs_context = aufs_fsctx_init,
+	.parameters	= aufs_fsctx_paramspec,
 	.kill_sb	= aufs_kill_sb,
 	/* no need to __module_get() and module_put(). */
 	.owner		= THIS_MODULE,
