@@ -12,6 +12,7 @@
 
 #ifdef __KERNEL__
 
+#include <linux/namei.h>
 #include <linux/path.h>
 
 struct file;
@@ -58,6 +59,8 @@ struct file;
 #define AuOptMask_UDBA	(AuOpt_UDBA_NONE \
 			 | AuOpt_UDBA_REVAL \
 			 | AuOpt_UDBA_HNOTIFY)
+
+#define AuOpt_LkupDirFlags	(LOOKUP_FOLLOW | LOOKUP_DIRECTORY)
 
 #define au_opt_test(flags, name)	(flags & AuOpt_##name)
 #define au_opt_set(flags, name) do { \

@@ -7,7 +7,6 @@
  * mount options/flags
  */
 
-#include <linux/namei.h>
 #include <linux/types.h> /* a distribution requires */
 #include <linux/parser.h>
 #include "aufs.h"
@@ -539,8 +538,6 @@ const char *au_optstr_wbr_copyup(int wbr_copyup)
 
 /* ---------------------------------------------------------------------- */
 
-static const int lkup_dirflags = LOOKUP_FOLLOW | LOOKUP_DIRECTORY;
-
 static void dump_opts(struct au_opts *opts)
 {
 #ifdef CONFIG_AUFS_DEBUG
@@ -783,7 +780,7 @@ static int opt_add(struct au_opt *opt, char *opt_str, unsigned long sb_flags,
 			add->perm = br_perm_val(p);
 	}
 
-	err = vfsub_kern_path(add->pathname, lkup_dirflags, &add->path);
+	err = vfsub_kern_path(add->pathname, AuOpt_LkupDirFlags, &add->path);
 	if (!err) {
 		if (!p) {
 			add->perm = AuBrPerm_RO;
@@ -809,7 +806,7 @@ static int au_opts_parse_del(struct au_opt_del *del, substring_t args[])
 	del->pathname = args[0].from;
 	AuDbg("del path %s\n", del->pathname);
 
-	err = vfsub_kern_path(del->pathname, lkup_dirflags, &del->h_path);
+	err = vfsub_kern_path(del->pathname, AuOpt_LkupDirFlags, &del->h_path);
 	if (unlikely(err))
 		pr_err("lookup failed %s (%d)\n", del->pathname, err);
 
@@ -857,7 +854,7 @@ au_opts_parse_mod(struct au_opt_mod *mod, substring_t args[])
 	}
 
 	*p++ = 0;
-	err = vfsub_kern_path(mod->path, lkup_dirflags, &path);
+	err = vfsub_kern_path(mod->path, AuOpt_LkupDirFlags, &path);
 	if (unlikely(err)) {
 		pr_err("lookup failed %s (%d)\n", mod->path, err);
 		goto out;
@@ -935,7 +932,7 @@ au_opts_parse_xino_itrunc_path(struct super_block *sb,
 	struct path path;
 	struct dentry *root;
 
-	err = vfsub_kern_path(args[0].from, lkup_dirflags, &path);
+	err = vfsub_kern_path(args[0].from, AuOpt_LkupDirFlags, &path);
 	if (unlikely(err)) {
 		pr_err("lookup failed %s (%d)\n", args[0].from, err);
 		goto out;
