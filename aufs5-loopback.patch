@@ -2,7 +2,7 @@ SPDX-License-Identifier: GPL-2.0
 aufs5.x-rcN loopback patch
 
 diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index 4bcea5a2fc25f..7d358f3392d3e 100644
+index 0015bd6036a08..9c22144078631 100644
 --- a/drivers/block/loop.c
 +++ b/drivers/block/loop.c
 @@ -509,6 +509,15 @@ static inline void loop_update_dio(struct loop_device *lo)
@@ -115,30 +115,30 @@ index 4bcea5a2fc25f..7d358f3392d3e 100644
  	module_put(THIS_MODULE);
  	return error;
 @@ -1103,6 +1137,7 @@ static int loop_configure(struct loop_device *lo, fmode_t mode,
- static int __loop_clr_fd(struct loop_device *lo, bool release)
+ static void __loop_clr_fd(struct loop_device *lo, bool release)
  {
- 	struct file *filp = NULL;
+ 	struct file *filp;
 +	struct file *virt_filp = lo->lo_backing_virt_file;
  	gfp_t gfp = lo->old_gfp_mask;
- 	int err = 0;
- 	bool partscan = false;
-@@ -1153,6 +1188,7 @@ static int __loop_clr_fd(struct loop_device *lo, bool release)
+ 	struct loop_worker *pos, *worker;
  
+@@ -1148,6 +1183,7 @@ static void __loop_clr_fd(struct loop_device *lo, bool release)
  	spin_lock_irq(&lo->lo_lock);
+ 	filp = lo->lo_backing_file;
  	lo->lo_backing_file = NULL;
 +	lo->lo_backing_virt_file = NULL;
  	spin_unlock_irq(&lo->lo_lock);
  
  	lo->lo_device = NULL;
-@@ -1220,6 +1256,8 @@ static int __loop_clr_fd(struct loop_device *lo, bool release)
+@@ -1209,6 +1245,8 @@ static void __loop_clr_fd(struct loop_device *lo, bool release)
+ 	 * fput can take open_mutex which is usually taken before lo_mutex.
  	 */
- 	if (filp)
- 		fput(filp);
+ 	fput(filp);
 +	if (virt_filp)
 +		fput(virt_filp);
- 	return err;
  }
  
+ static int loop_clr_fd(struct loop_device *lo)
 diff --git a/drivers/block/loop.h b/drivers/block/loop.h
 index 082d4b6bfc6a6..61feca64688df 100644
 --- a/drivers/block/loop.h
@@ -212,15 +212,15 @@ index 7293bee427f96..3345c098d0d47 100644
  
  #endif /* __KERNEL__ */
 diff --git a/fs/aufs/super.c b/fs/aufs/super.c
-index cfa90537d9d38..028ee1ceeed1a 100644
+index 90043afec51c1..0835f6da42d97 100644
 --- a/fs/aufs/super.c
 +++ b/fs/aufs/super.c
-@@ -844,7 +844,10 @@ static const struct super_operations aufs_sop = {
+@@ -758,7 +758,10 @@ const struct super_operations aufs_sop = {
+ 	.show_options	= aufs_show_options,
  	.statfs		= aufs_statfs,
  	.put_super	= aufs_put_super,
- 	.sync_fs	= aufs_sync_fs,
--	.remount_fs	= aufs_remount_fs
-+	.remount_fs	= aufs_remount_fs,
+-	.sync_fs	= aufs_sync_fs
++	.sync_fs	= aufs_sync_fs,
 +#ifdef CONFIG_AUFS_BDEV_LOOP
 +	.real_loop	= aufs_real_loop
 +#endif
@@ -228,10 +228,10 @@ index cfa90537d9d38..028ee1ceeed1a 100644
  
  /* ---------------------------------------------------------------------- */
 diff --git a/include/linux/fs.h b/include/linux/fs.h
-index ac21259fbeda6..6774404aab5e9 100644
+index 5479e6dc18a23..05fe92d076c19 100644
 --- a/include/linux/fs.h
 +++ b/include/linux/fs.h
-@@ -2225,6 +2225,10 @@ struct super_operations {
+@@ -2137,6 +2137,10 @@ struct super_operations {
  				  struct shrink_control *);
  	long (*free_cached_objects)(struct super_block *,
  				    struct shrink_control *);
