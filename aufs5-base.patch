@@ -2,10 +2,10 @@ SPDX-License-Identifier: GPL-2.0
 aufs5.x-rcN base patch
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index fca970a46e77a..81ca8308634c3 100644
+index 05fd080b82f3a..9554f31190578 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -3237,6 +3237,19 @@ F:	include/uapi/linux/audit.h
+@@ -3235,6 +3235,19 @@ F:	include/uapi/linux/audit.h
  F:	kernel/audit*
  F:	lib/*audit.c
  
@@ -26,10 +26,10 @@ index fca970a46e77a..81ca8308634c3 100644
  M:	Miguel Ojeda <ojeda@kernel.org>
  S:	Maintained
 diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index 150012ffb387f..0015bd6036a08 100644
+index 19fe19eaa50e9..9009a0efc4b28 100644
 --- a/drivers/block/loop.c
 +++ b/drivers/block/loop.c
-@@ -635,6 +635,24 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
+@@ -636,6 +636,24 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
  	return error;
  }
  
@@ -90,10 +90,10 @@ index 9c6c6a3e2de51..02382fa9bd341 100644
  		return error;
  
 diff --git a/fs/namespace.c b/fs/namespace.c
-index 40b994a29e90d..a2bad18d05a34 100644
+index de6fae84f1a1a..e189393b34b14 100644
 --- a/fs/namespace.c
 +++ b/fs/namespace.c
-@@ -809,6 +809,12 @@ static inline int check_mnt(struct mount *mnt)
+@@ -839,6 +839,12 @@ static inline int check_mnt(struct mount *mnt)
  	return mnt->mnt_ns == current->nsproxy->mnt_ns;
  }
  
@@ -219,7 +219,7 @@ index a55179fd60fc3..8e21c53cf8831 100644
 +			 unsigned int flags);
  #endif
 diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 4a882f83aeb9d..fad7349cc80e5 100644
+index f8a0212189cad..43e3d1fdd570b 100644
 --- a/kernel/locking/lockdep.c
 +++ b/kernel/locking/lockdep.c
 @@ -189,7 +189,7 @@ static
