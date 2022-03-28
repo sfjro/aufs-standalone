@@ -1,0 +1,76 @@
+commit a7654211a35bea845a3dd0b919d9e7cb957a3134
+Author: J. R. Okajima <hooanon05g@gmail.com>
+Date:   Mon Mar 28 14:44:52 2022 +0900
+
+    [PATCH v5.15-rt] aufs: update compile fix for v5.15+ preempt-rt kernels
+    
+    The AUFS preempt-rt fix from v5.10 was forward ported to v5.15 in yocto
+    commit 3f9f162d9bb0 ("aufs: i_op: Add handling for au_pin_hdir_set_owner
+    with RT kernel") but that isn't quite correct, as we'll stll get:
+    
+    fs/aufs/i_op.c: In function `au_pin_hdir_set_owner':
+    fs/aufs/i_op.c:641:28: error: `struct rw_semaphore' has no member named `rtmutex'
+      p->hdir->hi_inode->i_rwsem.rtmutex.owner = task;
+                                ^
+    This is because there has been some restructuring between v5.10 and v5.15
+    kernels; the <rwsem-rt.h> is gone and there is a new level of indirection:
+    
+        In linux 5.10-rt
+        ----------------
+         -- include/linux/rwsem-rt.h --
+    
+        struct rw_semaphore {
+                atomic_t                readers;
+                struct rt_mutex         rtmutex;
+        #ifdef CONFIG_DEBUG_LOCK_ALLOC
+                struct lockdep_map      dep_map;
+        #endif
+        };
+    
+        In linux 5.15-rt
+        ----------------
+         -- include/linux/rwsem.h --
+    
+        struct rw_semaphore {
+                struct rwbase_rt        rwbase;
+        #ifdef CONFIG_DEBUG_LOCK_ALLOC
+                struct lockdep_map      dep_map;
+        #endif
+        };
+    
+         -- include/linux/rwbase_rt.h --
+    
+        struct rwbase_rt {
+                atomic_t                readers;
+                struct rt_mutex_base    rtmutex;
+        };
+    
+    Hence we need to bounce through the rwbase to get to the rtmutex now.
+    
+    Cc: He Zhe <zhe.he@windriver.com>
+    Signed-off-by: Paul Gortmaker <paul.gortmaker@windriver.com>
+    
+    That was the commit
+    42254105dfe8 2021-08-17 locking/rwsem: Add rtmutex based R/W semaphore implementation
+    in
+    https://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-stable-rt.git
+    
+    See-also: https://github.com/sfjro/aufs5-standalone/issues/10
+    Signed-off-by: J. R. Okajima <hooanon05g@gmail.com>
+
+diff --git a/fs/aufs/i_op.c b/fs/aufs/i_op.c
+index 98c046f7b4a55..09e3c28db07b9 100644
+--- a/fs/aufs/i_op.c
++++ b/fs/aufs/i_op.c
+@@ -623,7 +623,11 @@ int au_pin_hdir_relock(struct au_pin *p)
+ 
+ static void au_pin_hdir_set_owner(struct au_pin *p, struct task_struct *task)
+ {
++#ifdef CONFIG_PREEMPT_RT
++	p->hdir->hi_inode->i_rwsem.rwbase.rtmutex.owner = task;
++#else
+ 	atomic_long_set(&p->hdir->hi_inode->i_rwsem.owner, (long)task);
++#endif
+ }
+ 
+ void au_pin_hdir_acquire_nest(struct au_pin *p)
