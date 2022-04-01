@@ -2,7 +2,7 @@ SPDX-License-Identifier: GPL-2.0
 aufs5.10.82 standalone patch
 
 diff --git a/fs/dcache.c b/fs/dcache.c
-index ddca6240e0db4..30dec552278dc 100644
+index ddca6240e0db..30dec552278d 100644
 --- a/fs/dcache.c
 +++ b/fs/dcache.c
 @@ -1390,6 +1390,7 @@ void d_walk(struct dentry *parent, void *data,
@@ -22,7 +22,7 @@ index ddca6240e0db4..30dec552278dc 100644
  /**
   * d_ancestor - search for an ancestor
 diff --git a/fs/exec.c b/fs/exec.c
-index ca89e0e3ef10f..666565bb411f6 100644
+index ca89e0e3ef10..666565bb411f 100644
 --- a/fs/exec.c
 +++ b/fs/exec.c
 @@ -113,6 +113,7 @@ bool path_noexec(const struct path *path)
@@ -34,7 +34,7 @@ index ca89e0e3ef10f..666565bb411f6 100644
  #ifdef CONFIG_USELIB
  /*
 diff --git a/fs/fcntl.c b/fs/fcntl.c
-index 7cd57fb4e8646..96bc0e48b7467 100644
+index 7cd57fb4e864..96bc0e48b746 100644
 --- a/fs/fcntl.c
 +++ b/fs/fcntl.c
 @@ -85,6 +85,7 @@ int setfl(int fd, struct file *filp, unsigned long arg)
@@ -46,7 +46,7 @@ index 7cd57fb4e8646..96bc0e48b7467 100644
  static void f_modown(struct file *filp, struct pid *pid, enum pid_type type,
                       int force)
 diff --git a/fs/file_table.c b/fs/file_table.c
-index 709ada3151da5..27a3e3c9f2a82 100644
+index 709ada3151da..27a3e3c9f2a8 100644
 --- a/fs/file_table.c
 +++ b/fs/file_table.c
 @@ -162,6 +162,7 @@ struct file *alloc_empty_file(int flags, const struct cred *cred)
@@ -66,7 +66,7 @@ index 709ada3151da5..27a3e3c9f2a82 100644
  void __init files_init(void)
  {
 diff --git a/fs/namespace.c b/fs/namespace.c
-index a256f0f9c6c09..5d6b3e723e913 100644
+index a256f0f9c6c0..5d6b3e723e91 100644
 --- a/fs/namespace.c
 +++ b/fs/namespace.c
 @@ -431,6 +431,7 @@ void __mnt_drop_write(struct vfsmount *mnt)
@@ -94,7 +94,7 @@ index a256f0f9c6c09..5d6b3e723e913 100644
  static void lock_mnt_tree(struct mount *mnt)
  {
 diff --git a/fs/notify/group.c b/fs/notify/group.c
-index a4a4b1c64d32a..86dc2efb1850c 100644
+index a4a4b1c64d32..86dc2efb1850 100644
 --- a/fs/notify/group.c
 +++ b/fs/notify/group.c
 @@ -100,6 +100,7 @@ void fsnotify_get_group(struct fsnotify_group *group)
@@ -106,7 +106,7 @@ index a4a4b1c64d32a..86dc2efb1850c 100644
  /*
   * Drop a reference to a group.  Free it if it's through.
 diff --git a/fs/open.c b/fs/open.c
-index 3aaaad47d9cac..60ae17e35e125 100644
+index 3aaaad47d9ca..60ae17e35e12 100644
 --- a/fs/open.c
 +++ b/fs/open.c
 @@ -65,6 +65,7 @@ int do_truncate(struct dentry *dentry, loff_t length, unsigned int time_attrs,
@@ -118,7 +118,7 @@ index 3aaaad47d9cac..60ae17e35e125 100644
  long vfs_truncate(const struct path *path, loff_t length)
  {
 diff --git a/fs/read_write.c b/fs/read_write.c
-index 75f764b434184..7582bb3fb634b 100644
+index 75f764b43418..7582bb3fb634 100644
 --- a/fs/read_write.c
 +++ b/fs/read_write.c
 @@ -503,6 +503,7 @@ ssize_t vfs_read(struct file *file, char __user *buf, size_t count, loff_t *pos)
@@ -138,7 +138,7 @@ index 75f764b434184..7582bb3fb634b 100644
  /* file_ppos returns &file->f_pos or NULL if file is stream */
  static inline loff_t *file_ppos(struct file *file)
 diff --git a/fs/splice.c b/fs/splice.c
-index 55b5356262085..c13ac0fbac318 100644
+index 55b535626208..c13ac0fbac31 100644
 --- a/fs/splice.c
 +++ b/fs/splice.c
 @@ -763,6 +763,7 @@ long do_splice_from(struct pipe_inode_info *pipe, struct file *out,
@@ -158,7 +158,7 @@ index 55b5356262085..c13ac0fbac318 100644
  /**
   * splice_direct_to_actor - splices data directly between two non-pipes
 diff --git a/fs/sync.c b/fs/sync.c
-index b7b5a0a0df6ff..fa5c7fba7f1ba 100644
+index b7b5a0a0df6f..fa5c7fba7f1b 100644
 --- a/fs/sync.c
 +++ b/fs/sync.c
 @@ -39,6 +39,7 @@ int __sync_filesystem(struct super_block *sb, int wait)
@@ -170,7 +170,7 @@ index b7b5a0a0df6ff..fa5c7fba7f1ba 100644
  /*
   * Write out and wait upon all dirty data associated with this
 diff --git a/fs/xattr.c b/fs/xattr.c
-index cd7a563e8bcd4..7d989d57b0f0d 100644
+index cd7a563e8bcd..7d989d57b0f0 100644
 --- a/fs/xattr.c
 +++ b/fs/xattr.c
 @@ -360,6 +360,7 @@ vfs_getxattr_alloc(struct dentry *dentry, const char *name, char **xattr_value,
@@ -182,7 +182,7 @@ index cd7a563e8bcd4..7d989d57b0f0d 100644
  ssize_t
  __vfs_getxattr(struct dentry *dentry, struct inode *inode, const char *name,
 diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 4550f7a021178..efc579b9a36d9 100644
+index 4550f7a02117..efc579b9a36d 100644
 --- a/kernel/locking/lockdep.c
 +++ b/kernel/locking/lockdep.c
 @@ -209,6 +209,7 @@ inline struct lock_class *lockdep_hlock_class(struct held_lock *hlock)
@@ -194,7 +194,7 @@ index 4550f7a021178..efc579b9a36d9 100644
  
  #ifdef CONFIG_LOCK_STAT
 diff --git a/kernel/task_work.c b/kernel/task_work.c
-index 8d6e1217c451c..0e73637adda86 100644
+index 8d6e1217c451..0e73637adda8 100644
 --- a/kernel/task_work.c
 +++ b/kernel/task_work.c
 @@ -154,3 +154,4 @@ void task_work_run(void)
@@ -203,7 +203,7 @@ index 8d6e1217c451c..0e73637adda86 100644
  }
 +EXPORT_SYMBOL_GPL(task_work_run);
 diff --git a/security/security.c b/security/security.c
-index a864ff824dd3b..d919d763ade5a 100644
+index a864ff824dd3..d919d763ade5 100644
 --- a/security/security.c
 +++ b/security/security.c
 @@ -1094,6 +1094,7 @@ int security_path_rmdir(const struct path *dir, struct dentry *dentry)
