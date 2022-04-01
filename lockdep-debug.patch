@@ -2,15 +2,15 @@ SPDX-License-Identifier: GPL-2.0
 aufs5.11 lockdep patch
 
 diff --git a/include/linux/lockdep.h b/include/linux/lockdep.h
-index e152c49cc3163..78d8963ba9a31 100644
+index e152c49cc316..78d8963ba9a3 100644
 --- a/include/linux/lockdep.h
 +++ b/include/linux/lockdep.h
 diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index ff00031462623..b76744a37ed28 100644
+index ff0003146262..b76744a37ed2 100644
 --- a/kernel/locking/lockdep.c
 +++ b/kernel/locking/lockdep.c
 diff --git a/kernel/locking/lockdep_internals.h b/kernel/locking/lockdep_internals.h
-index de49f9e1c11ba..df5b79a3122b9 100644
+index de49f9e1c11b..df5b79a3122b 100644
 --- a/kernel/locking/lockdep_internals.h
 +++ b/kernel/locking/lockdep_internals.h
 @@ -99,15 +99,15 @@ static const unsigned long LOCKF_USED_IN_IRQ_READ =
