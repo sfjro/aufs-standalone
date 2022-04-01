@@ -2,7 +2,7 @@ SPDX-License-Identifier: GPL-2.0
 aufs5.15.5 kbuild patch
 
 diff --git a/fs/Kconfig b/fs/Kconfig
-index a6313a969bc5f..aca4b89d41a14 100644
+index a6313a969bc5..aca4b89d41a1 100644
 --- a/fs/Kconfig
 +++ b/fs/Kconfig
 @@ -312,6 +312,7 @@ source "fs/sysv/Kconfig"
@@ -14,7 +14,7 @@ index a6313a969bc5f..aca4b89d41a14 100644
  endif # MISC_FILESYSTEMS
  
 diff --git a/fs/Makefile b/fs/Makefile
-index 84c5e4cdfee5a..b4fcdad8412ed 100644
+index 84c5e4cdfee5..b4fcdad8412e 100644
 --- a/fs/Makefile
 +++ b/fs/Makefile
 @@ -138,3 +138,4 @@ obj-$(CONFIG_EFIVAR_FS)		+= efivarfs/
