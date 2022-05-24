@@ -58,7 +58,7 @@ index ada8fe814db9..4ebcd56ea4f0 100644
  /*
   * Variant of alloc_empty_file() that doesn't check and modify nr_files.
 diff --git a/fs/namespace.c b/fs/namespace.c
-index 7a54c6b514a2..ddae5f68ac19 100644
+index 764ec04e4abc..82b830245b21 100644
 --- a/fs/namespace.c
 +++ b/fs/namespace.c
 @@ -456,6 +456,7 @@ void __mnt_drop_write(struct vfsmount *mnt)
@@ -150,7 +150,7 @@ index a21caa5c54c8..ccf9e1681eb7 100644
  /**
   * splice_direct_to_actor - splices data directly between two non-pipes
 diff --git a/fs/xattr.c b/fs/xattr.c
-index 5c8c5175b385..ff7e9ff774b7 100644
+index 998045165916..9c751a763ecf 100644
 --- a/fs/xattr.c
 +++ b/fs/xattr.c
 @@ -384,6 +384,7 @@ vfs_getxattr_alloc(struct user_namespace *mnt_userns, struct dentry *dentry,
