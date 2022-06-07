@@ -184,6 +184,7 @@ static void dy_aop(struct au_dykey *key, const void *h_op,
 	DySetAop(error_remove_page);
 	DySetAop(swap_activate);
 	DySetAop(swap_deactivate);
+	DySetAop(swap_rw);
 
 	DyDbgSize(cnt, *h_aop);
 }
