@@ -176,7 +176,7 @@ static void dy_aop(struct au_dykey *key, const void *h_op,
 	AuDbg("%s\n", au_sbtype(h_sb));
 
 	DySetAop(writepage);
-	DySetAopForce(readpage);	/* force */
+	DySetAopForce(read_folio);	/* force */
 	DySetAop(writepages);
 	DySetAop(dirty_folio);
 	DySetAop(invalidate_folio);
@@ -184,8 +184,8 @@ static void dy_aop(struct au_dykey *key, const void *h_op,
 	DySetAop(write_begin);
 	DySetAop(write_end);
 	DySetAop(bmap);
-	DySetAop(releasepage);
-	DySetAop(freepage);
+	DySetAop(release_folio);
+	DySetAop(free_folio);
 	/* this one will be changed according to an aufs mount option */
 	DySetAop(direct_IO);
 	DySetAop(migratepage);
@@ -197,6 +197,7 @@ static void dy_aop(struct au_dykey *key, const void *h_op,
 	DySetAop(error_remove_page);
 	DySetAop(swap_activate);
 	DySetAop(swap_deactivate);
+	DySetAop(swap_rw);
 
 	DyDbgSize(cnt, *h_aop);
 }
