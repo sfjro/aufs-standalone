@@ -120,10 +120,10 @@ index bc8f326be0ce..7ef2c8662740 100644
  		void *buf, int len, unsigned int gup_flags);
  extern int access_remote_vm(struct mm_struct *mm, unsigned long addr,
 diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
-index b34ff2cdbc4f..e941cba9bf5b 100644
+index c29ab4c0cd5c..51753b926421 100644
 --- a/include/linux/mm_types.h
 +++ b/include/linux/mm_types.h
-@@ -362,6 +362,9 @@ struct vm_region {
+@@ -367,6 +367,9 @@ struct vm_region {
  	unsigned long	vm_top;		/* region allocated to here */
  	unsigned long	vm_pgoff;	/* the offset in vm_file corresponding to vm_start */
  	struct file	*vm_file;	/* the backing file or NULL */
@@ -133,7 +133,7 @@ index b34ff2cdbc4f..e941cba9bf5b 100644
  
  	int		vm_usage;	/* region usage count (access under nommu_region_sem) */
  	bool		vm_icache_flushed : 1; /* true if the icache has been flushed for
-@@ -458,6 +461,9 @@ struct vm_area_struct {
+@@ -463,6 +466,9 @@ struct vm_area_struct {
  	unsigned long vm_pgoff;		/* Offset (within vm_file) in PAGE_SIZE
  					   units */
  	struct file * vm_file;		/* File we map to (can be NULL). */
@@ -166,10 +166,10 @@ index 6f9ffa968a1a..f1e338fa3d10 100644
  obj-$(CONFIG_GENERIC_IOREMAP) += ioremap.o
 +obj-$(CONFIG_AUFS_FS:m=y) += prfile.o
 diff --git a/mm/filemap.c b/mm/filemap.c
-index 9daeaab36081..aefc223f8e89 100644
+index ac3775c1ce4c..7d1a79a23eed 100644
 --- a/mm/filemap.c
 +++ b/mm/filemap.c
-@@ -3421,7 +3421,7 @@ vm_fault_t filemap_page_mkwrite(struct vm_fault *vmf)
+@@ -3422,7 +3422,7 @@ vm_fault_t filemap_page_mkwrite(struct vm_fault *vmf)
  	vm_fault_t ret = VM_FAULT_LOCKED;
  
  	sb_start_pagefault(mapping->host->i_sb);
