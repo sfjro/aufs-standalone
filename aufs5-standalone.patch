@@ -110,7 +110,7 @@ index 1d57fbde2feb..50d04ab40175 100644
  long vfs_truncate(const struct path *path, loff_t length)
  {
 diff --git a/fs/read_write.c b/fs/read_write.c
-index b1b1cdfee9d3..c93e7fd16917 100644
+index e0777eefd846..5e4413802f73 100644
 --- a/fs/read_write.c
 +++ b/fs/read_write.c
 @@ -489,6 +489,7 @@ ssize_t vfs_read(struct file *file, char __user *buf, size_t count, loff_t *pos)
@@ -162,7 +162,7 @@ index e8dd03e4561e..fd922e39d42d 100644
  ssize_t
  __vfs_getxattr(struct dentry *dentry, struct inode *inode, const char *name,
 diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 11d509ef5168..1cd8e9d04b04 100644
+index dedf7da3dd4a..2c74c70f4816 100644
 --- a/kernel/locking/lockdep.c
 +++ b/kernel/locking/lockdep.c
 @@ -238,6 +238,7 @@ inline struct lock_class *lockdep_hlock_class(struct held_lock *hlock)
