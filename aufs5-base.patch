@@ -2,7 +2,7 @@ SPDX-License-Identifier: GPL-2.0
 aufs5.x-rcN base patch
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 8a5012ba6ff9..b8abd16b7fe5 100644
+index d30f26e07cd3..2331a15f3550 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
 @@ -3426,6 +3426,19 @@ F:	include/uapi/linux/audit.h
@@ -26,7 +26,7 @@ index 8a5012ba6ff9..b8abd16b7fe5 100644
  M:	Miguel Ojeda <ojeda@kernel.org>
  S:	Maintained
 diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index e3c0ba93c1a3..e3db517a72e0 100644
+index ad92192c7d61..8ca56da3ca69 100644
 --- a/drivers/block/loop.c
 +++ b/drivers/block/loop.c
 @@ -645,6 +645,24 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
@@ -55,7 +55,7 @@ index e3c0ba93c1a3..e3db517a72e0 100644
  
  static ssize_t loop_attr_show(struct device *dev, char *page,
 diff --git a/fs/dcache.c b/fs/dcache.c
-index c5dc32a59c76..e23352b3e5ea 100644
+index bb0c4d0038db..d753ad7d77e6 100644
 --- a/fs/dcache.c
 +++ b/fs/dcache.c
 @@ -1345,7 +1345,7 @@ enum d_walk_ret {
@@ -90,7 +90,7 @@ index 146c9ab0cd4b..c980a0524118 100644
  		return error;
  
 diff --git a/fs/namespace.c b/fs/namespace.c
-index 68789f896f08..4820d0c01f5b 100644
+index df137ba19d37..faae7f8644ac 100644
 --- a/fs/namespace.c
 +++ b/fs/namespace.c
 @@ -852,6 +852,12 @@ static inline int check_mnt(struct mount *mnt)

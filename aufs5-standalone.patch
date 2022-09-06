@@ -2,7 +2,7 @@ SPDX-License-Identifier: GPL-2.0
 aufs5.x-rcN standalone patch
 
 diff --git a/fs/dcache.c b/fs/dcache.c
-index e23352b3e5ea..8698e6da74d9 100644
+index d753ad7d77e6..1a3b40ebc12b 100644
 --- a/fs/dcache.c
 +++ b/fs/dcache.c
 @@ -1450,6 +1450,7 @@ void d_walk(struct dentry *parent, void *data,
@@ -13,7 +13,7 @@ index e23352b3e5ea..8698e6da74d9 100644
  
  struct check_mount {
  	struct vfsmount *mnt;
-@@ -3035,6 +3036,7 @@ void d_exchange(struct dentry *dentry1, struct dentry *dentry2)
+@@ -3061,6 +3062,7 @@ void d_exchange(struct dentry *dentry1, struct dentry *dentry2)
  
  	write_sequnlock(&rename_lock);
  }
@@ -22,7 +22,7 @@ index e23352b3e5ea..8698e6da74d9 100644
  /**
   * d_ancestor - search for an ancestor
 diff --git a/fs/exec.c b/fs/exec.c
-index f793221f4eb6..6ac8c0731b3c 100644
+index 9a5ca7b82bfc..22cda82470f0 100644
 --- a/fs/exec.c
 +++ b/fs/exec.c
 @@ -112,6 +112,7 @@ bool path_noexec(const struct path *path)
@@ -58,7 +58,7 @@ index 99c6796c9f28..ad533dcedfec 100644
  /*
   * Variant of alloc_empty_file() that doesn't check and modify nr_files.
 diff --git a/fs/namespace.c b/fs/namespace.c
-index 4820d0c01f5b..4760af5fdac2 100644
+index faae7f8644ac..0310c99a83dd 100644
 --- a/fs/namespace.c
 +++ b/fs/namespace.c
 @@ -456,6 +456,7 @@ void __mnt_drop_write(struct vfsmount *mnt)
@@ -183,7 +183,7 @@ index dff75bcde151..30b814618535 100644
  }
 +EXPORT_SYMBOL_GPL(task_work_run);
 diff --git a/security/security.c b/security/security.c
-index 14d30fec8a00..ac8a6ea93aca 100644
+index 4b95de24bc8d..139e1443c49b 100644
 --- a/security/security.c
 +++ b/security/security.c
 @@ -1165,6 +1165,7 @@ int security_path_rmdir(const struct path *dir, struct dentry *dentry)
