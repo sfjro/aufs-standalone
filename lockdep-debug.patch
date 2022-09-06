@@ -1,0 +1,11 @@
+SPDX-License-Identifier: GPL-2.0
+aufs5.10.140 lockdep patch
+
+diff --git a/include/linux/lockdep.h b/include/linux/lockdep.h
+index 02dab569a2a0..75931322b295 100644
+--- a/include/linux/lockdep.h
++++ b/include/linux/lockdep.h
+diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
+index 5a3affee7a9b..a0d454cf4a52 100644
+--- a/kernel/locking/lockdep.c
++++ b/kernel/locking/lockdep.c
