@@ -22,10 +22,10 @@ index d753ad7d77e6..1a3b40ebc12b 100644
  /**
   * d_ancestor - search for an ancestor
 diff --git a/fs/exec.c b/fs/exec.c
-index 9a5ca7b82bfc..22cda82470f0 100644
+index d046dbb9cbd0..5b9023e75de0 100644
 --- a/fs/exec.c
 +++ b/fs/exec.c
-@@ -112,6 +112,7 @@ bool path_noexec(const struct path *path)
+@@ -111,6 +111,7 @@ bool path_noexec(const struct path *path)
  	return (path->mnt->mnt_flags & MNT_NOEXEC) ||
  	       (path->mnt->mnt_sb->s_iflags & SB_I_NOEXEC);
  }
@@ -98,7 +98,7 @@ index 1de6631a3925..3008eb37a18d 100644
  /*
   * Drop a reference to a group.  Free it if it's through.
 diff --git a/fs/open.c b/fs/open.c
-index 8a813fa5ca56..29f5960ec109 100644
+index cf7e5c350a54..c99195ee46ba 100644
 --- a/fs/open.c
 +++ b/fs/open.c
 @@ -66,6 +66,7 @@ int do_truncate(struct user_namespace *mnt_userns, struct dentry *dentry,
@@ -110,7 +110,7 @@ index 8a813fa5ca56..29f5960ec109 100644
  long vfs_truncate(const struct path *path, loff_t length)
  {
 diff --git a/fs/read_write.c b/fs/read_write.c
-index 1a261dcf1778..937646c50ea4 100644
+index 328ce8cf9a85..59931848f794 100644
 --- a/fs/read_write.c
 +++ b/fs/read_write.c
 @@ -477,6 +477,7 @@ ssize_t vfs_read(struct file *file, char __user *buf, size_t count, loff_t *pos)
@@ -121,7 +121,7 @@ index 1a261dcf1778..937646c50ea4 100644
  
  static ssize_t new_sync_write(struct file *filp, const char __user *buf, size_t len, loff_t *ppos)
  {
-@@ -586,6 +587,7 @@ ssize_t vfs_write(struct file *file, const char __user *buf, size_t count, loff_
+@@ -592,6 +593,7 @@ ssize_t vfs_write(struct file *file, const char __user *buf, size_t count, loff_
  	file_end_write(file);
  	return ret;
  }

@@ -144,7 +144,7 @@ index cf97f3884fda..a783130a669d 100644
  
  #ifdef CONFIG_SWAP
 diff --git a/kernel/fork.c b/kernel/fork.c
-index 90c85b17bf69..55406414ade4 100644
+index 2b6bd511c6ed..944adfb5189a 100644
 --- a/kernel/fork.c
 +++ b/kernel/fork.c
 @@ -662,7 +662,7 @@ static __latent_entropy int dup_mmap(struct mm_struct *mm,
