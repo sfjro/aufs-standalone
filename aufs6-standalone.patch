@@ -22,7 +22,7 @@ index 519321f32f95..267e0c65914a 100644
  /**
   * d_ancestor - search for an ancestor
 diff --git a/fs/exec.c b/fs/exec.c
-index 349a5da91efe..05d07dfb214b 100644
+index a0b1f0337a62..2038fdb508c9 100644
 --- a/fs/exec.c
 +++ b/fs/exec.c
 @@ -110,6 +110,7 @@ bool path_noexec(const struct path *path)

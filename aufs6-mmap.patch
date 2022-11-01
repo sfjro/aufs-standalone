@@ -179,7 +179,7 @@ index 08341616ae7a..410ca60fbf39 100644
  	if (folio->mapping != mapping) {
  		folio_unlock(folio);
 diff --git a/mm/mmap.c b/mm/mmap.c
-index e270057ed04e..8479a0229430 100644
+index 2def55555e05..fefc5c67e96e 100644
 --- a/mm/mmap.c
 +++ b/mm/mmap.c
 @@ -139,7 +139,7 @@ static void remove_vma(struct vm_area_struct *vma)
@@ -246,7 +246,7 @@ index e270057ed04e..8479a0229430 100644
  
  	pr_warn_once("%s (%d) uses deprecated remap_file_pages() syscall. See Documentation/mm/remap_file_pages.rst.\n",
  		     current->comm, current->pid);
-@@ -2868,10 +2871,34 @@ SYSCALL_DEFINE5(remap_file_pages, unsigned long, start, unsigned long, size,
+@@ -2871,10 +2874,34 @@ SYSCALL_DEFINE5(remap_file_pages, unsigned long, start, unsigned long, size,
  	if (vma->vm_flags & VM_LOCKED)
  		flags |= MAP_LOCKED;
  
@@ -281,7 +281,7 @@ index e270057ed04e..8479a0229430 100644
  out:
  	mmap_write_unlock(mm);
  	if (populate)
-@@ -3224,7 +3251,7 @@ struct vm_area_struct *copy_vma(struct vm_area_struct **vmap,
+@@ -3227,7 +3254,7 @@ struct vm_area_struct *copy_vma(struct vm_area_struct **vmap,
  		if (anon_vma_clone(new_vma, vma))
  			goto out_free_mempol;
  		if (new_vma->vm_file)
