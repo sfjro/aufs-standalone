@@ -72,10 +72,10 @@ index 2fd06f52b6a4..b01030da424f 100644
  		ino = inode->i_ino;
  		pgoff = (loff_t)vma->vm_pgoff << PAGE_SHIFT;
 diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 8bbcccbc5565..d5006a1f4271 100644
+index 974ccca609d2..f5f4fc5e0565 100644
 --- a/include/linux/mm.h
 +++ b/include/linux/mm.h
-@@ -1933,6 +1933,43 @@ static inline void unmap_shared_mapping_range(struct address_space *mapping,
+@@ -1954,6 +1954,43 @@ static inline void unmap_shared_mapping_range(struct address_space *mapping,
  	unmap_mapping_range(mapping, holebegin, holelen, 0);
  }
  
@@ -179,7 +179,7 @@ index 08341616ae7a..410ca60fbf39 100644
  	if (folio->mapping != mapping) {
  		folio_unlock(folio);
 diff --git a/mm/mmap.c b/mm/mmap.c
-index 2def55555e05..fefc5c67e96e 100644
+index 54abd46e6007..de942692ac82 100644
 --- a/mm/mmap.c
 +++ b/mm/mmap.c
 @@ -139,7 +139,7 @@ static void remove_vma(struct vm_area_struct *vma)
@@ -191,7 +191,7 @@ index 2def55555e05..fefc5c67e96e 100644
  	mpol_put(vma_policy(vma));
  	vm_area_free(vma);
  }
-@@ -590,7 +590,7 @@ inline int vma_expand(struct ma_state *mas, struct vm_area_struct *vma,
+@@ -589,7 +589,7 @@ inline int vma_expand(struct ma_state *mas, struct vm_area_struct *vma,
  	if (remove_next) {
  		if (file) {
  			uprobe_munmap(next, next->vm_start, next->vm_end);
@@ -200,7 +200,7 @@ index 2def55555e05..fefc5c67e96e 100644
  		}
  		if (next->anon_vma)
  			anon_vma_merge(vma, next);
-@@ -831,7 +831,7 @@ int __vma_adjust(struct vm_area_struct *vma, unsigned long start,
+@@ -830,7 +830,7 @@ int __vma_adjust(struct vm_area_struct *vma, unsigned long start,
  again:
  		if (file) {
  			uprobe_munmap(next, next->vm_start, next->vm_end);
@@ -209,7 +209,7 @@ index 2def55555e05..fefc5c67e96e 100644
  		}
  		if (next->anon_vma)
  			anon_vma_merge(vma, next);
-@@ -2228,7 +2228,7 @@ int __split_vma(struct mm_struct *mm, struct vm_area_struct *vma,
+@@ -2224,7 +2224,7 @@ int __split_vma(struct mm_struct *mm, struct vm_area_struct *vma,
  		goto out_free_mpol;
  
  	if (new->vm_file)
@@ -218,7 +218,7 @@ index 2def55555e05..fefc5c67e96e 100644
  
  	if (new->vm_ops && new->vm_ops->open)
  		new->vm_ops->open(new);
-@@ -2250,7 +2250,7 @@ int __split_vma(struct mm_struct *mm, struct vm_area_struct *vma,
+@@ -2246,7 +2246,7 @@ int __split_vma(struct mm_struct *mm, struct vm_area_struct *vma,
  	if (new->vm_ops && new->vm_ops->close)
  		new->vm_ops->close(new);
  	if (new->vm_file)
@@ -281,7 +281,7 @@ index 2def55555e05..fefc5c67e96e 100644
  out:
  	mmap_write_unlock(mm);
  	if (populate)
-@@ -3227,7 +3254,7 @@ struct vm_area_struct *copy_vma(struct vm_area_struct **vmap,
+@@ -3222,7 +3249,7 @@ struct vm_area_struct *copy_vma(struct vm_area_struct **vmap,
  		if (anon_vma_clone(new_vma, vma))
  			goto out_free_mempol;
  		if (new_vma->vm_file)
