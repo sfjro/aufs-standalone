@@ -10,7 +10,7 @@
 #include <linux/fs.h>
 #include "aufs.h"
 
-struct posix_acl *aufs_get_acl(struct inode *inode, int type, bool rcu)
+struct posix_acl *aufs_get_inode_acl(struct inode *inode, int type, bool rcu)
 {
 	struct posix_acl *acl;
 	int err;
@@ -40,7 +40,7 @@ struct posix_acl *aufs_get_acl(struct inode *inode, int type, bool rcu)
 	}
 
 	/* always topmost only */
-	acl = get_acl(h_inode, type);
+	acl = get_inode_acl(h_inode, type);
 	if (IS_ERR(acl))
 		forget_cached_acl(inode, type);
 	else
