@@ -341,5 +341,22 @@ static inline int vfsub_removexattr(struct user_namespace *userns,
 	return err;
 }
 
+#ifdef CONFIG_FS_POSIX_ACL
+static inline int vfsub_remove_acl(struct user_namespace *userns,
+				   struct dentry *dentry, const char *name)
+{
+	int err;
+
+	lockdep_off();
+	err = vfs_remove_acl(userns, dentry, name);
+	lockdep_on();
+
+	return err;
+}
+#else
+AuStubInt0(vfsub_remove_acl, struct user_namespace *userns,
+	   struct dentry *dentry, const char *name);
+#endif
+
 #endif /* __KERNEL__ */
 #endif /* __AUFS_VFSUB_H__ */
