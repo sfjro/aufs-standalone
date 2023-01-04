@@ -195,6 +195,8 @@ For aufs-linux tree,
 	CONFIG_LOCKDEP_BITS=21
 	CONFIG_LOCKDEP_CHAINS_BITS=21
 	CONFIG_LOCKDEP_STACK_TRACE_BITS=24
+  Also you will need to expand some constant values in LOCKDEP. Refer
+  to lockdep-debug.patch in aufs-standalone.git.
 
 For aufs-standalone tree,
 There are several ways to build.
@@ -272,6 +274,10 @@ optional. When you meet some problems, they will help you.
   duplication of inode number, which is important for backup tools and
   other utilities. When you find aufs XINO files for tmpfs branch
   growing too much, try this patch.
+- lockdep-debug.patch
+  Similar to some kernel configurations for LOCKDEP (see the top of
+  this section), you will need expand some constants in LOCKDEP for
+  aufs if you enable CONFIG_LOCKDEP.
 
 
 4. Usage
