@@ -312,7 +312,7 @@ AuStubVoid(au_xattr_init, struct super_block *sb);
 
 #ifdef CONFIG_FS_POSIX_ACL
 struct posix_acl *aufs_get_inode_acl(struct inode *inode, int type, bool rcu);
-int aufs_set_acl(struct user_namespace *userns, struct inode *inode,
+int aufs_set_acl(struct user_namespace *userns, struct dentry *dentry,
 		 struct posix_acl *acl, int type);
 #endif
 

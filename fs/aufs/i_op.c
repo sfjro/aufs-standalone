@@ -1023,7 +1023,7 @@ static int aufs_setattr(struct user_namespace *userns, struct dentry *dentry,
 	 */
 	if (!err && (ia->ia_valid & ATTR_MODE)) {
 		h_userns = mnt_user_ns(a->h_path.mnt);
-		err = vfsub_acl_chmod(h_userns, a->h_inode, ia->ia_mode);
+		err = vfsub_acl_chmod(h_userns, a->h_path.dentry, ia->ia_mode);
 	}
 	if (!err)
 		au_cpup_attr_changeable(inode);
@@ -1120,7 +1120,7 @@ ssize_t au_sxattr(struct dentry *dentry, struct inode *inode,
 		h_inode = d_inode(h_path.dentry);
 		if (h_inode->i_op->set_acl) {
 			/* this will call posix_acl_update_mode */
-			err = h_inode->i_op->set_acl(h_userns, h_inode,
+			err = h_inode->i_op->set_acl(h_userns, h_path.dentry,
 						     arg->u.acl_set.acl,
 						     arg->u.acl_set.type);
 		}

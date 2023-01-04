@@ -222,18 +222,18 @@ static inline int vfsub_update_time(struct inode *h_inode,
 
 #ifdef CONFIG_FS_POSIX_ACL
 static inline int vfsub_acl_chmod(struct user_namespace *h_userns,
-				  struct inode *h_inode, umode_t h_mode)
+				  struct dentry *h_dentry, umode_t h_mode)
 {
 	int err;
 
-	err = posix_acl_chmod(h_userns, h_inode, h_mode);
+	err = posix_acl_chmod(h_userns, h_dentry, h_mode);
 	if (err == -EOPNOTSUPP)
 		err = 0;
 	return err;
 }
 #else
 AuStubInt0(vfsub_acl_chmod, struct user_namespace *h_userns,
-	   struct inode *h_inode, umode_t h_mode);
+	   struct dentry *h_dentry, umode_t h_mode);
 #endif
 
 long vfsub_splice_to(struct file *in, loff_t *ppos,
