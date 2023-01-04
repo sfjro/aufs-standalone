@@ -1439,6 +1439,7 @@ struct inode_operations aufs_iop_nogetattr[AuIop_Last],
 		.permission	= aufs_permission,
 #ifdef CONFIG_FS_POSIX_ACL
 		.get_inode_acl	= aufs_get_inode_acl,
+		.get_acl	= aufs_get_acl,
 		.set_acl	= aufs_set_acl, /* unsupport for symlink? */
 #endif
 
@@ -1467,6 +1468,7 @@ struct inode_operations aufs_iop_nogetattr[AuIop_Last],
 		.permission	= aufs_permission,
 #ifdef CONFIG_FS_POSIX_ACL
 		.get_inode_acl	= aufs_get_inode_acl,
+		.get_acl	= aufs_get_acl,
 		.set_acl	= aufs_set_acl,
 #endif
 
@@ -1485,6 +1487,7 @@ struct inode_operations aufs_iop_nogetattr[AuIop_Last],
 		.permission	= aufs_permission,
 #ifdef CONFIG_FS_POSIX_ACL
 		.get_inode_acl	= aufs_get_inode_acl,
+		.get_acl	= aufs_get_acl,
 		.set_acl	= aufs_set_acl,
 #endif
 

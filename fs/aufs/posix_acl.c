@@ -55,6 +55,18 @@ out:
 	return acl;
 }
 
+struct posix_acl *aufs_get_acl(struct user_namespace *userns,
+			       struct dentry *dentry, int type)
+{
+	struct posix_acl *acl;
+	struct inode *inode;
+
+	inode = d_inode(dentry);
+	acl = aufs_get_inode_acl(inode, type, /*rcu*/false);
+
+	return acl;
+}
+
 int aufs_set_acl(struct user_namespace *userns, struct dentry *dentry,
 		 struct posix_acl *acl, int type)
 {
