@@ -1,0 +1,16 @@
+SPDX-License-Identifier: GPL-2.0
+aufs5.15.36 lockdep patch
+
+diff --git a/include/linux/lockdep_types.h b/include/linux/lockdep_types.h
+index 3e726ace5c62..ae7bf46a7a68 100644
+--- a/include/linux/lockdep_types.h
++++ b/include/linux/lockdep_types.h
+@@ -12,7 +12,7 @@
+ 
+ #include <linux/types.h>
+ 
+-#define MAX_LOCKDEP_SUBCLASSES		8UL
++#define MAX_LOCKDEP_SUBCLASSES		(8UL + 4)
+ 
+ enum lockdep_wait_type {
+ 	LD_WAIT_INV = 0,	/* not checked, catch all */
