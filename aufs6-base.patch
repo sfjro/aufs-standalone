@@ -2,10 +2,10 @@ SPDX-License-Identifier: GPL-2.0
 aufs6.x-rcN base patch
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index f61eb221415b..b192cff97244 100644
+index 135d93368d36..7d3230ef47ec 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -3522,6 +3522,19 @@ F:	include/uapi/linux/audit.h
+@@ -3526,6 +3526,19 @@ F:	include/uapi/linux/audit.h
  F:	kernel/audit*
  F:	lib/*audit.c
  
@@ -135,10 +135,10 @@ index 5969b7a1d353..21db9b057d60 100644
  	unsigned int p_space;
  	int ret;
 diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 066555ad1bf8..2d30def9a580 100644
+index c1769a2c5d70..ec560e8704a4 100644
 --- a/include/linux/fs.h
 +++ b/include/linux/fs.h
-@@ -1383,6 +1383,7 @@ extern void fasync_free(struct fasync_struct *);
+@@ -1386,6 +1386,7 @@ extern void fasync_free(struct fasync_struct *);
  /* can be called from interrupts */
  extern void kill_fasync(struct fasync_struct **, int, int);
  
@@ -146,7 +146,7 @@ index 066555ad1bf8..2d30def9a580 100644
  extern void __f_setown(struct file *filp, struct pid *, enum pid_type, int force);
  extern int f_setown(struct file *filp, unsigned long arg, int force);
  extern void f_delown(struct file *filp);
-@@ -2110,6 +2111,7 @@ struct file_operations {
+@@ -2113,6 +2114,7 @@ struct file_operations {
  	ssize_t (*sendpage) (struct file *, struct page *, int, size_t, loff_t *, int);
  	unsigned long (*get_unmapped_area)(struct file *, unsigned long, unsigned long, unsigned long, unsigned long);
  	int (*check_flags)(int);
