@@ -79,7 +79,7 @@ index 8ba434287387..75fdfc50e092 100644
  	unmap_mapping_range(mapping, holebegin, holelen, 0);
  }
  
-+#if IS_ENABLED(CONFIG_AUFS_FS)
++#if 1 /* IS_ENABLED(CONFIG_AUFS_FS) */
 +extern void vma_do_file_update_time(struct vm_area_struct *, const char[], int);
 +extern struct file *vma_do_pr_or_file(struct vm_area_struct *, const char[],
 +				      int);
@@ -127,7 +127,7 @@ index 6613b26a8894..3277e3fbc5d4 100644
  	unsigned long	vm_top;		/* region allocated to here */
  	unsigned long	vm_pgoff;	/* the offset in vm_file corresponding to vm_start */
  	struct file	*vm_file;	/* the backing file or NULL */
-+#if IS_ENABLED(CONFIG_AUFS_FS)
++#if 1 /* IS_ENABLED(CONFIG_AUFS_FS) */
 +	struct file	*vm_prfile;	/* the virtual backing file or NULL */
 +#endif
  
@@ -137,7 +137,7 @@ index 6613b26a8894..3277e3fbc5d4 100644
  	unsigned long vm_pgoff;		/* Offset (within vm_file) in PAGE_SIZE
  					   units */
  	struct file * vm_file;		/* File we map to (can be NULL). */
-+#if IS_ENABLED(CONFIG_AUFS_FS)
++#if 1 /* IS_ENABLED(CONFIG_AUFS_FS) */
 +	struct file *vm_prfile;		/* shadow of vm_file */
 +#endif
  	void * vm_private_data;		/* was vm_pte (shared mem) */
@@ -164,7 +164,7 @@ index 72227b24a616..1fbbbe91a31c 100644
  obj-$(CONFIG_MAPPING_DIRTY_HELPERS) += mapping_dirty_helpers.o
  obj-$(CONFIG_PTDUMP_CORE) += ptdump.o
  obj-$(CONFIG_PAGE_REPORTING) += page_reporting.o
-+obj-$(CONFIG_AUFS_FS:m=y) += prfile.o
++obj-y += prfile.o
 diff --git a/mm/filemap.c b/mm/filemap.c
 index 6ce832dc59e7..8b7a71b6f0e6 100644
 --- a/mm/filemap.c
@@ -231,7 +231,7 @@ index 3f287599a7a3..7e4f3b9208a1 100644
  	unsigned long populate = 0;
  	unsigned long ret = -EINVAL;
  	struct file *file;
-+#if IS_ENABLED(CONFIG_AUFS_FS)
++#if 1 /* IS_ENABLED(CONFIG_AUFS_FS) */
 +	struct file *prfile;
 +#endif
  
@@ -241,7 +241,7 @@ index 3f287599a7a3..7e4f3b9208a1 100644
  		}
  	}
  
-+#if IS_ENABLED(CONFIG_AUFS_FS)
++#if 1 /* IS_ENABLED(CONFIG_AUFS_FS) */
 +	vma_get_file(vma);
 +	file = vma->vm_file;
 +	prfile = vma->vm_prfile;
