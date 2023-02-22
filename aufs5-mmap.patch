@@ -79,7 +79,7 @@ index a7e4a9e7d807..406a1382b1b9 100644
  	unmap_mapping_range(mapping, holebegin, holelen, 0);
  }
  
-+#if IS_ENABLED(CONFIG_AUFS_FS)
++#if 1 /* IS_ENABLED(CONFIG_AUFS_FS) */
 +extern void vma_do_file_update_time(struct vm_area_struct *, const char[], int);
 +extern struct file *vma_do_pr_or_file(struct vm_area_struct *, const char[],
 +				      int);
@@ -127,7 +127,7 @@ index c3a6e6209600..dbb10d7e0131 100644
  	unsigned long	vm_top;		/* region allocated to here */
  	unsigned long	vm_pgoff;	/* the offset in vm_file corresponding to vm_start */
  	struct file	*vm_file;	/* the backing file or NULL */
-+#if IS_ENABLED(CONFIG_AUFS_FS)
++#if 1 /* IS_ENABLED(CONFIG_AUFS_FS) */
 +	struct file	*vm_prfile;	/* the virtual backing file or NULL */
 +#endif
  
@@ -137,7 +137,7 @@ index c3a6e6209600..dbb10d7e0131 100644
  	unsigned long vm_pgoff;		/* Offset (within vm_file) in PAGE_SIZE
  					   units */
  	struct file * vm_file;		/* File we map to (can be NULL). */
-+#if IS_ENABLED(CONFIG_AUFS_FS)
++#if 1 /* IS_ENABLED(CONFIG_AUFS_FS) */
 +	struct file *vm_prfile;		/* shadow of vm_file */
 +#endif
  	void * vm_private_data;		/* was vm_pte (shared mem) */
@@ -164,7 +164,7 @@ index d6c0042e3aa0..6d53148c0f0d 100644
  obj-$(CONFIG_IO_MAPPING) += io-mapping.o
  obj-$(CONFIG_HAVE_BOOTMEM_INFO_NODE) += bootmem_info.o
  obj-$(CONFIG_GENERIC_IOREMAP) += ioremap.o
-+obj-$(CONFIG_AUFS_FS:m=y) += prfile.o
++obj-y += prfile.o
 diff --git a/mm/filemap.c b/mm/filemap.c
 index 39c4c46c6133..c9491cd04c85 100644
 --- a/mm/filemap.c
@@ -231,7 +231,7 @@ index bfb0ea164a90..070b98691889 100644
  	unsigned long populate = 0;
  	unsigned long ret = -EINVAL;
  	struct file *file;
-+#if IS_ENABLED(CONFIG_AUFS_FS)
++#if 1 /* IS_ENABLED(CONFIG_AUFS_FS) */
 +	struct file *prfile;
 +#endif
  
@@ -241,7 +241,7 @@ index bfb0ea164a90..070b98691889 100644
  	if (vma->vm_flags & VM_LOCKED)
  		flags |= MAP_LOCKED;
  
-+#if IS_ENABLED(CONFIG_AUFS_FS)
++#if 1 /* IS_ENABLED(CONFIG_AUFS_FS) */
 +	vma_get_file(vma);
 +	file = vma->vm_file;
 +	prfile = vma->vm_prfile;
