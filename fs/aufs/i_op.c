@@ -8,6 +8,7 @@
  */
 
 #include <linux/device_cgroup.h>
+#include <linux/filelock.h>
 #include <linux/fs_stack.h>
 #include <linux/iversion.h>
 #include <linux/security.h>
