@@ -58,7 +58,7 @@ index 372653b92617..69128fe39b6d 100644
  /*
   * Variant of alloc_empty_file() that doesn't check and modify nr_files.
 diff --git a/fs/namespace.c b/fs/namespace.c
-index 4e4dce8f483c..836f27e4524d 100644
+index 39360cb714ad..445ae8c35d10 100644
 --- a/fs/namespace.c
 +++ b/fs/namespace.c
 @@ -457,6 +457,7 @@ void __mnt_drop_write(struct vfsmount *mnt)
@@ -130,7 +130,7 @@ index 7a2ff6157eda..76f5d4d08687 100644
  /* file_ppos returns &file->f_pos or NULL if file is stream */
  static inline loff_t *file_ppos(struct file *file)
 diff --git a/fs/splice.c b/fs/splice.c
-index cf863787b4e7..906f0ac3ad39 100644
+index b74a37c1a57c..0597fb31c26d 100644
 --- a/fs/splice.c
 +++ b/fs/splice.c
 @@ -855,6 +855,7 @@ long do_splice_from(struct pipe_inode_info *pipe, struct file *out,

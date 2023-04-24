@@ -2,7 +2,7 @@ SPDX-License-Identifier: GPL-2.0
 aufs6.x-rcN base patch
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 8d5bc223f305..269079ad5d05 100644
+index c6545eb54104..0483d81e19db 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
 @@ -3371,6 +3371,19 @@ F:	include/uapi/linux/audit.h
@@ -26,7 +26,7 @@ index 8d5bc223f305..269079ad5d05 100644
  M:	Miguel Ojeda <ojeda@kernel.org>
  S:	Maintained
 diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index 839373451c2b..463edc7c1633 100644
+index bc31bb7072a2..131294601819 100644
 --- a/drivers/block/loop.c
 +++ b/drivers/block/loop.c
 @@ -645,6 +645,24 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
@@ -90,7 +90,7 @@ index b622be119706..9ea58b7bb580 100644
  		return error;
  
 diff --git a/fs/namespace.c b/fs/namespace.c
-index bc0f15257b49..4e4dce8f483c 100644
+index 6836e937ee61..39360cb714ad 100644
 --- a/fs/namespace.c
 +++ b/fs/namespace.c
 @@ -849,6 +849,12 @@ static inline int check_mnt(struct mount *mnt)
@@ -107,7 +107,7 @@ index bc0f15257b49..4e4dce8f483c 100644
   * vfsmount lock must be held for write
   */
 diff --git a/fs/splice.c b/fs/splice.c
-index 2e76dbb81a8f..cf863787b4e7 100644
+index 2c3dec2b6dfa..b74a37c1a57c 100644
 --- a/fs/splice.c
 +++ b/fs/splice.c
 @@ -848,8 +848,8 @@ static int warn_unsupported(struct file *file, const char *op)
