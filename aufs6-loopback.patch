@@ -1,6 +1,198 @@
 SPDX-License-Identifier: GPL-2.0
 aufs6.2 loopback patch
 
+diff --git a/Documentation/filesystems/aufs/README b/Documentation/filesystems/aufs/README
+index 600ac2c0eec6..58cfd7b93922 100644
+--- a/Documentation/filesystems/aufs/README
++++ b/Documentation/filesystems/aufs/README
+@@ -389,7 +389,6 @@ James Burry made a donation (2016/12).
+ Carsten Rose made a donation (2018/9).
+ Porteus Kiosk made a donation (2018/10).
+ huronOS team: Enya Quetzalli made donations (2022/5 and 2023/5).
+-Vasily Mikhaylichenko made a donation (2023/5).
+ 
+ Thank you very much.
+ Donations are always, including future donations, very important and
+diff --git a/arch/x86/boot/Makefile b/arch/x86/boot/Makefile
+index 1b5ff7d21386..9e38ffaadb5d 100644
+--- a/arch/x86/boot/Makefile
++++ b/arch/x86/boot/Makefile
+@@ -34,7 +34,6 @@ targets		+= fdimage fdimage144 fdimage288 image.iso hdimage
+ subdir-		:= compressed
+ 
+ setup-y		+= a20.o bioscall.o cmdline.o copy.o cpu.o cpuflags.o cpucheck.o
+-CFLAGS_main.o += -Wno-array-bounds
+ setup-y		+= early_serial_console.o edd.o header.o main.o memory.o
+ setup-y		+= pm.o pmjump.o printf.o regs.o string.o tty.o video.o
+ setup-y		+= video-mode.o version.o
+diff --git a/arch/x86/lib/Makefile b/arch/x86/lib/Makefile
+index 74bab6f1dd03..4f1a40a86534 100644
+--- a/arch/x86/lib/Makefile
++++ b/arch/x86/lib/Makefile
+@@ -39,7 +39,6 @@ $(obj)/inat.o: $(obj)/inat-tables.c
+ 
+ clean-files := inat-tables.c
+ 
+-CFLAGS_msr-smp.o += -Wno-array-parameter
+ obj-$(CONFIG_SMP) += msr-smp.o cache-smp.o
+ 
+ lib-y := delay.o misc.o cmdline.o cpu.o
+diff --git a/config.jrobm b/config.jrobm
+index afc65d5e4413..eb0f3ddac9c8 100644
+--- a/config.jrobm
++++ b/config.jrobm
+@@ -2,19 +2,17 @@
+ # Automatically generated file; DO NOT EDIT.
+ # Linux/x86 6.2.0 Kernel Configuration
+ #
+-CONFIG_CC_VERSION_TEXT="gcc (Debian 12.2.0-14) 12.2.0"
++CONFIG_CC_VERSION_TEXT="gcc (Debian 8.3.0-6) 8.3.0"
+ CONFIG_CC_IS_GCC=y
+-CONFIG_GCC_VERSION=120200
++CONFIG_GCC_VERSION=80300
+ CONFIG_CLANG_VERSION=0
+ CONFIG_AS_IS_GNU=y
+-CONFIG_AS_VERSION=24000
++CONFIG_AS_VERSION=23101
+ CONFIG_LD_IS_BFD=y
+-CONFIG_LD_VERSION=24000
++CONFIG_LD_VERSION=23101
+ CONFIG_LLD_VERSION=0
+ CONFIG_CC_CAN_LINK=y
+ CONFIG_CC_CAN_LINK_STATIC=y
+-CONFIG_CC_HAS_ASM_GOTO_OUTPUT=y
+-CONFIG_CC_HAS_ASM_GOTO_TIED_OUTPUT=y
+ CONFIG_CC_HAS_ASM_INLINE=y
+ CONFIG_CC_HAS_NO_PROFILE_FN_ATTR=y
+ CONFIG_PAHOLE_VERSION=0
+@@ -174,7 +172,6 @@ CONFIG_CC_HAS_INT128=y
+ CONFIG_CC_IMPLICIT_FALLTHROUGH="-Wimplicit-fallthrough=5"
+ CONFIG_GCC11_NO_ARRAY_BOUNDS=y
+ CONFIG_GCC12_NO_ARRAY_BOUNDS=y
+-CONFIG_CC_NO_ARRAY_BOUNDS=y
+ CONFIG_ARCH_SUPPORTS_INT128=y
+ CONFIG_NUMA_BALANCING=y
+ CONFIG_NUMA_BALANCING_DEFAULT_ENABLED=y
+@@ -440,7 +437,6 @@ CONFIG_MODIFY_LDT_SYSCALL=y
+ CONFIG_HAVE_LIVEPATCH=y
+ # end of Processor type and features
+ 
+-CONFIG_CC_HAS_SLS=y
+ CONFIG_CC_HAS_RETURN_THUNK=y
+ CONFIG_CC_HAS_ENTRY_PADDING=y
+ CONFIG_FUNCTION_PADDING_CFI=11
+@@ -456,7 +452,6 @@ CONFIG_RETHUNK=y
+ CONFIG_CALL_DEPTH_TRACKING=y
+ # CONFIG_CALL_THUNKS_DEBUG is not set
+ CONFIG_CPU_IBRS_ENTRY=y
+-# CONFIG_SLS is not set
+ CONFIG_ARCH_HAS_ADD_PAGES=y
+ CONFIG_ARCH_MHP_MEMMAP_ON_MEMORY_ENABLE=y
+ 
+@@ -3918,16 +3913,9 @@ CONFIG_LSM="yama,loadpin,safesetid,integrity,apparmor,selinux,smack,tomoyo"
+ #
+ # Memory initialization
+ #
+-CONFIG_CC_HAS_AUTO_VAR_INIT_PATTERN=y
+-CONFIG_CC_HAS_AUTO_VAR_INIT_ZERO_BARE=y
+-CONFIG_CC_HAS_AUTO_VAR_INIT_ZERO=y
+ CONFIG_INIT_STACK_NONE=y
+-# CONFIG_INIT_STACK_ALL_PATTERN is not set
+-# CONFIG_INIT_STACK_ALL_ZERO is not set
+ # CONFIG_INIT_ON_ALLOC_DEFAULT_ON is not set
+ # CONFIG_INIT_ON_FREE_DEFAULT_ON is not set
+-CONFIG_CC_HAS_ZERO_CALL_USED_REGS=y
+-# CONFIG_ZERO_CALL_USED_REGS is not set
+ # end of Memory initialization
+ 
+ CONFIG_RANDSTRUCT_NONE=y
+@@ -4328,8 +4316,6 @@ CONFIG_HAVE_ARCH_KGDB=y
+ CONFIG_ARCH_HAS_UBSAN_SANITIZE_ALL=y
+ # CONFIG_UBSAN is not set
+ CONFIG_HAVE_ARCH_KCSAN=y
+-CONFIG_HAVE_KCSAN_COMPILER=y
+-# CONFIG_KCSAN is not set
+ # end of Generic Kernel Debugging Instruments
+ 
+ #
+diff --git a/config.jrotkm b/config.jrotkm
+index 9082e00940bb..5b2449b1beba 100644
+--- a/config.jrotkm
++++ b/config.jrotkm
+@@ -2,19 +2,17 @@
+ # Automatically generated file; DO NOT EDIT.
+ # Linux/x86 6.2.0 Kernel Configuration
+ #
+-CONFIG_CC_VERSION_TEXT="gcc (Debian 12.2.0-14) 12.2.0"
++CONFIG_CC_VERSION_TEXT="gcc (Debian 8.3.0-6) 8.3.0"
+ CONFIG_CC_IS_GCC=y
+-CONFIG_GCC_VERSION=120200
++CONFIG_GCC_VERSION=80300
+ CONFIG_CLANG_VERSION=0
+ CONFIG_AS_IS_GNU=y
+-CONFIG_AS_VERSION=24000
++CONFIG_AS_VERSION=23101
+ CONFIG_LD_IS_BFD=y
+-CONFIG_LD_VERSION=24000
++CONFIG_LD_VERSION=23101
+ CONFIG_LLD_VERSION=0
+ CONFIG_CC_CAN_LINK=y
+ CONFIG_CC_CAN_LINK_STATIC=y
+-CONFIG_CC_HAS_ASM_GOTO_OUTPUT=y
+-CONFIG_CC_HAS_ASM_GOTO_TIED_OUTPUT=y
+ CONFIG_CC_HAS_ASM_INLINE=y
+ CONFIG_CC_HAS_NO_PROFILE_FN_ATTR=y
+ CONFIG_PAHOLE_VERSION=0
+@@ -177,7 +175,6 @@ CONFIG_CC_HAS_INT128=y
+ CONFIG_CC_IMPLICIT_FALLTHROUGH="-Wimplicit-fallthrough=5"
+ CONFIG_GCC11_NO_ARRAY_BOUNDS=y
+ CONFIG_GCC12_NO_ARRAY_BOUNDS=y
+-CONFIG_CC_NO_ARRAY_BOUNDS=y
+ CONFIG_ARCH_SUPPORTS_INT128=y
+ CONFIG_NUMA_BALANCING=y
+ CONFIG_NUMA_BALANCING_DEFAULT_ENABLED=y
+@@ -449,7 +446,6 @@ CONFIG_HAVE_LIVEPATCH=y
+ # CONFIG_LIVEPATCH is not set
+ # end of Processor type and features
+ 
+-CONFIG_CC_HAS_SLS=y
+ CONFIG_CC_HAS_RETURN_THUNK=y
+ CONFIG_CC_HAS_ENTRY_PADDING=y
+ CONFIG_FUNCTION_PADDING_CFI=11
+@@ -467,7 +463,6 @@ CONFIG_CALL_DEPTH_TRACKING=y
+ # CONFIG_CALL_THUNKS_DEBUG is not set
+ CONFIG_CPU_IBPB_ENTRY=y
+ CONFIG_CPU_IBRS_ENTRY=y
+-# CONFIG_SLS is not set
+ CONFIG_ARCH_HAS_ADD_PAGES=y
+ CONFIG_ARCH_MHP_MEMMAP_ON_MEMORY_ENABLE=y
+ 
+@@ -3807,16 +3802,9 @@ CONFIG_LSM="apparmor"
+ #
+ # Memory initialization
+ #
+-CONFIG_CC_HAS_AUTO_VAR_INIT_PATTERN=y
+-CONFIG_CC_HAS_AUTO_VAR_INIT_ZERO_BARE=y
+-CONFIG_CC_HAS_AUTO_VAR_INIT_ZERO=y
+ CONFIG_INIT_STACK_NONE=y
+-# CONFIG_INIT_STACK_ALL_PATTERN is not set
+-# CONFIG_INIT_STACK_ALL_ZERO is not set
+ # CONFIG_INIT_ON_ALLOC_DEFAULT_ON is not set
+ # CONFIG_INIT_ON_FREE_DEFAULT_ON is not set
+-CONFIG_CC_HAS_ZERO_CALL_USED_REGS=y
+-# CONFIG_ZERO_CALL_USED_REGS is not set
+ # end of Memory initialization
+ 
+ CONFIG_RANDSTRUCT_NONE=y
+@@ -4219,8 +4207,6 @@ CONFIG_HAVE_ARCH_KGDB=y
+ CONFIG_ARCH_HAS_UBSAN_SANITIZE_ALL=y
+ # CONFIG_UBSAN is not set
+ CONFIG_HAVE_ARCH_KCSAN=y
+-CONFIG_HAVE_KCSAN_COMPILER=y
+-# CONFIG_KCSAN is not set
+ # end of Generic Kernel Debugging Instruments
+ 
+ #
 diff --git a/drivers/block/loop.c b/drivers/block/loop.c
 index 7a9928c6db9d..0bac486deea2 100644
 --- a/drivers/block/loop.c
@@ -148,6 +340,26 @@ index 7a9928c6db9d..0bac486deea2 100644
  }
  
  static int loop_clr_fd(struct loop_device *lo)
+diff --git a/drivers/gpu/drm/i915/Makefile b/drivers/gpu/drm/i915/Makefile
+index acbf85c55f6d..d592f6d9dd8a 100644
+--- a/drivers/gpu/drm/i915/Makefile
++++ b/drivers/gpu/drm/i915/Makefile
+@@ -32,7 +32,6 @@ subdir-ccflags-y += -I$(srctree)/$(src)
+ # Please keep these build lists sorted!
+ 
+ # core driver code
+-CFLAGS_intel_pm.o += -Wno-stringop-overread
+ CFLAGS_intel_uncore.o += -Wno-array-bounds
+ i915-y += i915_driver.o \
+ 	  i915_drm_client.o \
+@@ -274,7 +273,6 @@ i915-$(CONFIG_DRM_FBDEV_EMULATION) += \
+ 	display/intel_fbdev.o
+ 
+ # modesetting output/encoder code
+-CFLAGS_display/intel_dp.o += -Wno-array-parameter -Wno-stringop-overread
+ i915-y += \
+ 	display/dvo_ch7017.o \
+ 	display/dvo_ch7xxx.o \
 diff --git a/fs/aufs/f_op.c b/fs/aufs/f_op.c
 index 1ed300047a41..ea63191d6473 100644
 --- a/fs/aufs/f_op.c
@@ -223,6 +435,18 @@ index 81922d4faf54..c8a62c267d72 100644
  };
  
  /* ---------------------------------------------------------------------- */
+diff --git a/fs/xfs/Makefile b/fs/xfs/Makefile
+index 30d0ff010e07..03135a1c31b6 100644
+--- a/fs/xfs/Makefile
++++ b/fs/xfs/Makefile
+@@ -13,7 +13,6 @@ obj-$(CONFIG_XFS_FS)		+= xfs.o
+ xfs-y				+= xfs_trace.o
+ 
+ # build the libxfs code first
+-CFLAGS_libxfs/xfs_attr_remote.o += -Wno-dangling-pointer
+ xfs-y				+= $(addprefix libxfs/, \
+ 				   xfs_ag.o \
+ 				   xfs_alloc.o \
 diff --git a/include/linux/fs.h b/include/linux/fs.h
 index ec560e8704a4..fc6e4d469419 100644
 --- a/include/linux/fs.h
@@ -238,3 +462,51 @@ index ec560e8704a4..fc6e4d469419 100644
  };
  
  /*
+diff --git a/lib/crypto/Makefile b/lib/crypto/Makefile
+index 3ff07a443c5f..6ec2d4543d9c 100644
+--- a/lib/crypto/Makefile
++++ b/lib/crypto/Makefile
+@@ -38,9 +38,7 @@ obj-$(CONFIG_CRYPTO_LIB_DES)			+= libdes.o
+ libdes-y					:= des.o
+ 
+ obj-$(CONFIG_CRYPTO_LIB_POLY1305_GENERIC)	+= libpoly1305.o
+-CFLAGS_poly1305-donna32.o += -Wno-array-parameter
+ libpoly1305-y					:= poly1305-donna32.o
+-CFLAGS_poly1305-donna64.o += -Wno-array-parameter
+ libpoly1305-$(CONFIG_ARCH_SUPPORTS_INT128)	:= poly1305-donna64.o
+ libpoly1305-y					+= poly1305.o
+ 
+diff --git a/mm/Makefile b/mm/Makefile
+index 7c84b0049f99..c218d042dbce 100644
+--- a/mm/Makefile
++++ b/mm/Makefile
+@@ -57,7 +57,6 @@ obj-y			:= filemap.o mempool.o oom_kill.o fadvise.o \
+ 			   debug.o gup.o mmap_lock.o $(mmu-y)
+ 
+ # Give 'page_alloc' its own module-parameter namespace
+-CFLAGS_page_alloc.o += -Wno-array-compare
+ page-alloc-y := page_alloc.o
+ page-alloc-$(CONFIG_SHUFFLE_PAGE_ALLOCATOR) += shuffle.o
+ 
+diff --git a/net/core/Makefile b/net/core/Makefile
+index 8371681fd63e..5857cec87b83 100644
+--- a/net/core/Makefile
++++ b/net/core/Makefile
+@@ -9,7 +9,6 @@ obj-y := sock.o request_sock.o skbuff.o datagram.o stream.o scm.o \
+ 
+ obj-$(CONFIG_SYSCTL) += sysctl_net_core.o
+ 
+-CFLAGS_dev.o += -Wno-stringop-overread
+ obj-y		     += dev.o dev_addr_lists.o dst.o netevent.o \
+ 			neighbour.o rtnetlink.o utils.o link_watch.o filter.o \
+ 			sock_diag.o dev_ioctl.o tso.o sock_reuseport.o \
+diff --git a/net/ethernet/Makefile b/net/ethernet/Makefile
+index 080c8d7f4828..e03eff94e0db 100644
+--- a/net/ethernet/Makefile
++++ b/net/ethernet/Makefile
+@@ -3,5 +3,4 @@
+ # Makefile for the Linux Ethernet layer.
+ #
+ 
+-CFLAGS_eth.o += -Wno-stringop-overread
+ obj-y					+= eth.o
