@@ -179,7 +179,7 @@ index 66f7e9fdfbc4..f9a8ff48e697 100644
  	if (page->mapping != mapping) {
  		unlock_page(page);
 diff --git a/mm/mmap.c b/mm/mmap.c
-index 0584e540246e..53d6f27164ea 100644
+index 0584e540246e..489a7a868bf0 100644
 --- a/mm/mmap.c
 +++ b/mm/mmap.c
 @@ -185,7 +185,7 @@ static struct vm_area_struct *remove_vma(struct vm_area_struct *vma)
@@ -247,13 +247,13 @@ index 0584e540246e..53d6f27164ea 100644
 +	prfile = vma->vm_prfile;
 +	ret = do_mmap(vma->vm_file, start, size,
 +			prot, flags, pgoff, &populate, NULL);
-+	if (!IS_ERR_VALUE(ret) && file && prfile) {
++	if (!IS_ERR_VALUE(ret) && prfile) {
 +		struct vm_area_struct *new_vma;
 +
 +		new_vma = find_vma(mm, ret);
 +		if (!new_vma->vm_prfile)
 +			new_vma->vm_prfile = prfile;
-+		if (new_vma != vma)
++		if (prfile)
 +			get_file(prfile);
 +	}
 +	/*
