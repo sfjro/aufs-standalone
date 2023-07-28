@@ -179,7 +179,7 @@ index ad8c39d90bf9..f95b595a49b7 100644
  	if (folio->mapping != mapping) {
  		folio_unlock(folio);
 diff --git a/mm/mmap.c b/mm/mmap.c
-index f61a15474dd6..937226306687 100644
+index f61a15474dd6..a2bd0a0e3b38 100644
 --- a/mm/mmap.c
 +++ b/mm/mmap.c
 @@ -184,7 +184,7 @@ static struct vm_area_struct *remove_vma(struct vm_area_struct *vma)
@@ -247,13 +247,13 @@ index f61a15474dd6..937226306687 100644
 +	prfile = vma->vm_prfile;
 +	ret = do_mmap(vma->vm_file, start, size,
 +			prot, flags, pgoff, &populate, NULL);
-+	if (!IS_ERR_VALUE(ret) && file && prfile) {
++	if (!IS_ERR_VALUE(ret) && prfile) {
 +		struct vm_area_struct *new_vma;
 +
 +		new_vma = find_vma(mm, ret);
 +		if (!new_vma->vm_prfile)
 +			new_vma->vm_prfile = prfile;
-+		if (new_vma != vma)
++		if (prfile)
 +			get_file(prfile);
 +	}
 +	/*
