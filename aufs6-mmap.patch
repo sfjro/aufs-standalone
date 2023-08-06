@@ -1,6 +1,40 @@
 SPDX-License-Identifier: GPL-2.0
 aufs6.0 mmap patch
 
+diff --git a/fs/aufs/f_op.c b/fs/aufs/f_op.c
+index 05c51c6f5983..9c7d8be90553 100644
+--- a/fs/aufs/f_op.c
++++ b/fs/aufs/f_op.c
+@@ -616,6 +616,7 @@ static int aufs_mmap(struct file *file, struct vm_area_struct *vma)
+ 	if (!err)
+ 		err = call_mmap(h_file, vma);
+ 	if (!err) {
++		au_vm_prfile_set(vma, file);
+ 		fsstack_copy_attr_atime(inode, file_inode(h_file));
+ 		goto out_fput; /* success */
+ 	}
+diff --git a/fs/aufs/file.h b/fs/aufs/file.h
+index 5dc2c2212198..4ed41bb59d3d 100644
+--- a/fs/aufs/file.h
++++ b/fs/aufs/file.h
+@@ -313,5 +313,17 @@ static inline void au_vm_file_reset(struct vm_area_struct *vma,
+ }
+ #endif /* CONFIG_MMU */
+ 
++/* handle vma->vm_prfile */
++static inline void au_vm_prfile_set(struct vm_area_struct *vma,
++				    struct file *file)
++{
++	get_file(file);
++	vma->vm_prfile = file;
++#ifndef CONFIG_MMU
++	get_file(file);
++	vma->vm_region->vm_prfile = file;
++#endif
++}
++
+ #endif /* __KERNEL__ */
+ #endif /* __AUFS_FILE_H__ */
 diff --git a/fs/proc/base.c b/fs/proc/base.c
 index 93f7e3d971e4..23aa1626020a 100644
 --- a/fs/proc/base.c
@@ -179,7 +213,7 @@ index 15800334147b..2c22abb4a14d 100644
  	if (folio->mapping != mapping) {
  		folio_unlock(folio);
 diff --git a/mm/mmap.c b/mm/mmap.c
-index 9d780f415be3..c404b6e870f3 100644
+index 9d780f415be3..3314481a51f7 100644
 --- a/mm/mmap.c
 +++ b/mm/mmap.c
 @@ -142,7 +142,7 @@ static struct vm_area_struct *remove_vma(struct vm_area_struct *vma)
@@ -200,6 +234,15 @@ index 9d780f415be3..c404b6e870f3 100644
  		}
  		if (next->anon_vma)
  			anon_vma_merge(vma, next);
+@@ -1775,7 +1775,7 @@ unsigned long mmap_region(struct file *file, unsigned long addr,
+ 				 * fput the vma->vm_file here or we would add an extra fput for file
+ 				 * and cause general protection fault ultimately.
+ 				 */
+-				fput(vma->vm_file);
++				vma_fput(vma);
+ 				vm_area_free(vma);
+ 				vma = merge;
+ 				/* Update vm_flags to pick up the change. */
 @@ -1845,7 +1845,7 @@ unsigned long mmap_region(struct file *file, unsigned long addr,
  	return addr;
  
@@ -247,7 +290,7 @@ index 9d780f415be3..c404b6e870f3 100644
 +	prfile = vma->vm_prfile;
 +	ret = do_mmap(vma->vm_file, start, size,
 +			prot, flags, pgoff, &populate, NULL);
-+	if (!IS_ERR_VALUE(ret) && prfile) {
++	if (!IS_ERR_VALUE(ret) && file && prfile) {
 +		struct vm_area_struct *new_vma;
 +
 +		new_vma = find_vma(mm, ret);
