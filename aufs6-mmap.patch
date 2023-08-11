@@ -1,6 +1,40 @@
 SPDX-License-Identifier: GPL-2.0
 aufs6.2 mmap patch
 
+diff --git a/fs/aufs/f_op.c b/fs/aufs/f_op.c
+index 45c63fa737b5..da5a24f55ec8 100644
+--- a/fs/aufs/f_op.c
++++ b/fs/aufs/f_op.c
+@@ -621,6 +621,7 @@ static int aufs_mmap(struct file *file, struct vm_area_struct *vma)
+ 	if (!err)
+ 		err = call_mmap(h_file, vma);
+ 	if (!err) {
++		au_vm_prfile_set(vma, file);
+ 		fsstack_copy_attr_atime(inode, file_inode(h_file));
+ 		goto out_fput; /* success */
+ 	}
+diff --git a/fs/aufs/file.h b/fs/aufs/file.h
+index 5dc2c2212198..4ed41bb59d3d 100644
+--- a/fs/aufs/file.h
++++ b/fs/aufs/file.h
+@@ -313,5 +313,17 @@ static inline void au_vm_file_reset(struct vm_area_struct *vma,
+ }
+ #endif /* CONFIG_MMU */
+ 
++/* handle vma->vm_prfile */
++static inline void au_vm_prfile_set(struct vm_area_struct *vma,
++				    struct file *file)
++{
++	get_file(file);
++	vma->vm_prfile = file;
++#ifndef CONFIG_MMU
++	get_file(file);
++	vma->vm_region->vm_prfile = file;
++#endif
++}
++
+ #endif /* __KERNEL__ */
+ #endif /* __AUFS_FILE_H__ */
 diff --git a/fs/proc/base.c b/fs/proc/base.c
 index 9e479d7d202b..986c2ae12f8b 100644
 --- a/fs/proc/base.c
@@ -179,7 +213,7 @@ index 0e20a8d6dd93..ba1b238d928a 100644
  	if (folio->mapping != mapping) {
  		folio_unlock(folio);
 diff --git a/mm/mmap.c b/mm/mmap.c
-index 425a9349e610..004eb9dbd99a 100644
+index 425a9349e610..2976a2f1ce59 100644
 --- a/mm/mmap.c
 +++ b/mm/mmap.c
 @@ -139,7 +139,7 @@ static void remove_vma(struct vm_area_struct *vma)
@@ -227,6 +261,15 @@ index 425a9349e610..004eb9dbd99a 100644
  	unlink_anon_vmas(new);
   out_free_mpol:
  	mpol_put(vma_policy(new));
+@@ -2651,7 +2651,7 @@ unsigned long mmap_region(struct file *file, unsigned long addr,
+ 				 * and cause general protection fault
+ 				 * ultimately.
+ 				 */
+-				fput(vma->vm_file);
++				vma_fput(vma);
+ 				vm_area_free(vma);
+ 				vma = merge;
+ 				/* Update vm_flags to pick up the change. */
 @@ -2750,7 +2750,7 @@ unsigned long mmap_region(struct file *file, unsigned long addr,
  	if (vma->vm_ops && vma->vm_ops->close)
  		vma->vm_ops->close(vma);
@@ -262,7 +305,7 @@ index 425a9349e610..004eb9dbd99a 100644
 +		new_vma = find_vma(mm, ret);
 +		if (!new_vma->vm_prfile)
 +			new_vma->vm_prfile = prfile;
-+		if (new_vma != vma)
++		if (prfile)
 +			get_file(prfile);
 +	}
 +	/*
