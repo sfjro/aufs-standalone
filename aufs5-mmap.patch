@@ -1,40 +1,6 @@
 SPDX-License-Identifier: GPL-2.0
 aufs5.15.36 mmap patch
 
-diff --git a/fs/aufs/f_op.c b/fs/aufs/f_op.c
-index 65de7d94d3e4..e57334b462b1 100644
---- a/fs/aufs/f_op.c
-+++ b/fs/aufs/f_op.c
-@@ -616,6 +616,7 @@ static int aufs_mmap(struct file *file, struct vm_area_struct *vma)
- 	if (!err)
- 		err = call_mmap(h_file, vma);
- 	if (!err) {
-+		au_vm_prfile_set(vma, file);
- 		fsstack_copy_attr_atime(inode, file_inode(h_file));
- 		goto out_fput; /* success */
- 	}
-diff --git a/fs/aufs/file.h b/fs/aufs/file.h
-index 878c8708a4aa..e78a1d48e5cd 100644
---- a/fs/aufs/file.h
-+++ b/fs/aufs/file.h
-@@ -313,5 +313,17 @@ static inline void au_vm_file_reset(struct vm_area_struct *vma,
- }
- #endif /* CONFIG_MMU */
- 
-+/* handle vma->vm_prfile */
-+static inline void au_vm_prfile_set(struct vm_area_struct *vma,
-+				    struct file *file)
-+{
-+	get_file(file);
-+	vma->vm_prfile = file;
-+#ifndef CONFIG_MMU
-+	get_file(file);
-+	vma->vm_region->vm_prfile = file;
-+#endif
-+}
-+
- #endif /* __KERNEL__ */
- #endif /* __AUFS_FILE_H__ */
 diff --git a/fs/proc/base.c b/fs/proc/base.c
 index 1f394095eb88..93f2479ef319 100644
 --- a/fs/proc/base.c
