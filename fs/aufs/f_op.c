@@ -378,7 +378,7 @@ static ssize_t aufs_splice_read(struct file *file, loff_t *ppos,
 	if (IS_ERR(h_file))
 		goto out;
 
-	err = vfsub_splice_to(h_file, ppos, pipe, len, flags);
+	err = vfsub_splice_read(h_file, ppos, pipe, len, flags);
 	/* todo: necessary? */
 	/* file->f_ra = h_file->f_ra; */
 	au_read_post(inode, h_file);
