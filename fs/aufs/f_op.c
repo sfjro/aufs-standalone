@@ -391,7 +391,7 @@ static ssize_t aufs_splice_read(struct file *file, loff_t *ppos,
 	if (IS_ERR(h_file))
 		goto out;
 
-	err = vfsub_splice_to(h_file, ppos, pipe, len, flags);
+	err = vfsub_splice_read(h_file, ppos, pipe, len, flags);
 	/* todo: necessary? */
 	/* file->f_ra = h_file->f_ra; */
 	au_read_post(inode, h_file);
@@ -736,16 +736,6 @@ out:
 
 /* ---------------------------------------------------------------------- */
 
-/* no one supports this operation, currently */
-#if 0 /* reserved for future use */
-static ssize_t aufs_sendpage(struct file *file, struct page *page, int offset,
-			     size_t len, loff_t *pos, int more)
-{
-}
-#endif
-
-/* ---------------------------------------------------------------------- */
-
 const struct file_operations aufs_file_fop = {
 	.owner		= THIS_MODULE,
 
@@ -767,7 +757,6 @@ const struct file_operations aufs_file_fop = {
 	.release	= aufs_release_nondir,
 	.fsync		= aufs_fsync_nondir,
 	.fasync		= aufs_fasync,
-	/* .sendpage	= aufs_sendpage, */
 	.setfl		= aufs_setfl,
 	.splice_write	= aufs_splice_write,
 	.splice_read	= aufs_splice_read,
