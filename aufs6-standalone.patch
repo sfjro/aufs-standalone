@@ -22,7 +22,7 @@ index 519321f32f95..267e0c65914a 100644
  /**
   * d_ancestor - search for an ancestor
 diff --git a/fs/exec.c b/fs/exec.c
-index a466e797c8e2..c60353b5214f 100644
+index 1a827d55ba94..d7b12f1e7af2 100644
 --- a/fs/exec.c
 +++ b/fs/exec.c
 @@ -112,6 +112,7 @@ bool path_noexec(const struct path *path)
@@ -46,10 +46,10 @@ index 9ea58b7bb580..99fef189bcd6 100644
  static void f_modown(struct file *filp, struct pid *pid, enum pid_type type,
                       int force)
 diff --git a/fs/file_table.c b/fs/file_table.c
-index 372653b92617..69128fe39b6d 100644
+index fc7d677ff5ad..a2fbedb58c0a 100644
 --- a/fs/file_table.c
 +++ b/fs/file_table.c
-@@ -199,6 +199,7 @@ struct file *alloc_empty_file(int flags, const struct cred *cred)
+@@ -225,6 +225,7 @@ struct file *alloc_empty_file(int flags, const struct cred *cred)
  	}
  	return ERR_PTR(-ENFILE);
  }
@@ -58,10 +58,10 @@ index 372653b92617..69128fe39b6d 100644
  /*
   * Variant of alloc_empty_file() that doesn't check and modify nr_files.
 diff --git a/fs/namespace.c b/fs/namespace.c
-index ebb7b4b057ea..6ee47677de2f 100644
+index 6c57487f126b..16be9ac1c734 100644
 --- a/fs/namespace.c
 +++ b/fs/namespace.c
-@@ -457,6 +457,7 @@ void __mnt_drop_write(struct vfsmount *mnt)
+@@ -466,6 +466,7 @@ void __mnt_drop_write(struct vfsmount *mnt)
  	mnt_dec_writers(real_mount(mnt));
  	preempt_enable();
  }
@@ -69,7 +69,7 @@ index ebb7b4b057ea..6ee47677de2f 100644
  
  /**
   * mnt_drop_write - give up write access to a mount
-@@ -854,6 +855,7 @@ int is_current_mnt_ns(struct vfsmount *mnt)
+@@ -877,6 +878,7 @@ int is_current_mnt_ns(struct vfsmount *mnt)
  {
  	return check_mnt(real_mount(mnt));
  }
@@ -77,7 +77,7 @@ index ebb7b4b057ea..6ee47677de2f 100644
  
  /*
   * vfsmount lock must be held for write
-@@ -2062,6 +2064,7 @@ int iterate_mounts(int (*f)(struct vfsmount *, void *), void *arg,
+@@ -2152,6 +2154,7 @@ int iterate_mounts(int (*f)(struct vfsmount *, void *), void *arg,
  	}
  	return 0;
  }
@@ -98,7 +98,7 @@ index 1de6631a3925..3008eb37a18d 100644
  /*
   * Drop a reference to a group.  Free it if it's through.
 diff --git a/fs/open.c b/fs/open.c
-index 4478adcc4f3a..5a984ff90580 100644
+index e6ead0f19964..1f4deda436ec 100644
 --- a/fs/open.c
 +++ b/fs/open.c
 @@ -67,6 +67,7 @@ int do_truncate(struct mnt_idmap *idmap, struct dentry *dentry,
@@ -110,7 +110,7 @@ index 4478adcc4f3a..5a984ff90580 100644
  long vfs_truncate(const struct path *path, loff_t length)
  {
 diff --git a/fs/read_write.c b/fs/read_write.c
-index a21ba3be7dbe..ec40061176b3 100644
+index b07de77ef126..e07fadb4afe2 100644
 --- a/fs/read_write.c
 +++ b/fs/read_write.c
 @@ -477,6 +477,7 @@ ssize_t vfs_read(struct file *file, char __user *buf, size_t count, loff_t *pos)
@@ -130,27 +130,19 @@ index a21ba3be7dbe..ec40061176b3 100644
  /* file_ppos returns &file->f_pos or NULL if file is stream */
  static inline loff_t *file_ppos(struct file *file)
 diff --git a/fs/splice.c b/fs/splice.c
-index 97a66df75d4c..19c8d35f5ebd 100644
+index a724fe9ccb80..ebb2c4ceb598 100644
 --- a/fs/splice.c
 +++ b/fs/splice.c
-@@ -872,6 +872,7 @@ long do_splice_from(struct pipe_inode_info *pipe, struct file *out,
+@@ -935,6 +935,7 @@ long do_splice_from(struct pipe_inode_info *pipe, struct file *out,
  		return warn_unsupported(out, "write");
  	return out->f_op->splice_write(pipe, out, ppos, len, flags);
  }
 +EXPORT_SYMBOL_GPL(do_splice_from);
  
  /*
-  * Attempt to initiate a splice from a file to a pipe.
-@@ -901,6 +902,7 @@ long do_splice_to(struct file *in, loff_t *ppos,
- 		return warn_unsupported(in, "read");
- 	return in->f_op->splice_read(in, ppos, pipe, len, flags);
- }
-+EXPORT_SYMBOL_GPL(do_splice_to);
- 
- /**
-  * splice_direct_to_actor - splices data directly between two non-pipes
+  * Indicate to the caller that there was a premature EOF when reading from the
 diff --git a/fs/xattr.c b/fs/xattr.c
-index fcf67d80d7f9..174dfb9285fb 100644
+index e7bbb7f57557..edb0190da4d5 100644
 --- a/fs/xattr.c
 +++ b/fs/xattr.c
 @@ -406,6 +406,7 @@ vfs_getxattr_alloc(struct mnt_idmap *idmap, struct dentry *dentry,
@@ -162,7 +154,7 @@ index fcf67d80d7f9..174dfb9285fb 100644
  ssize_t
  __vfs_getxattr(struct dentry *dentry, struct inode *inode, const char *name,
 diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 85d1f7e0bc07..5e20504eed24 100644
+index 22af30abc781..eaf4e02bcb4d 100644
 --- a/kernel/locking/lockdep.c
 +++ b/kernel/locking/lockdep.c
 @@ -239,6 +239,7 @@ inline struct lock_class *lockdep_hlock_class(struct held_lock *hlock)
@@ -183,7 +175,7 @@ index 065e1ef8fc8d..c623c6f0c645 100644
  }
 +EXPORT_SYMBOL_GPL(task_work_run);
 diff --git a/security/security.c b/security/security.c
-index d5ff7ff45b77..5cca1f5774ef 100644
+index b720424ca37d..635ee0582e05 100644
 --- a/security/security.c
 +++ b/security/security.c
 @@ -1711,6 +1711,7 @@ int security_path_rmdir(const struct path *dir, struct dentry *dentry)

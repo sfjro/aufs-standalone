@@ -2,10 +2,10 @@ SPDX-License-Identifier: GPL-2.0
 aufs6.x-rcN base patch
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index e0ad886d3163..a27659e1886b 100644
+index 4cc6bf79fdd8..5578e44ad7e2 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -3380,6 +3380,19 @@ F:	include/uapi/linux/audit.h
+@@ -3310,6 +3310,19 @@ F:	include/uapi/linux/audit.h
  F:	kernel/audit*
  F:	lib/*audit.c
  
@@ -22,11 +22,11 @@ index e0ad886d3163..a27659e1886b 100644
 +F:	fs/aufs/
 +F:	include/uapi/linux/aufs_type.h
 +
- AUXILIARY DISPLAY DRIVERS
- M:	Miguel Ojeda <ojeda@kernel.org>
- S:	Maintained
+ AUXILIARY BUS DRIVER
+ M:	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+ R:	Dave Ertman <david.m.ertman@intel.com>
 diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index bc31bb7072a2..131294601819 100644
+index 637c5bda2387..cbefd23beb44 100644
 --- a/drivers/block/loop.c
 +++ b/drivers/block/loop.c
 @@ -645,6 +645,24 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
@@ -90,10 +90,10 @@ index b622be119706..9ea58b7bb580 100644
  		return error;
  
 diff --git a/fs/namespace.c b/fs/namespace.c
-index 54847db5b819..ebb7b4b057ea 100644
+index e157efc54023..6c57487f126b 100644
 --- a/fs/namespace.c
 +++ b/fs/namespace.c
-@@ -849,6 +849,12 @@ static inline int check_mnt(struct mount *mnt)
+@@ -872,6 +872,12 @@ static inline int check_mnt(struct mount *mnt)
  	return mnt->mnt_ns == current->nsproxy->mnt_ns;
  }
  
@@ -107,10 +107,10 @@ index 54847db5b819..ebb7b4b057ea 100644
   * vfsmount lock must be held for write
   */
 diff --git a/fs/splice.c b/fs/splice.c
-index 3e06611d19ae..97a66df75d4c 100644
+index 3e2a31e1ce6a..a724fe9ccb80 100644
 --- a/fs/splice.c
 +++ b/fs/splice.c
-@@ -865,8 +865,8 @@ static int warn_unsupported(struct file *file, const char *op)
+@@ -928,8 +928,8 @@ static int warn_unsupported(struct file *file, const char *op)
  /*
   * Attempt to initiate a splice from pipe to file.
   */
@@ -121,24 +121,11 @@ index 3e06611d19ae..97a66df75d4c 100644
  {
  	if (unlikely(!out->f_op->splice_write))
  		return warn_unsupported(out, "write");
-@@ -876,9 +876,9 @@ static long do_splice_from(struct pipe_inode_info *pipe, struct file *out,
- /*
-  * Attempt to initiate a splice from a file to a pipe.
-  */
--static long do_splice_to(struct file *in, loff_t *ppos,
--			 struct pipe_inode_info *pipe, size_t len,
--			 unsigned int flags)
-+long do_splice_to(struct file *in, loff_t *ppos,
-+		  struct pipe_inode_info *pipe, size_t len,
-+		  unsigned int flags)
- {
- 	unsigned int p_space;
- 	int ret;
 diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 21a981680856..1e3054e5367d 100644
+index 562f2623c9c9..5a2db7b8eca5 100644
 --- a/include/linux/fs.h
 +++ b/include/linux/fs.h
-@@ -1066,6 +1066,7 @@ extern void fasync_free(struct fasync_struct *);
+@@ -1068,6 +1068,7 @@ extern void fasync_free(struct fasync_struct *);
  /* can be called from interrupts */
  extern void kill_fasync(struct fasync_struct **, int, int);
  
@@ -146,8 +133,8 @@ index 21a981680856..1e3054e5367d 100644
  extern void __f_setown(struct file *filp, struct pid *, enum pid_type, int force);
  extern int f_setown(struct file *filp, unsigned long arg, int force);
  extern void f_delown(struct file *filp);
-@@ -1793,6 +1794,7 @@ struct file_operations {
- 	ssize_t (*sendpage) (struct file *, struct page *, int, size_t, loff_t *, int);
+@@ -1794,6 +1795,7 @@ struct file_operations {
+ 	int (*lock) (struct file *, int, struct file_lock *);
  	unsigned long (*get_unmapped_area)(struct file *, unsigned long, unsigned long, unsigned long, unsigned long);
  	int (*check_flags)(int);
 +	int (*setfl)(struct file *, unsigned long);
@@ -155,7 +142,7 @@ index 21a981680856..1e3054e5367d 100644
  	ssize_t (*splice_write)(struct pipe_inode_info *, struct file *, loff_t *, size_t, unsigned int);
  	ssize_t (*splice_read)(struct file *, loff_t *, struct pipe_inode_info *, size_t, unsigned int);
 diff --git a/include/linux/lockdep.h b/include/linux/lockdep.h
-index b32256e9e944..16bd7230f44b 100644
+index 310f85903c91..46ff52c1a522 100644
 --- a/include/linux/lockdep.h
 +++ b/include/linux/lockdep.h
 @@ -249,6 +249,8 @@ static inline int lockdep_match_key(struct lockdep_map *lock,
@@ -188,10 +175,10 @@ index 8f882f5881e8..6b9808f09843 100644
  extern const struct file_operations proc_mountinfo_operations;
  extern const struct file_operations proc_mountstats_operations;
 diff --git a/include/linux/splice.h b/include/linux/splice.h
-index a55179fd60fc..8e21c53cf883 100644
+index 6c461573434d..7416cf375ad1 100644
 --- a/include/linux/splice.h
 +++ b/include/linux/splice.h
-@@ -93,4 +93,10 @@ extern void splice_shrink_spd(struct splice_pipe_desc *);
+@@ -99,4 +99,10 @@ extern void splice_shrink_spd(struct splice_pipe_desc *);
  
  extern const struct pipe_buf_operations page_cache_pipe_buf_ops;
  extern const struct pipe_buf_operations default_pipe_buf_ops;
@@ -203,7 +190,7 @@ index a55179fd60fc..8e21c53cf883 100644
 +			 unsigned int flags);
  #endif
 diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index dcd1d5bfc1e0..85d1f7e0bc07 100644
+index 111607d91489..22af30abc781 100644
 --- a/kernel/locking/lockdep.c
 +++ b/kernel/locking/lockdep.c
 @@ -218,7 +218,7 @@ unsigned long max_lock_class_idx;

@@ -2,7 +2,7 @@ SPDX-License-Identifier: GPL-2.0
 aufs6.x-rcN kbuild patch
 
 diff --git a/fs/Kconfig b/fs/Kconfig
-index cc07a0cd3172..5ee4f1be48ff 100644
+index 18d034ec7953..3159bcb16918 100644
 --- a/fs/Kconfig
 +++ b/fs/Kconfig
 @@ -316,6 +316,7 @@ source "fs/sysv/Kconfig"
@@ -14,10 +14,10 @@ index cc07a0cd3172..5ee4f1be48ff 100644
  endif # MISC_FILESYSTEMS
  
 diff --git a/fs/Makefile b/fs/Makefile
-index 834f1c3dba46..b5c97dd026cd 100644
+index e513aaee0603..acdea5771285 100644
 --- a/fs/Makefile
 +++ b/fs/Makefile
-@@ -137,3 +137,4 @@ obj-$(CONFIG_EFIVAR_FS)		+= efivarfs/
+@@ -129,3 +129,4 @@ obj-$(CONFIG_EFIVAR_FS)		+= efivarfs/
  obj-$(CONFIG_EROFS_FS)		+= erofs/
  obj-$(CONFIG_VBOXSF_FS)		+= vboxsf/
  obj-$(CONFIG_ZONEFS_FS)		+= zonefs/
