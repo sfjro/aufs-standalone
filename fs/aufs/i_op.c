@@ -1156,7 +1156,7 @@ static void au_refresh_iattr(struct inode *inode, struct kstat *st,
 	inode->i_gid = st->gid;
 	inode->i_atime = st->atime;
 	inode->i_mtime = st->mtime;
-	inode->i_ctime = st->ctime;
+	inode_set_ctime_to_ts(inode, st->ctime);
 
 	au_cpup_attr_nlink(inode, /*force*/0);
 	if (S_ISDIR(inode->i_mode)) {
