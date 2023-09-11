@@ -1293,7 +1293,7 @@ static int aufs_getattr(struct mnt_idmap *idmap, const struct path *path,
 	goto out_di;
 
 out_fill:
-	generic_fillattr(idmap, inode, st);
+	generic_fillattr(idmap, request, inode, st);
 out_di:
 	di_read_unlock(dentry, AuLock_IR);
 out_si:
