@@ -149,6 +149,20 @@ static inline void vfsub_mnt_drop_write_file(struct file *file)
 }
 #endif
 
+static inline void vfsub_file_start_write(struct file *file)
+{
+	lockdep_off();
+	file_start_write(file);
+	lockdep_on();
+}
+
+static inline void vfsub_file_end_write(struct file *file)
+{
+	lockdep_off();
+	file_end_write(file);
+	lockdep_on();
+}
+
 /* ---------------------------------------------------------------------- */
 
 struct au_hinode;
@@ -226,10 +240,9 @@ static inline void vfsub_touch_atime(struct vfsmount *h_mnt,
 }
 #endif
 
-static inline int vfsub_update_time(struct inode *h_inode,
-				    struct timespec64 *ts, int flags)
+static inline int vfsub_update_time(struct inode *h_inode, int flags)
 {
-	return inode_update_time(h_inode, ts, flags);
+	return inode_update_time(h_inode, flags);
 	/* no vfsub_update_h_iattr() since we don't have struct path */
 }
 
