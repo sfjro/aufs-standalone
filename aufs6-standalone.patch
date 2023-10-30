@@ -166,10 +166,10 @@ index db4297f60bd3..9aca18312afb 100644
  
  #ifdef CONFIG_LOCK_STAT
 diff --git a/kernel/task_work.c b/kernel/task_work.c
-index 065e1ef8fc8d..c623c6f0c645 100644
+index 95a7e1b7f1da..5053670775d3 100644
 --- a/kernel/task_work.c
 +++ b/kernel/task_work.c
-@@ -182,3 +182,4 @@ void task_work_run(void)
+@@ -183,3 +183,4 @@ void task_work_run(void)
  		} while (work);
  	}
  }

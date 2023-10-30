@@ -2,10 +2,10 @@ SPDX-License-Identifier: GPL-2.0
 aufs6.x-rcN base patch
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index bf0f54c24f81..39b1844bce57 100644
+index dd5de540ec0b..1b495555a80c 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -3316,6 +3316,19 @@ F:	include/uapi/linux/audit.h
+@@ -3334,6 +3334,19 @@ F:	include/uapi/linux/audit.h
  F:	kernel/audit*
  F:	lib/*audit.c
  
@@ -122,7 +122,7 @@ index d983d375ff11..7216ef993b5f 100644
  	if (unlikely(!out->f_op->splice_write))
  		return warn_unsupported(out, "write");
 diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 4aeb3fa11927..dd5871d0c429 100644
+index 4a40823c3c67..a46e516bfc32 100644
 --- a/include/linux/fs.h
 +++ b/include/linux/fs.h
 @@ -1099,6 +1099,7 @@ extern void fasync_free(struct fasync_struct *);
@@ -133,7 +133,7 @@ index 4aeb3fa11927..dd5871d0c429 100644
  extern void __f_setown(struct file *filp, struct pid *, enum pid_type, int force);
  extern int f_setown(struct file *filp, int who, int force);
  extern void f_delown(struct file *filp);
-@@ -1901,6 +1902,7 @@ struct file_operations {
+@@ -1872,6 +1873,7 @@ struct file_operations {
  	int (*lock) (struct file *, int, struct file_lock *);
  	unsigned long (*get_unmapped_area)(struct file *, unsigned long, unsigned long, unsigned long, unsigned long);
  	int (*check_flags)(int);
