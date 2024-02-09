@@ -2,10 +2,10 @@ SPDX-License-Identifier: GPL-2.0
 aufs6.x-rcN base patch
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index dd5de540ec0b..1b495555a80c 100644
+index a7c4cf8201e0..5b377eebc879 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -3334,6 +3334,19 @@ F:	include/uapi/linux/audit.h
+@@ -3347,6 +3347,19 @@ F:	include/uapi/linux/audit.h
  F:	kernel/audit*
  F:	lib/*audit.c
  
@@ -55,7 +55,7 @@ index 9f2d412fc560..1fefc6a8d049 100644
  
  static ssize_t loop_attr_show(struct device *dev, char *page,
 diff --git a/fs/dcache.c b/fs/dcache.c
-index 25ac74d30bff..6c930ceed526 100644
+index c82ae731df9a..d82fff0e26d1 100644
 --- a/fs/dcache.c
 +++ b/fs/dcache.c
 @@ -1345,7 +1345,7 @@ enum d_walk_ret {
@@ -68,7 +68,7 @@ index 25ac74d30bff..6c930ceed526 100644
  {
  	struct dentry *this_parent;
 diff --git a/fs/fcntl.c b/fs/fcntl.c
-index e871009f6c88..d62e114c1b1a 100644
+index c80a6acad742..96a562b48ec7 100644
 --- a/fs/fcntl.c
 +++ b/fs/fcntl.c
 @@ -34,7 +34,7 @@
@@ -90,10 +90,10 @@ index e871009f6c88..d62e114c1b1a 100644
  		return error;
  
 diff --git a/fs/namespace.c b/fs/namespace.c
-index e157efc54023..6c57487f126b 100644
+index fbf0e596fcd3..813665ccd241 100644
 --- a/fs/namespace.c
 +++ b/fs/namespace.c
-@@ -872,6 +872,12 @@ static inline int check_mnt(struct mount *mnt)
+@@ -874,6 +874,12 @@ static inline int check_mnt(struct mount *mnt)
  	return mnt->mnt_ns == current->nsproxy->mnt_ns;
  }
  
@@ -122,10 +122,10 @@ index d983d375ff11..7216ef993b5f 100644
  	if (unlikely(!out->f_op->splice_write))
  		return warn_unsupported(out, "write");
 diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 4a40823c3c67..a46e516bfc32 100644
+index 98b7a7a8c42e..7bf7c5d0b4c9 100644
 --- a/include/linux/fs.h
 +++ b/include/linux/fs.h
-@@ -1099,6 +1099,7 @@ extern void fasync_free(struct fasync_struct *);
+@@ -1102,6 +1102,7 @@ extern void fasync_free(struct fasync_struct *);
  /* can be called from interrupts */
  extern void kill_fasync(struct fasync_struct **, int, int);
  
@@ -133,7 +133,7 @@ index 4a40823c3c67..a46e516bfc32 100644
  extern void __f_setown(struct file *filp, struct pid *, enum pid_type, int force);
  extern int f_setown(struct file *filp, int who, int force);
  extern void f_delown(struct file *filp);
-@@ -1872,6 +1873,7 @@ struct file_operations {
+@@ -1936,6 +1937,7 @@ struct file_operations {
  	int (*lock) (struct file *, int, struct file_lock *);
  	unsigned long (*get_unmapped_area)(struct file *, unsigned long, unsigned long, unsigned long, unsigned long);
  	int (*check_flags)(int);
@@ -190,7 +190,7 @@ index 6c461573434d..7416cf375ad1 100644
 +			 unsigned int flags);
  #endif
 diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index e85b5ad3e206..db4297f60bd3 100644
+index 151bd3de5936..2223ee909c10 100644
 --- a/kernel/locking/lockdep.c
 +++ b/kernel/locking/lockdep.c
 @@ -218,7 +218,7 @@ unsigned long max_lock_class_idx;

@@ -2,7 +2,7 @@ SPDX-License-Identifier: GPL-2.0
 aufs6.x-rcN standalone patch
 
 diff --git a/fs/dcache.c b/fs/dcache.c
-index 6c930ceed526..576ad162cdec 100644
+index d82fff0e26d1..411c9acbdca7 100644
 --- a/fs/dcache.c
 +++ b/fs/dcache.c
 @@ -1450,6 +1450,7 @@ void d_walk(struct dentry *parent, void *data,
@@ -22,7 +22,7 @@ index 6c930ceed526..576ad162cdec 100644
  /**
   * d_ancestor - search for an ancestor
 diff --git a/fs/exec.c b/fs/exec.c
-index 6518e33ea813..b67efac6a1ad 100644
+index 4aa19b24f281..013bc5896529 100644
 --- a/fs/exec.c
 +++ b/fs/exec.c
 @@ -112,6 +112,7 @@ bool path_noexec(const struct path *path)
@@ -34,7 +34,7 @@ index 6518e33ea813..b67efac6a1ad 100644
  #ifdef CONFIG_USELIB
  /*
 diff --git a/fs/fcntl.c b/fs/fcntl.c
-index d62e114c1b1a..ceef001775bd 100644
+index 96a562b48ec7..e21a0fcff538 100644
 --- a/fs/fcntl.c
 +++ b/fs/fcntl.c
 @@ -87,6 +87,7 @@ int setfl(int fd, struct file * filp, unsigned int arg)
@@ -46,10 +46,10 @@ index d62e114c1b1a..ceef001775bd 100644
  static void f_modown(struct file *filp, struct pid *pid, enum pid_type type,
                       int force)
 diff --git a/fs/file_table.c b/fs/file_table.c
-index ee21b3da9d08..c45ac36795dd 100644
+index de4a2915bfd4..475f3f9c7876 100644
 --- a/fs/file_table.c
 +++ b/fs/file_table.c
-@@ -225,6 +225,7 @@ struct file *alloc_empty_file(int flags, const struct cred *cred)
+@@ -235,6 +235,7 @@ struct file *alloc_empty_file(int flags, const struct cred *cred)
  	}
  	return ERR_PTR(-ENFILE);
  }
@@ -58,18 +58,10 @@ index ee21b3da9d08..c45ac36795dd 100644
  /*
   * Variant of alloc_empty_file() that doesn't check and modify nr_files.
 diff --git a/fs/namespace.c b/fs/namespace.c
-index 6c57487f126b..16be9ac1c734 100644
+index 813665ccd241..07e2fee153f7 100644
 --- a/fs/namespace.c
 +++ b/fs/namespace.c
-@@ -466,6 +466,7 @@ void __mnt_drop_write(struct vfsmount *mnt)
- 	mnt_dec_writers(real_mount(mnt));
- 	preempt_enable();
- }
-+EXPORT_SYMBOL_GPL(__mnt_drop_write);
- 
- /**
-  * mnt_drop_write - give up write access to a mount
-@@ -877,6 +878,7 @@ int is_current_mnt_ns(struct vfsmount *mnt)
+@@ -879,6 +879,7 @@ int is_current_mnt_ns(struct vfsmount *mnt)
  {
  	return check_mnt(real_mount(mnt));
  }
@@ -77,7 +69,7 @@ index 6c57487f126b..16be9ac1c734 100644
  
  /*
   * vfsmount lock must be held for write
-@@ -2152,6 +2154,7 @@ int iterate_mounts(int (*f)(struct vfsmount *, void *), void *arg,
+@@ -2154,6 +2155,7 @@ int iterate_mounts(int (*f)(struct vfsmount *, void *), void *arg,
  	}
  	return 0;
  }
@@ -98,7 +90,7 @@ index 1de6631a3925..3008eb37a18d 100644
  /*
   * Drop a reference to a group.  Free it if it's through.
 diff --git a/fs/open.c b/fs/open.c
-index 98f6601fbac6..8624e4ffa15b 100644
+index 3494a9cd8046..dc6a1779c44d 100644
 --- a/fs/open.c
 +++ b/fs/open.c
 @@ -67,6 +67,7 @@ int do_truncate(struct mnt_idmap *idmap, struct dentry *dentry,
@@ -142,7 +134,7 @@ index 7216ef993b5f..7ce1f1bc4268 100644
  /*
   * Indicate to the caller that there was a premature EOF when reading from the
 diff --git a/fs/xattr.c b/fs/xattr.c
-index efd4736bc94b..ce1a2c39ab23 100644
+index 09d927603433..890daee95a7b 100644
 --- a/fs/xattr.c
 +++ b/fs/xattr.c
 @@ -406,6 +406,7 @@ vfs_getxattr_alloc(struct mnt_idmap *idmap, struct dentry *dentry,
@@ -154,7 +146,7 @@ index efd4736bc94b..ce1a2c39ab23 100644
  ssize_t
  __vfs_getxattr(struct dentry *dentry, struct inode *inode, const char *name,
 diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index db4297f60bd3..9aca18312afb 100644
+index 2223ee909c10..d0ac4fc69a31 100644
 --- a/kernel/locking/lockdep.c
 +++ b/kernel/locking/lockdep.c
 @@ -239,6 +239,7 @@ inline struct lock_class *lockdep_hlock_class(struct held_lock *hlock)
@@ -175,7 +167,7 @@ index 95a7e1b7f1da..5053670775d3 100644
  }
 +EXPORT_SYMBOL_GPL(task_work_run);
 diff --git a/security/security.c b/security/security.c
-index 23b129d482a7..fca4c5707a1c 100644
+index dcb3e7014f9b..a7135660dd2c 100644
 --- a/security/security.c
 +++ b/security/security.c
 @@ -1750,6 +1750,7 @@ int security_path_rmdir(const struct path *dir, struct dentry *dentry)
