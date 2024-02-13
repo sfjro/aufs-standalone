@@ -598,11 +598,11 @@ int vfsub_iterate_dir(struct file *file, struct dir_context *ctx)
 	return err;
 }
 
-long vfsub_splice_read(struct file *in, loff_t *ppos,
-		       struct pipe_inode_info *pipe, size_t len,
-		       unsigned int flags)
+ssize_t vfsub_splice_read(struct file *in, loff_t *ppos,
+			  struct pipe_inode_info *pipe, size_t len,
+			  unsigned int flags)
 {
-	long err;
+	ssize_t err;
 
 	lockdep_off();
 	err = vfs_splice_read(in, ppos, pipe, len, flags);
@@ -613,10 +613,10 @@ long vfsub_splice_read(struct file *in, loff_t *ppos,
 	return err;
 }
 
-long vfsub_splice_from(struct pipe_inode_info *pipe, struct file *out,
-		       loff_t *ppos, size_t len, unsigned int flags)
+ssize_t vfsub_splice_from(struct pipe_inode_info *pipe, struct file *out,
+			  loff_t *ppos, size_t len, unsigned int flags)
 {
-	long err;
+	ssize_t err;
 
 	lockdep_off();
 	err = do_splice_from(pipe, out, ppos, len, flags);
