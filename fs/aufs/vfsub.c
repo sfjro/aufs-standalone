@@ -211,10 +211,13 @@ struct dentry *vfsub_lock_rename(struct dentry *d1, struct au_hinode *hdir1,
 	lockdep_off();
 	d = lock_rename(d1, d2);
 	lockdep_on();
+	if (IS_ERR(d))
+		goto out;
 	au_hn_suspend(hdir1);
 	if (hdir1 != hdir2)
 		au_hn_suspend(hdir2);
 
+out:
 	return d;
 }
 
