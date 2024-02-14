@@ -14,18 +14,18 @@
 enum { AuSRC, AuDST, AuSrcDst };
 enum { AuPARENT, AuCHILD, AuParentChild };
 
-#define AuRen_ISDIR_SRC		1
-#define AuRen_ISDIR_DST		(1 << 1)
-#define AuRen_ISSAMEDIR		(1 << 2)
-#define AuRen_WHSRC		(1 << 3)
-#define AuRen_WHDST		(1 << 4)
-#define AuRen_MNT_WRITE		(1 << 5)
-#define AuRen_DT_DSTDIR		(1 << 6)
-#define AuRen_DIROPQ_SRC	(1 << 7)
-#define AuRen_DIROPQ_DST	(1 << 8)
-#define AuRen_DIRREN		(1 << 9)
-#define AuRen_DROPPED_SRC	(1 << 10)
-#define AuRen_DROPPED_DST	(1 << 11)
+#define AuRen_ISDIR_SRC		BIT(0)
+#define AuRen_ISDIR_DST		BIT(1)
+#define AuRen_ISSAMEDIR		BIT(2)
+#define AuRen_WHSRC		BIT(3)
+#define AuRen_WHDST		BIT(4)
+#define AuRen_MNT_WRITE		BIT(5)
+#define AuRen_DT_DSTDIR		BIT(6)
+#define AuRen_DIROPQ_SRC	BIT(7)
+#define AuRen_DIROPQ_DST	BIT(8)
+#define AuRen_DIRREN		BIT(9)
+#define AuRen_DROPPED_SRC	BIT(10)
+#define AuRen_DROPPED_DST	BIT(11)
 #define au_ftest_ren(flags, name)	((flags) & AuRen_##name)
 #define au_fset_ren(flags, name) \
 	do { (flags) |= AuRen_##name; } while (0)

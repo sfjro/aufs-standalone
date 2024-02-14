@@ -259,12 +259,12 @@ static int hn_gen_by_name(struct dentry *dentry, const unsigned int isdir)
 /* ---------------------------------------------------------------------- */
 
 /* hnotify job flags */
-#define AuHnJob_XINO0		1
-#define AuHnJob_GEN		(1 << 1)
-#define AuHnJob_DIRENT		(1 << 2)
-#define AuHnJob_ISDIR		(1 << 3)
-#define AuHnJob_TRYXINO0	(1 << 4)
-#define AuHnJob_MNTPNT		(1 << 5)
+#define AuHnJob_XINO0		BIT(0)
+#define AuHnJob_GEN		BIT(1)
+#define AuHnJob_DIRENT		BIT(2)
+#define AuHnJob_ISDIR		BIT(3)
+#define AuHnJob_TRYXINO0	BIT(4)
+#define AuHnJob_MNTPNT		BIT(5)
 #define au_ftest_hnjob(flags, name)	((flags) & AuHnJob_##name)
 #define au_fset_hnjob(flags, name) \
 	do { (flags) |= AuHnJob_##name; } while (0)
