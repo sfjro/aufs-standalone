@@ -2,7 +2,7 @@ SPDX-License-Identifier: GPL-2.0
 aufs6.x-rcN base patch
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 73d898383e51..3a73824a989f 100644
+index 9ed4d3868539..c0f45969bcf8 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
 @@ -3365,6 +3365,19 @@ F:	kernel/audit*
@@ -90,7 +90,7 @@ index c80a6acad742..96a562b48ec7 100644
  		return error;
  
 diff --git a/fs/namespace.c b/fs/namespace.c
-index 437f60e96d40..4c5eb92d2bef 100644
+index 5a51315c6678..a4b6ce51848e 100644
 --- a/fs/namespace.c
 +++ b/fs/namespace.c
 @@ -860,6 +860,12 @@ static inline int check_mnt(struct mount *mnt)
@@ -120,7 +120,7 @@ index 218e24b1ac40..7210ddc5aa81 100644
  {
  	if (unlikely(!out->f_op->splice_write))
 diff --git a/include/linux/fs.h b/include/linux/fs.h
-index ed5966a70495..d05a37ba89aa 100644
+index 023f37c60709..96ca249ee1e6 100644
 --- a/include/linux/fs.h
 +++ b/include/linux/fs.h
 @@ -1104,6 +1104,7 @@ extern void fasync_free(struct fasync_struct *);
