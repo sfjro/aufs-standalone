@@ -2,10 +2,10 @@ SPDX-License-Identifier: GPL-2.0
 aufs6.x-rcN mmap patch
 
 diff --git a/fs/proc/base.c b/fs/proc/base.c
-index 98a031ac2648..a7a2ff2a7f61 100644
+index 18550c071d71..560be8fb4fca 100644
 --- a/fs/proc/base.c
 +++ b/fs/proc/base.c
-@@ -2215,7 +2215,7 @@ static int map_files_get_link(struct dentry *dentry, struct path *path)
+@@ -2213,7 +2213,7 @@ static int map_files_get_link(struct dentry *dentry, struct path *path)
  	rc = -ENOENT;
  	vma = find_exact_vma(mm, vm_start, vm_end);
  	if (vma && vma->vm_file) {
@@ -164,7 +164,7 @@ index e4b5b75aaec9..2ec2544009fb 100644
  obj-$(CONFIG_SHRINKER_DEBUG) += shrinker_debug.o
 +obj-y += prfile.o
 diff --git a/mm/filemap.c b/mm/filemap.c
-index 750e779c23db..b84a752ff676 100644
+index 4a30de98a8c7..8f0f43c74cc4 100644
 --- a/mm/filemap.c
 +++ b/mm/filemap.c
 @@ -3587,7 +3587,7 @@ vm_fault_t filemap_page_mkwrite(struct vm_fault *vmf)
@@ -177,7 +177,7 @@ index 750e779c23db..b84a752ff676 100644
  	if (folio->mapping != mapping) {
  		folio_unlock(folio);
 diff --git a/mm/mmap.c b/mm/mmap.c
-index d89770eaab6b..6bfba84b5ff0 100644
+index 3281287771c9..9126c6f1d19a 100644
 --- a/mm/mmap.c
 +++ b/mm/mmap.c
 @@ -140,7 +140,7 @@ static void remove_vma(struct vm_area_struct *vma, bool unreachable)
@@ -198,7 +198,7 @@ index d89770eaab6b..6bfba84b5ff0 100644
  		}
  		if (vp->remove->anon_vma)
  			anon_vma_merge(vp->vma, vp->remove);
-@@ -2357,7 +2357,7 @@ static int __split_vma(struct vma_iterator *vmi, struct vm_area_struct *vma,
+@@ -2365,7 +2365,7 @@ static int __split_vma(struct vma_iterator *vmi, struct vm_area_struct *vma,
  		goto out_free_mpol;
  
  	if (new->vm_file)
@@ -207,7 +207,7 @@ index d89770eaab6b..6bfba84b5ff0 100644
  
  	if (new->vm_ops && new->vm_ops->open)
  		new->vm_ops->open(new);
-@@ -2855,7 +2855,7 @@ unsigned long mmap_region(struct file *file, unsigned long addr,
+@@ -2863,7 +2863,7 @@ unsigned long mmap_region(struct file *file, unsigned long addr,
  				 * and cause general protection fault
  				 * ultimately.
  				 */
@@ -216,7 +216,7 @@ index d89770eaab6b..6bfba84b5ff0 100644
  				vm_area_free(vma);
  				vma = merge;
  				/* Update vm_flags to pick up the change. */
-@@ -2950,7 +2950,7 @@ unsigned long mmap_region(struct file *file, unsigned long addr,
+@@ -2958,7 +2958,7 @@ unsigned long mmap_region(struct file *file, unsigned long addr,
  
  	if (file || vma->vm_file) {
  unmap_and_free_vma:
@@ -225,7 +225,7 @@ index d89770eaab6b..6bfba84b5ff0 100644
  		vma->vm_file = NULL;
  
  		vma_iter_set(&vmi, vma->vm_end);
-@@ -3012,6 +3012,9 @@ SYSCALL_DEFINE5(remap_file_pages, unsigned long, start, unsigned long, size,
+@@ -3020,6 +3020,9 @@ SYSCALL_DEFINE5(remap_file_pages, unsigned long, start, unsigned long, size,
  	unsigned long populate = 0;
  	unsigned long ret = -EINVAL;
  	struct file *file;
@@ -235,7 +235,7 @@ index d89770eaab6b..6bfba84b5ff0 100644
  
  	pr_warn_once("%s (%d) uses deprecated remap_file_pages() syscall. See Documentation/mm/remap_file_pages.rst.\n",
  		     current->comm, current->pid);
-@@ -3070,10 +3073,34 @@ SYSCALL_DEFINE5(remap_file_pages, unsigned long, start, unsigned long, size,
+@@ -3078,10 +3081,34 @@ SYSCALL_DEFINE5(remap_file_pages, unsigned long, start, unsigned long, size,
  	if (vma->vm_flags & VM_LOCKED)
  		flags |= MAP_LOCKED;
  
@@ -270,7 +270,7 @@ index d89770eaab6b..6bfba84b5ff0 100644
  out:
  	mmap_write_unlock(mm);
  	if (populate)
-@@ -3420,7 +3447,7 @@ struct vm_area_struct *copy_vma(struct vm_area_struct **vmap,
+@@ -3428,7 +3455,7 @@ struct vm_area_struct *copy_vma(struct vm_area_struct **vmap,
  		if (anon_vma_clone(new_vma, vma))
  			goto out_free_mempol;
  		if (new_vma->vm_file)
@@ -279,7 +279,7 @@ index d89770eaab6b..6bfba84b5ff0 100644
  		if (new_vma->vm_ops && new_vma->vm_ops->open)
  			new_vma->vm_ops->open(new_vma);
  		if (vma_link(mm, new_vma))
-@@ -3434,7 +3461,7 @@ struct vm_area_struct *copy_vma(struct vm_area_struct **vmap,
+@@ -3442,7 +3469,7 @@ struct vm_area_struct *copy_vma(struct vm_area_struct **vmap,
  		new_vma->vm_ops->close(new_vma);
  
  	if (new_vma->vm_file)

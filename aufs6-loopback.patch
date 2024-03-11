@@ -2,7 +2,7 @@ SPDX-License-Identifier: GPL-2.0
 aufs6.x-rcN loopback patch
 
 diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index 333b3915fe86..1eb5bde57477 100644
+index f1d88226db65..0b22c9d400a5 100644
 --- a/drivers/block/loop.c
 +++ b/drivers/block/loop.c
 @@ -54,7 +54,7 @@ struct loop_device {
@@ -84,7 +84,7 @@ index 333b3915fe86..1eb5bde57477 100644
  	goto done;
  }
  
-@@ -1009,6 +1032,7 @@ static int loop_configure(struct loop_device *lo, blk_mode_t mode,
+@@ -1011,6 +1034,7 @@ static int loop_configure(struct loop_device *lo, blk_mode_t mode,
  			  const struct loop_config *config)
  {
  	struct file *file = fget(config->fd);
@@ -92,7 +92,7 @@ index 333b3915fe86..1eb5bde57477 100644
  	struct inode *inode;
  	struct address_space *mapping;
  	int error;
-@@ -1024,6 +1048,13 @@ static int loop_configure(struct loop_device *lo, blk_mode_t mode,
+@@ -1026,6 +1050,13 @@ static int loop_configure(struct loop_device *lo, blk_mode_t mode,
  	/* This is safe, since we have a reference from open(). */
  	__module_get(THIS_MODULE);
  
@@ -106,7 +106,7 @@ index 333b3915fe86..1eb5bde57477 100644
  	/*
  	 * If we don't hold exclusive handle for the device, upgrade to it
  	 * here to avoid changing device under exclusive owner.
-@@ -1087,6 +1118,7 @@ static int loop_configure(struct loop_device *lo, blk_mode_t mode,
+@@ -1089,6 +1120,7 @@ static int loop_configure(struct loop_device *lo, blk_mode_t mode,
  	lo->use_dio = lo->lo_flags & LO_FLAGS_DIRECT_IO;
  	lo->lo_device = bdev;
  	lo->lo_backing_file = file;
@@ -114,7 +114,7 @@ index 333b3915fe86..1eb5bde57477 100644
  	lo->old_gfp_mask = mapping_gfp_mask(mapping);
  	mapping_set_gfp_mask(mapping, lo->old_gfp_mask & ~(__GFP_IO|__GFP_FS));
  
-@@ -1142,6 +1174,8 @@ static int loop_configure(struct loop_device *lo, blk_mode_t mode,
+@@ -1144,6 +1176,8 @@ static int loop_configure(struct loop_device *lo, blk_mode_t mode,
  		bd_abort_claiming(bdev, loop_configure);
  out_putf:
  	fput(file);
@@ -123,7 +123,7 @@ index 333b3915fe86..1eb5bde57477 100644
  	/* This is safe: open() is still holding a reference. */
  	module_put(THIS_MODULE);
  	return error;
-@@ -1150,6 +1184,7 @@ static int loop_configure(struct loop_device *lo, blk_mode_t mode,
+@@ -1152,6 +1186,7 @@ static int loop_configure(struct loop_device *lo, blk_mode_t mode,
  static void __loop_clr_fd(struct loop_device *lo, bool release)
  {
  	struct file *filp;
@@ -131,7 +131,7 @@ index 333b3915fe86..1eb5bde57477 100644
  	gfp_t gfp = lo->old_gfp_mask;
  
  	if (test_bit(QUEUE_FLAG_WC, &lo->lo_queue->queue_flags))
-@@ -1166,6 +1201,7 @@ static void __loop_clr_fd(struct loop_device *lo, bool release)
+@@ -1168,6 +1203,7 @@ static void __loop_clr_fd(struct loop_device *lo, bool release)
  	spin_lock_irq(&lo->lo_lock);
  	filp = lo->lo_backing_file;
  	lo->lo_backing_file = NULL;
@@ -139,7 +139,7 @@ index 333b3915fe86..1eb5bde57477 100644
  	spin_unlock_irq(&lo->lo_lock);
  
  	lo->lo_device = NULL;
-@@ -1228,6 +1264,8 @@ static void __loop_clr_fd(struct loop_device *lo, bool release)
+@@ -1230,6 +1266,8 @@ static void __loop_clr_fd(struct loop_device *lo, bool release)
  	 * fput can take open_mutex which is usually taken before lo_mutex.
  	 */
  	fput(filp);
@@ -224,10 +224,10 @@ index 07d3412e950f..c4a00f620e57 100644
  
  /* ---------------------------------------------------------------------- */
 diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 96ca249ee1e6..b21abb1a2134 100644
+index 18f7613fc8de..3e5893cb87f0 100644
 --- a/include/linux/fs.h
 +++ b/include/linux/fs.h
-@@ -2165,6 +2165,11 @@ struct super_operations {
+@@ -2167,6 +2167,11 @@ struct super_operations {
  	long (*free_cached_objects)(struct super_block *,
  				    struct shrink_control *);
  	void (*shutdown)(struct super_block *sb);

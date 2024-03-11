@@ -2,10 +2,10 @@ SPDX-License-Identifier: GPL-2.0
 aufs6.x-rcN base patch
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 9ed4d3868539..c0f45969bcf8 100644
+index 1aabf1c15bb3..eda9d897b6d7 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -3365,6 +3365,19 @@ F:	kernel/audit*
+@@ -3366,6 +3366,19 @@ F:	kernel/audit*
  F:	lib/*audit.c
  K:	\baudit_[a-z_0-9]\+\b
  
@@ -26,10 +26,10 @@ index 9ed4d3868539..c0f45969bcf8 100644
  M:	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
  R:	Dave Ertman <david.m.ertman@intel.com>
 diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index f8145499da38..333b3915fe86 100644
+index f8145499da38..f1d88226db65 100644
 --- a/drivers/block/loop.c
 +++ b/drivers/block/loop.c
-@@ -641,6 +641,24 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
+@@ -641,6 +641,26 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
  	goto done;
  }
  
@@ -37,6 +37,8 @@ index f8145499da38..333b3915fe86 100644
 + * for AUFS
 + * no get/put for file.
 + */
++/* Just to make the compiler silence, declare it */
++struct file *loop_backing_file(struct super_block *sb);
 +struct file *loop_backing_file(struct super_block *sb)
 +{
 +	struct file *ret;
@@ -55,10 +57,20 @@ index f8145499da38..333b3915fe86 100644
  
  static ssize_t loop_attr_show(struct device *dev, char *page,
 diff --git a/fs/dcache.c b/fs/dcache.c
-index b813528fb147..78e322b59b8d 100644
+index 6ebccba33336..9e486d7e04a9 100644
 --- a/fs/dcache.c
 +++ b/fs/dcache.c
-@@ -1219,7 +1219,7 @@ enum d_walk_ret {
+@@ -1211,6 +1211,9 @@ enum d_walk_ret {
+ 	D_WALK_SKIP,
+ };
+ 
++/* AUFS calls d_walk(). Just to make the compiler silence, declare it */
++void d_walk(struct dentry *parent, void *data,
++		   enum d_walk_ret (*enter)(void *, struct dentry *));
+ /**
+  * d_walk - walk the dentry tree
+  * @parent:	start of walk
+@@ -1219,7 +1222,7 @@ enum d_walk_ret {
   *
   * The @enter() callbacks are called with d_lock held.
   */
@@ -120,10 +132,10 @@ index 218e24b1ac40..7210ddc5aa81 100644
  {
  	if (unlikely(!out->f_op->splice_write))
 diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 023f37c60709..96ca249ee1e6 100644
+index 1fbc72c5f112..18f7613fc8de 100644
 --- a/include/linux/fs.h
 +++ b/include/linux/fs.h
-@@ -1104,6 +1104,7 @@ extern void fasync_free(struct fasync_struct *);
+@@ -1106,6 +1106,7 @@ extern void fasync_free(struct fasync_struct *);
  /* can be called from interrupts */
  extern void kill_fasync(struct fasync_struct **, int, int);
  
@@ -131,7 +143,7 @@ index 023f37c60709..96ca249ee1e6 100644
  extern void __f_setown(struct file *filp, struct pid *, enum pid_type, int force);
  extern int f_setown(struct file *filp, int who, int force);
  extern void f_delown(struct file *filp);
-@@ -2001,6 +2002,7 @@ struct file_operations {
+@@ -2003,6 +2004,7 @@ struct file_operations {
  	int (*lock) (struct file *, int, struct file_lock *);
  	unsigned long (*get_unmapped_area)(struct file *, unsigned long, unsigned long, unsigned long, unsigned long);
  	int (*check_flags)(int);
