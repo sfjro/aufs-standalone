@@ -2,10 +2,10 @@ SPDX-License-Identifier: GPL-2.0
 aufs6.x-rcN base patch
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 1aabf1c15bb3..eda9d897b6d7 100644
+index aa3b947fb080..fb7020b24f7c 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -3366,6 +3366,19 @@ F:	kernel/audit*
+@@ -3396,6 +3396,19 @@ F:	kernel/audit*
  F:	lib/*audit.c
  K:	\baudit_[a-z_0-9]\+\b
  
@@ -26,7 +26,7 @@ index 1aabf1c15bb3..eda9d897b6d7 100644
  M:	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
  R:	Dave Ertman <david.m.ertman@intel.com>
 diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index f8145499da38..f1d88226db65 100644
+index 28a95fd366fe..6bd18fb1e53a 100644
 --- a/drivers/block/loop.c
 +++ b/drivers/block/loop.c
 @@ -641,6 +641,26 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
@@ -57,7 +57,7 @@ index f8145499da38..f1d88226db65 100644
  
  static ssize_t loop_attr_show(struct device *dev, char *page,
 diff --git a/fs/dcache.c b/fs/dcache.c
-index 6ebccba33336..9e486d7e04a9 100644
+index 71a8e943a0fa..13afe5474f86 100644
 --- a/fs/dcache.c
 +++ b/fs/dcache.c
 @@ -1211,6 +1211,9 @@ enum d_walk_ret {
@@ -80,10 +80,10 @@ index 6ebccba33336..9e486d7e04a9 100644
  {
  	struct dentry *this_parent, *dentry;
 diff --git a/fs/fcntl.c b/fs/fcntl.c
-index c80a6acad742..96a562b48ec7 100644
+index 54cc85d3338e..5dcfe97a5ba5 100644
 --- a/fs/fcntl.c
 +++ b/fs/fcntl.c
-@@ -34,7 +34,7 @@
+@@ -35,7 +35,7 @@
  
  #define SETFL_MASK (O_APPEND | O_NONBLOCK | O_NDELAY | O_DIRECT | O_NOATIME)
  
@@ -92,7 +92,7 @@ index c80a6acad742..96a562b48ec7 100644
  {
  	struct inode * inode = file_inode(filp);
  	int error = 0;
-@@ -64,6 +64,8 @@ static int setfl(int fd, struct file * filp, unsigned int arg)
+@@ -65,6 +65,8 @@ static int setfl(int fd, struct file * filp, unsigned int arg)
  
  	if (filp->f_op->check_flags)
  		error = filp->f_op->check_flags(arg);
@@ -132,10 +132,10 @@ index 218e24b1ac40..7210ddc5aa81 100644
  {
  	if (unlikely(!out->f_op->splice_write))
 diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 1fbc72c5f112..18f7613fc8de 100644
+index 00fc429b0af0..b3a73aed62b8 100644
 --- a/include/linux/fs.h
 +++ b/include/linux/fs.h
-@@ -1106,6 +1106,7 @@ extern void fasync_free(struct fasync_struct *);
+@@ -1113,6 +1113,7 @@ extern void fasync_free(struct fasync_struct *);
  /* can be called from interrupts */
  extern void kill_fasync(struct fasync_struct **, int, int);
  
@@ -143,7 +143,7 @@ index 1fbc72c5f112..18f7613fc8de 100644
  extern void __f_setown(struct file *filp, struct pid *, enum pid_type, int force);
  extern int f_setown(struct file *filp, int who, int force);
  extern void f_delown(struct file *filp);
-@@ -2003,6 +2004,7 @@ struct file_operations {
+@@ -2024,6 +2025,7 @@ struct file_operations {
  	int (*lock) (struct file *, int, struct file_lock *);
  	unsigned long (*get_unmapped_area)(struct file *, unsigned long, unsigned long, unsigned long, unsigned long);
  	int (*check_flags)(int);
