@@ -31,7 +31,7 @@ index c6e7ebc63756..d7ccfd909764 100644
  		ino = inode->i_ino;
  	}
 diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
-index 23fbab954c20..6faced8ef8fe 100644
+index 102f48668c35..0f6ff27ec284 100644
 --- a/fs/proc/task_mmu.c
 +++ b/fs/proc/task_mmu.c
 @@ -273,7 +273,8 @@ show_map_vma(struct seq_file *m, struct vm_area_struct *vma)
@@ -44,7 +44,7 @@ index 23fbab954c20..6faced8ef8fe 100644
  
  		dev = inode->i_sb->s_dev;
  		ino = inode->i_ino;
-@@ -2700,7 +2701,7 @@ static int show_numa_map(struct seq_file *m, void *v)
+@@ -2704,7 +2705,7 @@ static int show_numa_map(struct seq_file *m, void *v)
  	struct proc_maps_private *proc_priv = &numa_priv->proc_maps;
  	struct vm_area_struct *vma = v;
  	struct numa_maps *md = &numa_priv->md;
@@ -70,10 +70,10 @@ index bce674533000..b12b5a75c799 100644
  		ino = inode->i_ino;
  		pgoff = (loff_t)vma->vm_pgoff << PAGE_SHIFT;
 diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 0436b919f1c7..a04c7dde4bc2 100644
+index b6bdaa18b9e9..d036d32b985d 100644
 --- a/include/linux/mm.h
 +++ b/include/linux/mm.h
-@@ -2452,6 +2452,43 @@ static inline void unmap_shared_mapping_range(struct address_space *mapping,
+@@ -2454,6 +2454,43 @@ static inline void unmap_shared_mapping_range(struct address_space *mapping,
  static inline struct vm_area_struct *vma_lookup(struct mm_struct *mm,
  						unsigned long addr);
  
@@ -142,10 +142,10 @@ index 5240bd7bca33..f91323e92ef9 100644
  
  #ifdef CONFIG_ANON_VMA_NAME
 diff --git a/kernel/fork.c b/kernel/fork.c
-index 39a5046c2f0b..478a22f5f367 100644
+index aebb3e6c96dc..149d1e66c0dd 100644
 --- a/kernel/fork.c
 +++ b/kernel/fork.c
-@@ -718,7 +718,7 @@ static __latent_entropy int dup_mmap(struct mm_struct *mm,
+@@ -735,7 +735,7 @@ static __latent_entropy int dup_mmap(struct mm_struct *mm,
  		if (file) {
  			struct address_space *mapping = file->f_mapping;
  
@@ -155,16 +155,16 @@ index 39a5046c2f0b..478a22f5f367 100644
  			if (vma_is_shared_maywrite(tmp))
  				mapping_allow_writable(mapping);
 diff --git a/mm/Makefile b/mm/Makefile
-index e4b5b75aaec9..2ec2544009fb 100644
+index 4abb40b911ec..455b8009cc41 100644
 --- a/mm/Makefile
 +++ b/mm/Makefile
-@@ -134,3 +134,4 @@ obj-$(CONFIG_IO_MAPPING) += io-mapping.o
+@@ -133,3 +133,4 @@ obj-$(CONFIG_IO_MAPPING) += io-mapping.o
  obj-$(CONFIG_HAVE_BOOTMEM_INFO_NODE) += bootmem_info.o
  obj-$(CONFIG_GENERIC_IOREMAP) += ioremap.o
  obj-$(CONFIG_SHRINKER_DEBUG) += shrinker_debug.o
 +obj-y += prfile.o
 diff --git a/mm/filemap.c b/mm/filemap.c
-index 7437b2bd75c1..cecf1956f7a9 100644
+index 30de18c4fd28..a4f39076d23d 100644
 --- a/mm/filemap.c
 +++ b/mm/filemap.c
 @@ -3631,7 +3631,7 @@ vm_fault_t filemap_page_mkwrite(struct vm_fault *vmf)
