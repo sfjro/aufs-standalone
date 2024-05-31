@@ -2,7 +2,7 @@ SPDX-License-Identifier: GPL-2.0
 aufs6.x-rcN standalone patch
 
 diff --git a/fs/dcache.c b/fs/dcache.c
-index 13afe5474f86..05d9dab666bb 100644
+index 127a5e209f5a..10c0fd9e31e4 100644
 --- a/fs/dcache.c
 +++ b/fs/dcache.c
 @@ -1321,6 +1321,7 @@ void d_walk(struct dentry *parent, void *data,
@@ -13,7 +13,7 @@ index 13afe5474f86..05d9dab666bb 100644
  
  struct check_mount {
  	struct vfsmount *mnt;
-@@ -2883,6 +2884,7 @@ void d_exchange(struct dentry *dentry1, struct dentry *dentry2)
+@@ -2882,6 +2883,7 @@ void d_exchange(struct dentry *dentry1, struct dentry *dentry2)
  
  	write_sequnlock(&rename_lock);
  }
@@ -22,10 +22,10 @@ index 13afe5474f86..05d9dab666bb 100644
  /**
   * d_ancestor - search for an ancestor
 diff --git a/fs/exec.c b/fs/exec.c
-index cf1df7f16e55..664a9f81ed2e 100644
+index 40073142288f..df83c144ece0 100644
 --- a/fs/exec.c
 +++ b/fs/exec.c
-@@ -113,6 +113,7 @@ bool path_noexec(const struct path *path)
+@@ -114,6 +114,7 @@ bool path_noexec(const struct path *path)
  	return (path->mnt->mnt_flags & MNT_NOEXEC) ||
  	       (path->mnt->mnt_sb->s_iflags & SB_I_NOEXEC);
  }
@@ -34,7 +34,7 @@ index cf1df7f16e55..664a9f81ed2e 100644
  #ifdef CONFIG_USELIB
  /*
 diff --git a/fs/fcntl.c b/fs/fcntl.c
-index 5dcfe97a5ba5..48adde670824 100644
+index 3f927cbf63b3..9a6faf9fb36d 100644
 --- a/fs/fcntl.c
 +++ b/fs/fcntl.c
 @@ -88,6 +88,7 @@ int setfl(int fd, struct file * filp, unsigned int arg)
@@ -106,7 +106,7 @@ index 1de6631a3925..3008eb37a18d 100644
  /*
   * Drop a reference to a group.  Free it if it's through.
 diff --git a/fs/open.c b/fs/open.c
-index ee8460c83c77..cb296bf7770f 100644
+index 89cafb572061..7660092dfe5d 100644
 --- a/fs/open.c
 +++ b/fs/open.c
 @@ -66,6 +66,7 @@ int do_truncate(struct mnt_idmap *idmap, struct dentry *dentry,
@@ -118,7 +118,7 @@ index ee8460c83c77..cb296bf7770f 100644
  long vfs_truncate(const struct path *path, loff_t length)
  {
 diff --git a/fs/read_write.c b/fs/read_write.c
-index d4c036e82b6c..c61361ff5e67 100644
+index ef6339391351..5e37f9aeb841 100644
 --- a/fs/read_write.c
 +++ b/fs/read_write.c
 @@ -483,6 +483,7 @@ ssize_t vfs_read(struct file *file, char __user *buf, size_t count, loff_t *pos)
@@ -138,7 +138,7 @@ index d4c036e82b6c..c61361ff5e67 100644
  /* file_ppos returns &file->f_pos or NULL if file is stream */
  static inline loff_t *file_ppos(struct file *file)
 diff --git a/fs/splice.c b/fs/splice.c
-index 7210ddc5aa81..9e83f46eacc8 100644
+index 04af758d332c..06836fe2d101 100644
 --- a/fs/splice.c
 +++ b/fs/splice.c
 @@ -940,6 +940,7 @@ ssize_t do_splice_from(struct pipe_inode_info *pipe, struct file *out,
@@ -183,7 +183,7 @@ index 95a7e1b7f1da..5053670775d3 100644
  }
 +EXPORT_SYMBOL_GPL(task_work_run);
 diff --git a/security/security.c b/security/security.c
-index 0a9a0ac3f266..5c599ffd8552 100644
+index e5da848c50b9..9209140188c5 100644
 --- a/security/security.c
 +++ b/security/security.c
 @@ -1840,6 +1840,7 @@ int security_path_rmdir(const struct path *dir, struct dentry *dentry)
@@ -234,7 +234,7 @@ index 0a9a0ac3f266..5c599ffd8552 100644
  
  /**
   * security_inode_setattr() - Check if setting file attributes is allowed
-@@ -2694,6 +2700,7 @@ int security_file_permission(struct file *file, int mask)
+@@ -2695,6 +2701,7 @@ int security_file_permission(struct file *file, int mask)
  {
  	return call_int_hook(file_permission, file, mask);
  }
@@ -242,7 +242,7 @@ index 0a9a0ac3f266..5c599ffd8552 100644
  
  /**
   * security_file_alloc() - Allocate and init a file's LSM blob
-@@ -2996,6 +3003,7 @@ int security_file_truncate(struct file *file)
+@@ -2997,6 +3004,7 @@ int security_file_truncate(struct file *file)
  {
  	return call_int_hook(file_truncate, file);
  }
