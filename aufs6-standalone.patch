@@ -2,7 +2,7 @@ SPDX-License-Identifier: GPL-2.0
 aufs6.x-rcN standalone patch
 
 diff --git a/fs/dcache.c b/fs/dcache.c
-index 127a5e209f5a..10c0fd9e31e4 100644
+index 829c347a2238..005ead6c3ecb 100644
 --- a/fs/dcache.c
 +++ b/fs/dcache.c
 @@ -1321,6 +1321,7 @@ void d_walk(struct dentry *parent, void *data,
@@ -13,7 +13,7 @@ index 127a5e209f5a..10c0fd9e31e4 100644
  
  struct check_mount {
  	struct vfsmount *mnt;
-@@ -2882,6 +2883,7 @@ void d_exchange(struct dentry *dentry1, struct dentry *dentry2)
+@@ -2883,6 +2884,7 @@ void d_exchange(struct dentry *dentry1, struct dentry *dentry2)
  
  	write_sequnlock(&rename_lock);
  }
