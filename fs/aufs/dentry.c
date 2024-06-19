@@ -864,7 +864,7 @@ static int h_d_revalidate(struct dentry *dentry, struct inode *inode,
 {
 	int err;
 	umode_t mode, h_mode;
-	aufs_bindex_t bindex, btail, btop, ibs, ibe;
+	aufs_bindex_t bindex, btail, btop, ibs, ibe, bwh;
 	unsigned char plus, unhashed, is_root, h_plus, h_nfs, tmpfile;
 	struct inode *h_inode, *h_cached_inode;
 	struct dentry *h_dentry;
@@ -895,11 +895,17 @@ static int h_d_revalidate(struct dentry *dentry, struct inode *inode,
 	}
 
 	btop = au_dbtop(dentry);
+	bwh = au_dbwh(dentry);
+	if (0 <= bwh && bwh < btop)
+		btop = bwh;
 	btail = btop;
 	if (inode && S_ISDIR(inode->i_mode))
 		btail = au_dbtaildir(dentry);
 	for (bindex = btop; bindex <= btail; bindex++) {
 		h_dentry = au_h_dptr(dentry, bindex);
+		if (!h_dentry
+		    && (bindex == bwh && inode))
+			h_dentry = au_hi_wh(inode, bindex);
 		if (!h_dentry)
 			continue;
 
@@ -908,6 +914,7 @@ static int h_d_revalidate(struct dentry *dentry, struct inode *inode,
 		spin_lock(&h_dentry->d_lock);
 		h_name = &h_dentry->d_name;
 		if (unlikely(do_udba
+			     && bindex != bwh
 			     && !is_root
 			     && ((!h_nfs
 				  && (unhashed != !!d_unhashed(h_dentry)
@@ -948,7 +955,7 @@ static int h_d_revalidate(struct dentry *dentry, struct inode *inode,
 		h_plus = plus;
 		h_mode = mode;
 		h_cached_inode = h_inode;
-		if (h_inode) {
+		if (h_inode && bindex != bwh) {
 			h_mode = (h_inode->i_mode & S_IFMT);
 			h_plus = (h_inode->i_nlink > 0);
 		}
