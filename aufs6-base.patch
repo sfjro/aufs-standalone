@@ -2,10 +2,10 @@ SPDX-License-Identifier: GPL-2.0
 aufs6.x-rcN base patch
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 8754ac2c259d..fc93958fb011 100644
+index cf9c9221c388..4acd1ec5065f 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -3501,6 +3501,19 @@ F:	kernel/audit*
+@@ -3500,6 +3500,19 @@ F:	kernel/audit*
  F:	lib/*audit.c
  K:	\baudit_[a-z_0-9]\+\b
  
@@ -26,10 +26,10 @@ index 8754ac2c259d..fc93958fb011 100644
  M:	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
  R:	Dave Ertman <david.m.ertman@intel.com>
 diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index 93780f41646b..63a5312383f7 100644
+index 1153721bc7c2..bfe45a940de8 100644
 --- a/drivers/block/loop.c
 +++ b/drivers/block/loop.c
-@@ -641,6 +641,26 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
+@@ -664,6 +664,26 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
  	goto done;
  }
  
@@ -152,7 +152,7 @@ index 0283cf366c2a..d36e42c7406d 100644
  	ssize_t (*splice_write)(struct pipe_inode_info *, struct file *, loff_t *, size_t, unsigned int);
  	ssize_t (*splice_read)(struct file *, loff_t *, struct pipe_inode_info *, size_t, unsigned int);
 diff --git a/include/linux/lockdep.h b/include/linux/lockdep.h
-index 5e51b0de4c4b..58e66a0bc7fc 100644
+index 08b0d1d9d78b..009f69c4e09d 100644
 --- a/include/linux/lockdep.h
 +++ b/include/linux/lockdep.h
 @@ -192,6 +192,8 @@ static inline int lockdep_match_key(struct lockdep_map *lock,

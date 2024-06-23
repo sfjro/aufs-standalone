@@ -2,7 +2,7 @@ SPDX-License-Identifier: GPL-2.0
 aufs6.x-rcN mmap patch
 
 diff --git a/fs/proc/base.c b/fs/proc/base.c
-index 18550c071d71..560be8fb4fca 100644
+index 72a1acd03675..7970af6dde6b 100644
 --- a/fs/proc/base.c
 +++ b/fs/proc/base.c
 @@ -2213,7 +2213,7 @@ static int map_files_get_link(struct dentry *dentry, struct path *path)
@@ -118,7 +118,7 @@ index 9849dfda44d4..fadad6b69830 100644
  		void *buf, int len, unsigned int gup_flags);
  extern int access_remote_vm(struct mm_struct *mm, unsigned long addr,
 diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
-index 24323c7d0bd4..884b764e1c66 100644
+index af3a0256fa93..652ba2c8e82e 100644
 --- a/include/linux/mm_types.h
 +++ b/include/linux/mm_types.h
 @@ -556,6 +556,9 @@ struct vm_region {
@@ -164,7 +164,7 @@ index 8fb85acda1b1..05a7645fe2e8 100644
  obj-$(CONFIG_EXECMEM) += execmem.o
 +obj-y += prfile.o
 diff --git a/mm/filemap.c b/mm/filemap.c
-index 382c3d06bfb1..fde814a7dd82 100644
+index 876cc64aadd7..ae27ace866f4 100644
 --- a/mm/filemap.c
 +++ b/mm/filemap.c
 @@ -3672,7 +3672,7 @@ vm_fault_t filemap_page_mkwrite(struct vm_fault *vmf)
