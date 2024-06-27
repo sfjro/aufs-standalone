@@ -183,7 +183,7 @@ index 95a7e1b7f1da..5053670775d3 100644
  }
 +EXPORT_SYMBOL_GPL(task_work_run);
 diff --git a/security/security.c b/security/security.c
-index e5da848c50b9..9209140188c5 100644
+index e5ca08789f74..24596516c66f 100644
 --- a/security/security.c
 +++ b/security/security.c
 @@ -1840,6 +1840,7 @@ int security_path_rmdir(const struct path *dir, struct dentry *dentry)

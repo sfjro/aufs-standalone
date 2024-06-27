@@ -21,7 +21,7 @@ index 3fb18f7eb73e..e71bf6903bc5 100644
  	umode_t mode;		    /* Mount mode for root directory */
  	unsigned char huge;	    /* Whether to try for hugepages */
 diff --git a/mm/shmem.c b/mm/shmem.c
-index f5d60436b604..dcc41650ab71 100644
+index a8b181a63402..eda8dde0f0eb 100644
 --- a/mm/shmem.c
 +++ b/mm/shmem.c
 @@ -112,7 +112,7 @@ struct shmem_falloc {
