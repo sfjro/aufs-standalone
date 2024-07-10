@@ -1,7 +1,7 @@
 SPDX-License-Identifier: GPL-2.0
 
 diff --git a/include/linux/shmem_fs.h b/include/linux/shmem_fs.h
-index 2caa6b86106a..a23cbfa184c9 100644
+index 2caa6b86106a..51e88420f146 100644
 --- a/include/linux/shmem_fs.h
 +++ b/include/linux/shmem_fs.h
 @@ -55,10 +55,13 @@ struct shmem_quota_limits {
@@ -16,12 +16,12 @@ index 2caa6b86106a..a23cbfa184c9 100644
 -	unsigned long max_inodes;   /* How many inodes are allowed */
 -	unsigned long free_ispace;  /* How much ispace left for allocation */
 +	int max_inodes;		    /* How many inodes are allowed */
-+	int free_ispace;	    /* How many are left for allocation */
++	unsigned long free_ispace;  /* How many are left for allocation */
  	raw_spinlock_t stat_lock;   /* Serialize shmem_sb_info changes */
  	umode_t mode;		    /* Mount mode for root directory */
  	unsigned char huge;	    /* Whether to try for hugepages */
 diff --git a/mm/shmem.c b/mm/shmem.c
-index 0d1ce70bce38..ffcbf45037b7 100644
+index 0d1ce70bce38..030b901c9253 100644
 --- a/mm/shmem.c
 +++ b/mm/shmem.c
 @@ -111,7 +111,7 @@ struct shmem_falloc {
@@ -178,7 +178,7 @@ index 0d1ce70bce38..ffcbf45037b7 100644
  	free_percpu(sbinfo->ino_batch);
  	percpu_counter_destroy(&sbinfo->used_blocks);
  	mpol_put(sbinfo->mpol);
-@@ -4323,6 +4332,8 @@ static int shmem_fill_super(struct super_block *sb, struct fs_context *fc)
+@@ -4323,9 +4332,11 @@ static int shmem_fill_super(struct super_block *sb, struct fs_context *fc)
  #else
  	sb->s_flags |= SB_NOUSER;
  #endif
@@ -186,7 +186,11 @@ index 0d1ce70bce38..ffcbf45037b7 100644
 +	idr_init(&sbinfo->idr);
  	sbinfo->max_blocks = ctx->blocks;
  	sbinfo->max_inodes = ctx->inodes;
- 	sbinfo->free_ispace = sbinfo->max_inodes * BOGO_INODE_SIZE;
+-	sbinfo->free_ispace = sbinfo->max_inodes * BOGO_INODE_SIZE;
++	sbinfo->free_ispace = (unsigned long)sbinfo->max_inodes * BOGO_INODE_SIZE;
+ 	if (sb->s_flags & SB_KERNMOUNT) {
+ 		sbinfo->ino_batch = alloc_percpu(ino_t);
+ 		if (!sbinfo->ino_batch)
 @@ -4468,6 +4479,15 @@ static int shmem_error_remove_page(struct address_space *mapping,
  	return 0;
  }
