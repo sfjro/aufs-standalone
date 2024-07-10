@@ -31,7 +31,7 @@ index c6e7ebc63756..d7ccfd909764 100644
  		ino = inode->i_ino;
  	}
 diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
-index f8d35f993fe5..46f55631b4e1 100644
+index 71e5039d940d..c664cbc8bf27 100644
 --- a/fs/proc/task_mmu.c
 +++ b/fs/proc/task_mmu.c
 @@ -273,7 +273,8 @@ show_map_vma(struct seq_file *m, struct vm_area_struct *vma)
@@ -44,7 +44,7 @@ index f8d35f993fe5..46f55631b4e1 100644
  
  		dev = inode->i_sb->s_dev;
  		ino = inode->i_ino;
-@@ -2716,7 +2717,7 @@ static int show_numa_map(struct seq_file *m, void *v)
+@@ -2719,7 +2720,7 @@ static int show_numa_map(struct seq_file *m, void *v)
  	struct proc_maps_private *proc_priv = &numa_priv->proc_maps;
  	struct vm_area_struct *vma = v;
  	struct numa_maps *md = &numa_priv->md;
@@ -70,10 +70,10 @@ index bce674533000..b12b5a75c799 100644
  		ino = inode->i_ino;
  		pgoff = (loff_t)vma->vm_pgoff << PAGE_SHIFT;
 diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 9a5652c5fadd..6c1bb0021390 100644
+index eb7c96d24ac0..94be7829c0de 100644
 --- a/include/linux/mm.h
 +++ b/include/linux/mm.h
-@@ -2493,6 +2493,43 @@ static inline void unmap_shared_mapping_range(struct address_space *mapping,
+@@ -2498,6 +2498,43 @@ static inline void unmap_shared_mapping_range(struct address_space *mapping,
  static inline struct vm_area_struct *vma_lookup(struct mm_struct *mm,
  						unsigned long addr);
  

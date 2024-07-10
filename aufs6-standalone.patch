@@ -2,7 +2,7 @@ SPDX-License-Identifier: GPL-2.0
 aufs6.x-rcN standalone patch
 
 diff --git a/fs/dcache.c b/fs/dcache.c
-index 829c347a2238..005ead6c3ecb 100644
+index 49e6baeea669..20542007e183 100644
 --- a/fs/dcache.c
 +++ b/fs/dcache.c
 @@ -1321,6 +1321,7 @@ void d_walk(struct dentry *parent, void *data,
@@ -106,7 +106,7 @@ index 1de6631a3925..3008eb37a18d 100644
  /*
   * Drop a reference to a group.  Free it if it's through.
 diff --git a/fs/open.c b/fs/open.c
-index 89cafb572061..7660092dfe5d 100644
+index 278b3edcda44..15dd127a2296 100644
 --- a/fs/open.c
 +++ b/fs/open.c
 @@ -66,6 +66,7 @@ int do_truncate(struct mnt_idmap *idmap, struct dentry *dentry,

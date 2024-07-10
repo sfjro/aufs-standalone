@@ -2,7 +2,7 @@ SPDX-License-Identifier: GPL-2.0
 aufs6.x-rcN base patch
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 2ca8f35dfe03..7b862608ff86 100644
+index da5352dbd4f3..b6b9edb63307 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
 @@ -3500,6 +3500,19 @@ F:	kernel/audit*
@@ -57,7 +57,7 @@ index 1153721bc7c2..bfe45a940de8 100644
  
  static ssize_t loop_attr_show(struct device *dev, char *page,
 diff --git a/fs/dcache.c b/fs/dcache.c
-index 407095188f83..829c347a2238 100644
+index d58dc9e58f3b..49e6baeea669 100644
 --- a/fs/dcache.c
 +++ b/fs/dcache.c
 @@ -1211,6 +1211,9 @@ enum d_walk_ret {
