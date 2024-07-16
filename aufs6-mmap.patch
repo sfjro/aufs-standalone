@@ -164,10 +164,10 @@ index 8fb85acda1b1..05a7645fe2e8 100644
  obj-$(CONFIG_EXECMEM) += execmem.o
 +obj-y += prfile.o
 diff --git a/mm/filemap.c b/mm/filemap.c
-index 876cc64aadd7..ae27ace866f4 100644
+index 657bcd887fdb..b58773966026 100644
 --- a/mm/filemap.c
 +++ b/mm/filemap.c
-@@ -3672,7 +3672,7 @@ vm_fault_t filemap_page_mkwrite(struct vm_fault *vmf)
+@@ -3673,7 +3673,7 @@ vm_fault_t filemap_page_mkwrite(struct vm_fault *vmf)
  	vm_fault_t ret = VM_FAULT_LOCKED;
  
  	sb_start_pagefault(mapping->host->i_sb);

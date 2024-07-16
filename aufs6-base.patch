@@ -2,10 +2,10 @@ SPDX-License-Identifier: GPL-2.0
 aufs6.x-rcN base patch
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index da5352dbd4f3..b6b9edb63307 100644
+index 958e935449e5..07f4a5756abf 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -3500,6 +3500,19 @@ F:	kernel/audit*
+@@ -3479,6 +3479,19 @@ F:	kernel/audit*
  F:	lib/*audit.c
  K:	\baudit_[a-z_0-9]\+\b
  
@@ -57,10 +57,10 @@ index 1153721bc7c2..bfe45a940de8 100644
  
  static ssize_t loop_attr_show(struct device *dev, char *page,
 diff --git a/fs/dcache.c b/fs/dcache.c
-index d58dc9e58f3b..49e6baeea669 100644
+index 4c144519aa70..608e61e3d697 100644
 --- a/fs/dcache.c
 +++ b/fs/dcache.c
-@@ -1211,6 +1211,9 @@ enum d_walk_ret {
+@@ -1215,6 +1215,9 @@ enum d_walk_ret {
  	D_WALK_SKIP,
  };
  
@@ -70,7 +70,7 @@ index d58dc9e58f3b..49e6baeea669 100644
  /**
   * d_walk - walk the dentry tree
   * @parent:	start of walk
-@@ -1219,7 +1222,7 @@ enum d_walk_ret {
+@@ -1223,7 +1226,7 @@ enum d_walk_ret {
   *
   * The @enter() callbacks are called with d_lock held.
   */
