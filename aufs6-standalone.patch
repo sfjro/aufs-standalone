@@ -2,10 +2,10 @@ SPDX-License-Identifier: GPL-2.0
 aufs6.x-rcN standalone patch
 
 diff --git a/fs/dcache.c b/fs/dcache.c
-index 608e61e3d697..de38d1afc074 100644
+index 61f1e85afed1..0e16da701511 100644
 --- a/fs/dcache.c
 +++ b/fs/dcache.c
-@@ -1325,6 +1325,7 @@ void d_walk(struct dentry *parent, void *data,
+@@ -1328,6 +1328,7 @@ void d_walk(struct dentry *parent, void *data,
  	seq = 1;
  	goto again;
  }
@@ -13,7 +13,7 @@ index 608e61e3d697..de38d1afc074 100644
  
  struct check_mount {
  	struct vfsmount *mnt;
-@@ -2889,6 +2890,7 @@ void d_exchange(struct dentry *dentry1, struct dentry *dentry2)
+@@ -2892,6 +2893,7 @@ void d_exchange(struct dentry *dentry1, struct dentry *dentry2)
  
  	write_sequnlock(&rename_lock);
  }
@@ -22,7 +22,7 @@ index 608e61e3d697..de38d1afc074 100644
  /**
   * d_ancestor - search for an ancestor
 diff --git a/fs/exec.c b/fs/exec.c
-index 40073142288f..df83c144ece0 100644
+index a126e3d1cacb..92bc20df2738 100644
 --- a/fs/exec.c
 +++ b/fs/exec.c
 @@ -114,6 +114,7 @@ bool path_noexec(const struct path *path)
@@ -46,7 +46,7 @@ index 3f927cbf63b3..9a6faf9fb36d 100644
  static void f_modown(struct file *filp, struct pid *pid, enum pid_type type,
                       int force)
 diff --git a/fs/file_table.c b/fs/file_table.c
-index 4f03beed4737..1f0527dad5e1 100644
+index ca7843dde56d..0ce507e96f3a 100644
 --- a/fs/file_table.c
 +++ b/fs/file_table.c
 @@ -221,6 +221,7 @@ struct file *alloc_empty_file(int flags, const struct cred *cred)
@@ -58,10 +58,10 @@ index 4f03beed4737..1f0527dad5e1 100644
  /*
   * Variant of alloc_empty_file() that doesn't check and modify nr_files.
 diff --git a/fs/namespace.c b/fs/namespace.c
-index a4b6ce51848e..c7415f75ab4c 100644
+index e033b3d72b00..09bfecd15ba4 100644
 --- a/fs/namespace.c
 +++ b/fs/namespace.c
-@@ -865,6 +865,7 @@ int is_current_mnt_ns(struct vfsmount *mnt)
+@@ -971,6 +971,7 @@ int is_current_mnt_ns(struct vfsmount *mnt)
  {
  	return check_mnt(real_mount(mnt));
  }
@@ -69,7 +69,7 @@ index a4b6ce51848e..c7415f75ab4c 100644
  
  /*
   * vfsmount lock must be held for write
-@@ -2053,6 +2054,7 @@ struct vfsmount *collect_mounts(const struct path *path)
+@@ -2173,6 +2174,7 @@ struct vfsmount *collect_mounts(const struct path *path)
  		return ERR_CAST(tree);
  	return &tree->mnt;
  }
@@ -77,15 +77,15 @@ index a4b6ce51848e..c7415f75ab4c 100644
  
  static void free_mnt_ns(struct mnt_namespace *);
  static struct mnt_namespace *alloc_mnt_ns(struct user_namespace *, bool);
-@@ -2083,6 +2085,7 @@ void drop_collected_mounts(struct vfsmount *mnt)
+@@ -2203,6 +2205,7 @@ void drop_collected_mounts(struct vfsmount *mnt)
  	unlock_mount_hash();
  	namespace_unlock();
  }
 +EXPORT_SYMBOL_GPL(drop_collected_mounts);
  
- static bool has_locked_children(struct mount *mnt, struct dentry *dentry)
+ bool has_locked_children(struct mount *mnt, struct dentry *dentry)
  {
-@@ -2154,6 +2157,7 @@ int iterate_mounts(int (*f)(struct vfsmount *, void *), void *arg,
+@@ -2274,6 +2277,7 @@ int iterate_mounts(int (*f)(struct vfsmount *, void *), void *arg,
  	}
  	return 0;
  }
@@ -106,7 +106,7 @@ index 1de6631a3925..3008eb37a18d 100644
  /*
   * Drop a reference to a group.  Free it if it's through.
 diff --git a/fs/open.c b/fs/open.c
-index 278b3edcda44..15dd127a2296 100644
+index 22adbef7ecc2..8a6cbb395ba9 100644
 --- a/fs/open.c
 +++ b/fs/open.c
 @@ -66,6 +66,7 @@ int do_truncate(struct mnt_idmap *idmap, struct dentry *dentry,
@@ -118,7 +118,7 @@ index 278b3edcda44..15dd127a2296 100644
  long vfs_truncate(const struct path *path, loff_t length)
  {
 diff --git a/fs/read_write.c b/fs/read_write.c
-index ef6339391351..5e37f9aeb841 100644
+index 90e283b31ca1..e85c2c6149ac 100644
 --- a/fs/read_write.c
 +++ b/fs/read_write.c
 @@ -483,6 +483,7 @@ ssize_t vfs_read(struct file *file, char __user *buf, size_t count, loff_t *pos)
@@ -150,7 +150,7 @@ index 04af758d332c..06836fe2d101 100644
  /*
   * Indicate to the caller that there was a premature EOF when reading from the
 diff --git a/fs/xattr.c b/fs/xattr.c
-index f8b643f91a98..9a2d9b3aaf0a 100644
+index 7672ce5486c5..b59504c73737 100644
 --- a/fs/xattr.c
 +++ b/fs/xattr.c
 @@ -405,6 +405,7 @@ vfs_getxattr_alloc(struct mnt_idmap *idmap, struct dentry *dentry,
@@ -162,10 +162,10 @@ index f8b643f91a98..9a2d9b3aaf0a 100644
  ssize_t
  __vfs_getxattr(struct dentry *dentry, struct inode *inode, const char *name,
 diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 2223ee909c10..d0ac4fc69a31 100644
+index f6af298bfab5..dc3942a123d5 100644
 --- a/kernel/locking/lockdep.c
 +++ b/kernel/locking/lockdep.c
-@@ -239,6 +239,7 @@ inline struct lock_class *lockdep_hlock_class(struct held_lock *hlock)
+@@ -238,6 +238,7 @@ inline struct lock_class *lockdep_hlock_class(struct held_lock *hlock)
  	 */
  	return lock_classes + class_idx;
  }
@@ -174,16 +174,16 @@ index 2223ee909c10..d0ac4fc69a31 100644
  
  #ifdef CONFIG_LOCK_STAT
 diff --git a/kernel/task_work.c b/kernel/task_work.c
-index 95a7e1b7f1da..5053670775d3 100644
+index 5c2daa7ad3f9..f6bd41517f2b 100644
 --- a/kernel/task_work.c
 +++ b/kernel/task_work.c
-@@ -183,3 +183,4 @@ void task_work_run(void)
+@@ -225,3 +225,4 @@ void task_work_run(void)
  		} while (work);
  	}
  }
 +EXPORT_SYMBOL_GPL(task_work_run);
 diff --git a/security/security.c b/security/security.c
-index e5ca08789f74..24596516c66f 100644
+index 8cee5b6c6e6d..74c4b7013c46 100644
 --- a/security/security.c
 +++ b/security/security.c
 @@ -1840,6 +1840,7 @@ int security_path_rmdir(const struct path *dir, struct dentry *dentry)
@@ -234,7 +234,7 @@ index e5ca08789f74..24596516c66f 100644
  
  /**
   * security_inode_setattr() - Check if setting file attributes is allowed
-@@ -2695,6 +2701,7 @@ int security_file_permission(struct file *file, int mask)
+@@ -2721,6 +2727,7 @@ int security_file_permission(struct file *file, int mask)
  {
  	return call_int_hook(file_permission, file, mask);
  }
@@ -242,7 +242,7 @@ index e5ca08789f74..24596516c66f 100644
  
  /**
   * security_file_alloc() - Allocate and init a file's LSM blob
-@@ -2997,6 +3004,7 @@ int security_file_truncate(struct file *file)
+@@ -3023,6 +3030,7 @@ int security_file_truncate(struct file *file)
  {
  	return call_int_hook(file_truncate, file);
  }

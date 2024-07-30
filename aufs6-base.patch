@@ -2,10 +2,10 @@ SPDX-License-Identifier: GPL-2.0
 aufs6.x-rcN base patch
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 958e935449e5..07f4a5756abf 100644
+index 42decde38320..e6208e51073f 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -3479,6 +3479,19 @@ F:	kernel/audit*
+@@ -3565,6 +3565,19 @@ F:	kernel/audit*
  F:	lib/*audit.c
  K:	\baudit_[a-z_0-9]\+\b
  
@@ -26,10 +26,10 @@ index 958e935449e5..07f4a5756abf 100644
  M:	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
  R:	Dave Ertman <david.m.ertman@intel.com>
 diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index 1153721bc7c2..bfe45a940de8 100644
+index 78a7bb28defe..479480f25a6c 100644
 --- a/drivers/block/loop.c
 +++ b/drivers/block/loop.c
-@@ -664,6 +664,26 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
+@@ -661,6 +661,26 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
  	goto done;
  }
  
@@ -57,10 +57,10 @@ index 1153721bc7c2..bfe45a940de8 100644
  
  static ssize_t loop_attr_show(struct device *dev, char *page,
 diff --git a/fs/dcache.c b/fs/dcache.c
-index 4c144519aa70..608e61e3d697 100644
+index 3d8daaecb6d1..61f1e85afed1 100644
 --- a/fs/dcache.c
 +++ b/fs/dcache.c
-@@ -1215,6 +1215,9 @@ enum d_walk_ret {
+@@ -1218,6 +1218,9 @@ enum d_walk_ret {
  	D_WALK_SKIP,
  };
  
@@ -70,7 +70,7 @@ index 4c144519aa70..608e61e3d697 100644
  /**
   * d_walk - walk the dentry tree
   * @parent:	start of walk
-@@ -1223,7 +1226,7 @@ enum d_walk_ret {
+@@ -1226,7 +1229,7 @@ enum d_walk_ret {
   *
   * The @enter() callbacks are called with d_lock held.
   */
@@ -102,10 +102,10 @@ index 300e5d9ad913..3f927cbf63b3 100644
  		return error;
  
 diff --git a/fs/namespace.c b/fs/namespace.c
-index 5a51315c6678..a4b6ce51848e 100644
+index 328087a4df8a..e033b3d72b00 100644
 --- a/fs/namespace.c
 +++ b/fs/namespace.c
-@@ -860,6 +860,12 @@ static inline int check_mnt(struct mount *mnt)
+@@ -966,6 +966,12 @@ static inline int check_mnt(struct mount *mnt)
  	return mnt->mnt_ns == current->nsproxy->mnt_ns;
  }
  
@@ -132,10 +132,10 @@ index 60aed8de21f8..04af758d332c 100644
  {
  	if (unlikely(!out->f_op->splice_write))
 diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 0283cf366c2a..d36e42c7406d 100644
+index fd34b5755c0b..34cb4763f8d1 100644
 --- a/include/linux/fs.h
 +++ b/include/linux/fs.h
-@@ -1112,6 +1112,7 @@ extern void fasync_free(struct fasync_struct *);
+@@ -1120,6 +1120,7 @@ extern void fasync_free(struct fasync_struct *);
  /* can be called from interrupts */
  extern void kill_fasync(struct fasync_struct **, int, int);
  
@@ -143,7 +143,7 @@ index 0283cf366c2a..d36e42c7406d 100644
  extern void __f_setown(struct file *filp, struct pid *, enum pid_type, int force);
  extern int f_setown(struct file *filp, int who, int force);
  extern void f_delown(struct file *filp);
-@@ -2019,6 +2020,7 @@ struct file_operations {
+@@ -2041,6 +2042,7 @@ struct file_operations {
  	int (*lock) (struct file *, int, struct file_lock *);
  	unsigned long (*get_unmapped_area)(struct file *, unsigned long, unsigned long, unsigned long, unsigned long);
  	int (*check_flags)(int);
@@ -152,10 +152,10 @@ index 0283cf366c2a..d36e42c7406d 100644
  	ssize_t (*splice_write)(struct pipe_inode_info *, struct file *, loff_t *, size_t, unsigned int);
  	ssize_t (*splice_read)(struct file *, loff_t *, struct pipe_inode_info *, size_t, unsigned int);
 diff --git a/include/linux/lockdep.h b/include/linux/lockdep.h
-index 08b0d1d9d78b..009f69c4e09d 100644
+index 217f7abf2cbf..0e17b8c23f10 100644
 --- a/include/linux/lockdep.h
 +++ b/include/linux/lockdep.h
-@@ -192,6 +192,8 @@ static inline int lockdep_match_key(struct lockdep_map *lock,
+@@ -210,6 +210,8 @@ static inline int lockdep_match_key(struct lockdep_map *lock,
  	return lock->key == key;
  }
  
@@ -197,10 +197,10 @@ index 9dec4861d09f..14583d846864 100644
 +			      loff_t *ppos, size_t len, unsigned int flags);
  #endif
 diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 151bd3de5936..2223ee909c10 100644
+index 58c88220a478..f6af298bfab5 100644
 --- a/kernel/locking/lockdep.c
 +++ b/kernel/locking/lockdep.c
-@@ -218,7 +218,7 @@ unsigned long max_lock_class_idx;
+@@ -217,7 +217,7 @@ unsigned long max_lock_class_idx;
  struct lock_class lock_classes[MAX_LOCKDEP_KEYS];
  DECLARE_BITMAP(lock_classes_in_use, MAX_LOCKDEP_KEYS);
  
@@ -209,7 +209,7 @@ index 151bd3de5936..2223ee909c10 100644
  {
  	unsigned int class_idx = hlock->class_idx;
  
-@@ -239,6 +239,7 @@ static inline struct lock_class *hlock_class(struct held_lock *hlock)
+@@ -238,6 +238,7 @@ static inline struct lock_class *hlock_class(struct held_lock *hlock)
  	 */
  	return lock_classes + class_idx;
  }
