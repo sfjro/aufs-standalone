@@ -2,10 +2,10 @@ SPDX-License-Identifier: GPL-2.0
 aufs6.x-rcN standalone patch
 
 diff --git a/fs/dcache.c b/fs/dcache.c
-index 61f1e85afed1..0e16da701511 100644
+index e5f57c3cfbfc..529be26e381d 100644
 --- a/fs/dcache.c
 +++ b/fs/dcache.c
-@@ -1328,6 +1328,7 @@ void d_walk(struct dentry *parent, void *data,
+@@ -1333,6 +1333,7 @@ void d_walk(struct dentry *parent, void *data,
  	seq = 1;
  	goto again;
  }
@@ -13,7 +13,7 @@ index 61f1e85afed1..0e16da701511 100644
  
  struct check_mount {
  	struct vfsmount *mnt;
-@@ -2892,6 +2893,7 @@ void d_exchange(struct dentry *dentry1, struct dentry *dentry2)
+@@ -2897,6 +2898,7 @@ void d_exchange(struct dentry *dentry1, struct dentry *dentry2)
  
  	write_sequnlock(&rename_lock);
  }
@@ -22,7 +22,7 @@ index 61f1e85afed1..0e16da701511 100644
  /**
   * d_ancestor - search for an ancestor
 diff --git a/fs/exec.c b/fs/exec.c
-index a126e3d1cacb..92bc20df2738 100644
+index 50e76cc633c4..9c5f68105979 100644
 --- a/fs/exec.c
 +++ b/fs/exec.c
 @@ -114,6 +114,7 @@ bool path_noexec(const struct path *path)
@@ -162,7 +162,7 @@ index 7672ce5486c5..b59504c73737 100644
  ssize_t
  __vfs_getxattr(struct dentry *dentry, struct inode *inode, const char *name,
 diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index f6af298bfab5..dc3942a123d5 100644
+index 32be18a5ad55..fb8b368567f2 100644
 --- a/kernel/locking/lockdep.c
 +++ b/kernel/locking/lockdep.c
 @@ -238,6 +238,7 @@ inline struct lock_class *lockdep_hlock_class(struct held_lock *hlock)
@@ -174,10 +174,10 @@ index f6af298bfab5..dc3942a123d5 100644
  
  #ifdef CONFIG_LOCK_STAT
 diff --git a/kernel/task_work.c b/kernel/task_work.c
-index 5c2daa7ad3f9..f6bd41517f2b 100644
+index 5d14d639ac71..d6b770a115b8 100644
 --- a/kernel/task_work.c
 +++ b/kernel/task_work.c
-@@ -225,3 +225,4 @@ void task_work_run(void)
+@@ -231,3 +231,4 @@ void task_work_run(void)
  		} while (work);
  	}
  }

@@ -21,7 +21,7 @@ index 1d06b1e5408a..78e3535f5ad2 100644
  	umode_t mode;		    /* Mount mode for root directory */
  	unsigned char huge;	    /* Whether to try for hugepages */
 diff --git a/mm/shmem.c b/mm/shmem.c
-index 2faa9daaf54b..f32ee6acb397 100644
+index 5a77acf6ac6a..09a23d534f22 100644
 --- a/mm/shmem.c
 +++ b/mm/shmem.c
 @@ -112,7 +112,7 @@ struct shmem_falloc {
@@ -63,7 +63,7 @@ index 2faa9daaf54b..f32ee6acb397 100644
  	shmem_free_inode(inode->i_sb, freed);
  	WARN_ON(inode->i_blocks);
  	clear_inode(inode);
-@@ -2718,6 +2725,25 @@ static struct inode *__shmem_get_inode(struct mnt_idmap *idmap,
+@@ -2714,6 +2721,25 @@ static struct inode *__shmem_get_inode(struct mnt_idmap *idmap,
  		break;
  	}
  
@@ -89,7 +89,7 @@ index 2faa9daaf54b..f32ee6acb397 100644
  	lockdep_annotate_inode_mutex_key(inode);
  	return inode;
  }
-@@ -3963,8 +3989,7 @@ static struct dentry *shmem_get_parent(struct dentry *child)
+@@ -3959,8 +3985,7 @@ static struct dentry *shmem_get_parent(struct dentry *child)
  static int shmem_match(struct inode *ino, void *vfh)
  {
  	__u32 *fh = vfh;
@@ -99,7 +99,7 @@ index 2faa9daaf54b..f32ee6acb397 100644
  	return ino->i_ino == inum && fh[0] == ino->i_generation;
  }
  
-@@ -3983,14 +4008,11 @@ static struct dentry *shmem_fh_to_dentry(struct super_block *sb,
+@@ -3979,14 +4004,11 @@ static struct dentry *shmem_fh_to_dentry(struct super_block *sb,
  	struct dentry *dentry = NULL;
  	u64 inum;
  
@@ -117,7 +117,7 @@ index 2faa9daaf54b..f32ee6acb397 100644
  	if (inode) {
  		dentry = shmem_find_alias(inode);
  		iput(inode);
-@@ -4002,30 +4024,15 @@ static struct dentry *shmem_fh_to_dentry(struct super_block *sb,
+@@ -3998,30 +4020,15 @@ static struct dentry *shmem_fh_to_dentry(struct super_block *sb,
  static int shmem_encode_fh(struct inode *inode, __u32 *fh, int *len,
  				struct inode *parent)
  {
@@ -151,7 +151,7 @@ index 2faa9daaf54b..f32ee6acb397 100644
  	return 1;
  }
  
-@@ -4124,7 +4131,7 @@ static int shmem_parse_one(struct fs_context *fc, struct fs_parameter *param)
+@@ -4120,7 +4127,7 @@ static int shmem_parse_one(struct fs_context *fc, struct fs_parameter *param)
  		break;
  	case Opt_nr_inodes:
  		ctx->inodes = memparse(param->string, &rest);
@@ -160,7 +160,7 @@ index 2faa9daaf54b..f32ee6acb397 100644
  			goto bad_value;
  		ctx->seen |= SHMEM_SEEN_INODES;
  		break;
-@@ -4406,7 +4413,7 @@ static int shmem_show_options(struct seq_file *seq, struct dentry *root)
+@@ -4402,7 +4409,7 @@ static int shmem_show_options(struct seq_file *seq, struct dentry *root)
  	if (sbinfo->max_blocks != shmem_default_max_blocks())
  		seq_printf(seq, ",size=%luk", K(sbinfo->max_blocks));
  	if (sbinfo->max_inodes != shmem_default_max_inodes())
@@ -169,7 +169,7 @@ index 2faa9daaf54b..f32ee6acb397 100644
  	if (sbinfo->mode != (0777 | S_ISVTX))
  		seq_printf(seq, ",mode=%03ho", sbinfo->mode);
  	if (!uid_eq(sbinfo->uid, GLOBAL_ROOT_UID))
-@@ -4478,6 +4485,8 @@ static void shmem_put_super(struct super_block *sb)
+@@ -4474,6 +4481,8 @@ static void shmem_put_super(struct super_block *sb)
  #ifdef CONFIG_TMPFS_QUOTA
  	shmem_disable_quotas(sb);
  #endif
@@ -178,7 +178,7 @@ index 2faa9daaf54b..f32ee6acb397 100644
  	free_percpu(sbinfo->ino_batch);
  	percpu_counter_destroy(&sbinfo->used_blocks);
  	mpol_put(sbinfo->mpol);
-@@ -4522,9 +4531,11 @@ static int shmem_fill_super(struct super_block *sb, struct fs_context *fc)
+@@ -4518,9 +4527,11 @@ static int shmem_fill_super(struct super_block *sb, struct fs_context *fc)
  #else
  	sb->s_flags |= SB_NOUSER;
  #endif
@@ -191,7 +191,7 @@ index 2faa9daaf54b..f32ee6acb397 100644
  	if (sb->s_flags & SB_KERNMOUNT) {
  		sbinfo->ino_batch = alloc_percpu(ino_t);
  		if (!sbinfo->ino_batch)
-@@ -4669,6 +4680,15 @@ static int shmem_error_remove_folio(struct address_space *mapping,
+@@ -4665,6 +4676,15 @@ static int shmem_error_remove_folio(struct address_space *mapping,
  	return 0;
  }
  
@@ -207,7 +207,7 @@ index 2faa9daaf54b..f32ee6acb397 100644
  static const struct address_space_operations shmem_aops = {
  	.writepage	= shmem_writepage,
  	.dirty_folio	= noop_dirty_folio,
-@@ -4837,6 +4857,7 @@ void __init shmem_init(void)
+@@ -4833,6 +4853,7 @@ void __init shmem_init(void)
  		pr_err("Could not kern_mount tmpfs\n");
  		goto out1;
  	}

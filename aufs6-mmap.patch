@@ -80,10 +80,10 @@ index bce674533000..b12b5a75c799 100644
  		ino = inode->i_ino;
  		pgoff = (loff_t)vma->vm_pgoff << PAGE_SHIFT;
 diff --git a/include/linux/mm.h b/include/linux/mm.h
-index c4b238a20b76..d6c0174073b0 100644
+index 147073601716..9de0f88adb93 100644
 --- a/include/linux/mm.h
 +++ b/include/linux/mm.h
-@@ -2455,6 +2455,43 @@ static inline void unmap_shared_mapping_range(struct address_space *mapping,
+@@ -2459,6 +2459,43 @@ static inline void unmap_shared_mapping_range(struct address_space *mapping,
  static inline struct vm_area_struct *vma_lookup(struct mm_struct *mm,
  						unsigned long addr);
  
@@ -174,7 +174,7 @@ index d2915f8c9dc0..b07f11a62f7c 100644
  obj-$(CONFIG_EXECMEM) += execmem.o
 +obj-y += prfile.o
 diff --git a/mm/filemap.c b/mm/filemap.c
-index d62150418b91..28b102048de8 100644
+index 0ca9c1377b68..beacce26df57 100644
 --- a/mm/filemap.c
 +++ b/mm/filemap.c
 @@ -3673,7 +3673,7 @@ vm_fault_t filemap_page_mkwrite(struct vm_fault *vmf)

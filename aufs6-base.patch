@@ -2,10 +2,10 @@ SPDX-License-Identifier: GPL-2.0
 aufs6.x-rcN base patch
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 42decde38320..e6208e51073f 100644
+index cc40a9d9b8cd..ba788b0b667c 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -3565,6 +3565,19 @@ F:	kernel/audit*
+@@ -3570,6 +3570,19 @@ F:	kernel/audit*
  F:	lib/*audit.c
  K:	\baudit_[a-z_0-9]\+\b
  
@@ -57,10 +57,10 @@ index 78a7bb28defe..479480f25a6c 100644
  
  static ssize_t loop_attr_show(struct device *dev, char *page,
 diff --git a/fs/dcache.c b/fs/dcache.c
-index 3d8daaecb6d1..61f1e85afed1 100644
+index 6386b9b625dd..e5f57c3cfbfc 100644
 --- a/fs/dcache.c
 +++ b/fs/dcache.c
-@@ -1218,6 +1218,9 @@ enum d_walk_ret {
+@@ -1223,6 +1223,9 @@ enum d_walk_ret {
  	D_WALK_SKIP,
  };
  
@@ -70,7 +70,7 @@ index 3d8daaecb6d1..61f1e85afed1 100644
  /**
   * d_walk - walk the dentry tree
   * @parent:	start of walk
-@@ -1226,7 +1229,7 @@ enum d_walk_ret {
+@@ -1231,7 +1234,7 @@ enum d_walk_ret {
   *
   * The @enter() callbacks are called with d_lock held.
   */
@@ -132,10 +132,10 @@ index 60aed8de21f8..04af758d332c 100644
  {
  	if (unlikely(!out->f_op->splice_write))
 diff --git a/include/linux/fs.h b/include/linux/fs.h
-index fd34b5755c0b..34cb4763f8d1 100644
+index 6ca11e241a24..5092a7e8f9e9 100644
 --- a/include/linux/fs.h
 +++ b/include/linux/fs.h
-@@ -1120,6 +1120,7 @@ extern void fasync_free(struct fasync_struct *);
+@@ -1121,6 +1121,7 @@ extern void fasync_free(struct fasync_struct *);
  /* can be called from interrupts */
  extern void kill_fasync(struct fasync_struct **, int, int);
  
@@ -143,7 +143,7 @@ index fd34b5755c0b..34cb4763f8d1 100644
  extern void __f_setown(struct file *filp, struct pid *, enum pid_type, int force);
  extern int f_setown(struct file *filp, int who, int force);
  extern void f_delown(struct file *filp);
-@@ -2041,6 +2042,7 @@ struct file_operations {
+@@ -2042,6 +2043,7 @@ struct file_operations {
  	int (*lock) (struct file *, int, struct file_lock *);
  	unsigned long (*get_unmapped_area)(struct file *, unsigned long, unsigned long, unsigned long, unsigned long);
  	int (*check_flags)(int);
@@ -197,7 +197,7 @@ index 9dec4861d09f..14583d846864 100644
 +			      loff_t *ppos, size_t len, unsigned int flags);
  #endif
 diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 58c88220a478..f6af298bfab5 100644
+index 0349f957e672..32be18a5ad55 100644
 --- a/kernel/locking/lockdep.c
 +++ b/kernel/locking/lockdep.c
 @@ -217,7 +217,7 @@ unsigned long max_lock_class_idx;
