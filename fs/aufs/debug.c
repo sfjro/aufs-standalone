@@ -117,7 +117,7 @@ static int do_pri_inode(aufs_bindex_t bindex, struct inode *inode, int hn,
 	ctime = inode_get_ctime(inode);
 	dpri("i%d: %p, i%lu, %s, cnt %d, nl %u, 0%o, sz %llu, blk %llu,"
 	     " acl %p, def_acl %p,"
-	     " hn %d, ct %lld, np %lu, st 0x%lx, f 0x%x, v %llu, g %x%s%.*s\n",
+	     " hn %d, ct %lld, np %lu, st 0x%x, f 0x%x, v %llu, g %x%s%.*s\n",
 	     bindex, inode,
 	     inode->i_ino, inode->i_sb ? au_sbtype(inode->i_sb) : "??",
 	     atomic_read(&inode->i_count), inode->i_nlink, inode->i_mode,
