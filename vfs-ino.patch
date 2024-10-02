@@ -1,10 +1,10 @@
 SPDX-License-Identifier: GPL-2.0
 
 diff --git a/fs/inode.c b/fs/inode.c
-index 10c4619faeef..2f4422c7bd7e 100644
+index 471ae4a31549..d451c657dc2d 100644
 --- a/fs/inode.c
 +++ b/fs/inode.c
-@@ -1039,6 +1039,8 @@ unsigned int get_next_ino(void)
+@@ -1068,6 +1068,8 @@ unsigned int get_next_ino(void)
  	unsigned int *p = &get_cpu_var(last_ino);
  	unsigned int res = *p;
  
@@ -13,7 +13,7 @@ index 10c4619faeef..2f4422c7bd7e 100644
  #ifdef CONFIG_SMP
  	if (unlikely((res & (LAST_INO_BATCH-1)) == 0)) {
  		static atomic_t shared_last_ino;
-@@ -1051,7 +1053,7 @@ unsigned int get_next_ino(void)
+@@ -1080,7 +1082,7 @@ unsigned int get_next_ino(void)
  	res++;
  	/* get_next_ino should not provide a 0 inode number */
  	if (unlikely(!res))
