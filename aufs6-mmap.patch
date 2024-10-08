@@ -152,7 +152,7 @@ index 6e3bdf8e38bc..c70247dc7102 100644
  
  #ifdef CONFIG_ANON_VMA_NAME
 diff --git a/kernel/fork.c b/kernel/fork.c
-index 60c0b4868fd4..108005ac8873 100644
+index 89ceb4a68af2..cbbad77db89d 100644
 --- a/kernel/fork.c
 +++ b/kernel/fork.c
 @@ -734,7 +734,7 @@ static __latent_entropy int dup_mmap(struct mm_struct *mm,

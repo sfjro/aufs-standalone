@@ -94,7 +94,7 @@ index 95a223a378f1..82a771010956 100644
  static void lock_mnt_tree(struct mount *mnt)
  {
 diff --git a/fs/notify/group.c b/fs/notify/group.c
-index 1de6631a3925..3008eb37a18d 100644
+index 18446b7b0d49..09138e0b8a6a 100644
 --- a/fs/notify/group.c
 +++ b/fs/notify/group.c
 @@ -100,6 +100,7 @@ void fsnotify_get_group(struct fsnotify_group *group)
