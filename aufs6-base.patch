@@ -2,7 +2,7 @@ SPDX-License-Identifier: GPL-2.0
 aufs6.x-rcN base patch
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index a097afd76ded..9a358c7d4a49 100644
+index 7ad507f49324..8c4ac0fbea3c 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
 @@ -3678,6 +3678,19 @@ F:	kernel/audit*
@@ -132,7 +132,7 @@ index 06232d7e505f..b15fd6073b6d 100644
  {
  	if (unlikely(!out->f_op->splice_write))
 diff --git a/include/linux/fs.h b/include/linux/fs.h
-index e3c603d01337..6df331df75da 100644
+index 3559446279c1..51b64b2ad82c 100644
 --- a/include/linux/fs.h
 +++ b/include/linux/fs.h
 @@ -1160,6 +1160,7 @@ extern void fasync_free(struct fasync_struct *);
