@@ -31,7 +31,7 @@ index c6e7ebc63756..d7ccfd909764 100644
  		ino = inode->i_ino;
  	}
 diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
-index 72f14fd59c2d..6cd1579e0c35 100644
+index e52bd96137a6..9494d69abaad 100644
 --- a/fs/proc/task_mmu.c
 +++ b/fs/proc/task_mmu.c
 @@ -264,7 +264,8 @@ static void get_vma_name(struct vm_area_struct *vma,
@@ -54,7 +54,7 @@ index 72f14fd59c2d..6cd1579e0c35 100644
  
  		dev = inode->i_sb->s_dev;
  		ino = inode->i_ino;
-@@ -3002,7 +3004,7 @@ static int show_numa_map(struct seq_file *m, void *v)
+@@ -3006,7 +3008,7 @@ static int show_numa_map(struct seq_file *m, void *v)
  	struct proc_maps_private *proc_priv = &numa_priv->proc_maps;
  	struct vm_area_struct *vma = v;
  	struct numa_maps *md = &numa_priv->md;
@@ -187,10 +187,10 @@ index 36d22968be9a..6eb775b1bd4c 100644
  	if (folio->mapping != mapping) {
  		folio_unlock(folio);
 diff --git a/mm/mmap.c b/mm/mmap.c
-index dd4b35a25aeb..37d7b5cbe54d 100644
+index 9c0fb43064b5..a605110382fa 100644
 --- a/mm/mmap.c
 +++ b/mm/mmap.c
-@@ -1475,7 +1475,7 @@ unsigned long mmap_region(struct file *file, unsigned long addr,
+@@ -1483,7 +1483,7 @@ unsigned long mmap_region(struct file *file, unsigned long addr,
  				 * and cause general protection fault
  				 * ultimately.
  				 */
@@ -199,7 +199,7 @@ index dd4b35a25aeb..37d7b5cbe54d 100644
  				vm_area_free(vma);
  				vma = merge;
  				/* Update vm_flags to pick up the change. */
-@@ -1565,7 +1565,7 @@ unsigned long mmap_region(struct file *file, unsigned long addr,
+@@ -1575,7 +1575,7 @@ unsigned long mmap_region(struct file *file, unsigned long addr,
  
  	if (file || vma->vm_file) {
  unmap_and_free_vma:
@@ -208,7 +208,7 @@ index dd4b35a25aeb..37d7b5cbe54d 100644
  		vma->vm_file = NULL;
  
  		vma_iter_set(&vmi, vma->vm_end);
-@@ -1630,6 +1630,9 @@ SYSCALL_DEFINE5(remap_file_pages, unsigned long, start, unsigned long, size,
+@@ -1640,6 +1640,9 @@ SYSCALL_DEFINE5(remap_file_pages, unsigned long, start, unsigned long, size,
  	unsigned long populate = 0;
  	unsigned long ret = -EINVAL;
  	struct file *file;
@@ -218,7 +218,7 @@ index dd4b35a25aeb..37d7b5cbe54d 100644
  
  	pr_warn_once("%s (%d) uses deprecated remap_file_pages() syscall. See Documentation/mm/remap_file_pages.rst.\n",
  		     current->comm, current->pid);
-@@ -1688,6 +1691,32 @@ SYSCALL_DEFINE5(remap_file_pages, unsigned long, start, unsigned long, size,
+@@ -1698,6 +1701,32 @@ SYSCALL_DEFINE5(remap_file_pages, unsigned long, start, unsigned long, size,
  	if (vma->vm_flags & VM_LOCKED)
  		flags |= MAP_LOCKED;
  
@@ -251,7 +251,7 @@ index dd4b35a25aeb..37d7b5cbe54d 100644
  	file = get_file(vma->vm_file);
  	ret = security_mmap_file(vma->vm_file, prot, flags);
  	if (ret)
-@@ -1696,6 +1725,7 @@ SYSCALL_DEFINE5(remap_file_pages, unsigned long, start, unsigned long, size,
+@@ -1706,6 +1735,7 @@ SYSCALL_DEFINE5(remap_file_pages, unsigned long, start, unsigned long, size,
  			prot, flags, 0, pgoff, &populate, NULL);
  out_fput:
  	fput(file);
