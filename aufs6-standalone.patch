@@ -58,7 +58,7 @@ index eed5ffad9997..2f6bead42478 100644
  /*
   * Variant of alloc_empty_file() that doesn't check and modify nr_files.
 diff --git a/fs/namespace.c b/fs/namespace.c
-index 95a223a378f1..82a771010956 100644
+index 85739e2d64c0..8aa96de6c151 100644
 --- a/fs/namespace.c
 +++ b/fs/namespace.c
 @@ -971,6 +971,7 @@ int is_current_mnt_ns(struct vfsmount *mnt)
@@ -106,7 +106,7 @@ index 18446b7b0d49..09138e0b8a6a 100644
  /*
   * Drop a reference to a group.  Free it if it's through.
 diff --git a/fs/open.c b/fs/open.c
-index acaeb3e25c88..43d97a16959a 100644
+index 5da4df2f9b18..6024098fc644 100644
 --- a/fs/open.c
 +++ b/fs/open.c
 @@ -66,6 +66,7 @@ int do_truncate(struct mnt_idmap *idmap, struct dentry *dentry,

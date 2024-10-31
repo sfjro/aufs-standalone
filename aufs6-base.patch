@@ -2,7 +2,7 @@ SPDX-License-Identifier: GPL-2.0
 aufs6.x-rcN base patch
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index e9659a5a7fb3..4637937d87cc 100644
+index a27407950242..534fe9e0a1f2 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
 @@ -3665,6 +3665,19 @@ F:	kernel/audit*
@@ -102,7 +102,7 @@ index 22dd9dcce7ec..460791727fd9 100644
  		return error;
  
 diff --git a/fs/namespace.c b/fs/namespace.c
-index 93c377816d75..95a223a378f1 100644
+index d26f5e6d2ca3..85739e2d64c0 100644
 --- a/fs/namespace.c
 +++ b/fs/namespace.c
 @@ -966,6 +966,12 @@ static inline int check_mnt(struct mount *mnt)
