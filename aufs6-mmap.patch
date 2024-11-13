@@ -174,7 +174,7 @@ index d5639b036166..bb57f616f032 100644
  obj-$(CONFIG_TMPFS_QUOTA) += shmem_quota.o
 +obj-y += prfile.o
 diff --git a/mm/filemap.c b/mm/filemap.c
-index 36d22968be9a..6eb775b1bd4c 100644
+index 56fa431c52af..d55fe4e7bcfd 100644
 --- a/mm/filemap.c
 +++ b/mm/filemap.c
 @@ -3707,7 +3707,7 @@ vm_fault_t filemap_page_mkwrite(struct vm_fault *vmf)
@@ -187,10 +187,10 @@ index 36d22968be9a..6eb775b1bd4c 100644
  	if (folio->mapping != mapping) {
  		folio_unlock(folio);
 diff --git a/mm/mmap.c b/mm/mmap.c
-index 9841b41e3c76..c9149775e249 100644
+index 79d541f1502b..50430bfa4d82 100644
 --- a/mm/mmap.c
 +++ b/mm/mmap.c
-@@ -1486,7 +1486,7 @@ unsigned long mmap_region(struct file *file, unsigned long addr,
+@@ -1484,7 +1484,7 @@ static unsigned long __mmap_region(struct file *file, unsigned long addr,
  				 * and cause general protection fault
  				 * ultimately.
  				 */
@@ -199,16 +199,7 @@ index 9841b41e3c76..c9149775e249 100644
  				vm_area_free(vma);
  				vma = merge;
  				/* Update vm_flags to pick up the change. */
-@@ -1578,7 +1578,7 @@ unsigned long mmap_region(struct file *file, unsigned long addr,
- 
- 	if (file || vma->vm_file) {
- unmap_and_free_vma:
--		fput(vma->vm_file);
-+		vma_fput(vma);
- 		vma->vm_file = NULL;
- 
- 		vma_iter_set(&vmi, vma->vm_end);
-@@ -1644,6 +1644,7 @@ SYSCALL_DEFINE5(remap_file_pages, unsigned long, start, unsigned long, size,
+@@ -1654,6 +1654,7 @@ SYSCALL_DEFINE5(remap_file_pages, unsigned long, start, unsigned long, size,
  	unsigned long ret = -EINVAL;
  	struct file *file;
  	vm_flags_t vm_flags;
@@ -216,7 +207,7 @@ index 9841b41e3c76..c9149775e249 100644
  
  	pr_warn_once("%s (%d) uses deprecated remap_file_pages() syscall. See Documentation/mm/remap_file_pages.rst.\n",
  		     current->comm, current->pid);
-@@ -1686,14 +1687,16 @@ SYSCALL_DEFINE5(remap_file_pages, unsigned long, start, unsigned long, size,
+@@ -1696,14 +1697,16 @@ SYSCALL_DEFINE5(remap_file_pages, unsigned long, start, unsigned long, size,
  
  	/* Save vm_flags used to calculate prot and flags, and recheck later. */
  	vm_flags = vma->vm_flags;
@@ -235,7 +226,7 @@ index 9841b41e3c76..c9149775e249 100644
  		return ret;
  	}
  
-@@ -1701,7 +1704,7 @@ SYSCALL_DEFINE5(remap_file_pages, unsigned long, start, unsigned long, size,
+@@ -1711,7 +1714,7 @@ SYSCALL_DEFINE5(remap_file_pages, unsigned long, start, unsigned long, size,
  
  	/* OK security check passed, take write lock + let it rip. */
  	if (mmap_write_lock_killable(mm)) {
@@ -244,7 +235,7 @@ index 9841b41e3c76..c9149775e249 100644
  		return -EINTR;
  	}
  
-@@ -1743,9 +1746,25 @@ SYSCALL_DEFINE5(remap_file_pages, unsigned long, start, unsigned long, size,
+@@ -1753,9 +1756,25 @@ SYSCALL_DEFINE5(remap_file_pages, unsigned long, start, unsigned long, size,
  
  	ret = do_mmap(vma->vm_file, start, size,
  			prot, flags, 0, pgoff, &populate, NULL);
@@ -271,7 +262,7 @@ index 9841b41e3c76..c9149775e249 100644
  		mm_populate(ret, populate);
  	if (!IS_ERR_VALUE(ret))
 diff --git a/mm/nommu.c b/mm/nommu.c
-index 385b0c15add8..af934042ed77 100644
+index e9b5f527ab5b..0f069bf29964 100644
 --- a/mm/nommu.c
 +++ b/mm/nommu.c
 @@ -512,7 +512,7 @@ static void __put_nommu_region(struct vm_region *region)
@@ -283,16 +274,16 @@ index 385b0c15add8..af934042ed77 100644
  
  		/* IO memory and memory shared directly out of the pagecache
  		 * from ramfs/tmpfs mustn't be released here */
-@@ -592,7 +592,7 @@ static void delete_vma(struct mm_struct *mm, struct vm_area_struct *vma)
- 	if (vma->vm_ops && vma->vm_ops->close)
- 		vma->vm_ops->close(vma);
+@@ -591,7 +591,7 @@ static void delete_vma(struct mm_struct *mm, struct vm_area_struct *vma)
+ {
+ 	vma_close(vma);
  	if (vma->vm_file)
 -		fput(vma->vm_file);
 +		vma_fput(vma);
  	put_nommu_region(vma->vm_region);
  	vm_area_free(vma);
  }
-@@ -1124,7 +1124,7 @@ unsigned long do_mmap(struct file *file,
+@@ -1123,7 +1123,7 @@ unsigned long do_mmap(struct file *file,
  					goto error_just_free;
  				}
  			}
@@ -301,7 +292,7 @@ index 385b0c15add8..af934042ed77 100644
  			kmem_cache_free(vm_region_jar, region);
  			region = pregion;
  			result = start;
-@@ -1210,10 +1210,10 @@ unsigned long do_mmap(struct file *file,
+@@ -1209,10 +1209,10 @@ unsigned long do_mmap(struct file *file,
  error:
  	vma_iter_free(&vmi);
  	if (region->vm_file)
@@ -407,7 +398,7 @@ index 000000000000..8f820a235364
 +}
 +#endif /* !CONFIG_MMU */
 diff --git a/mm/vma.c b/mm/vma.c
-index b21ffec33f8e..b41a629ca9f2 100644
+index 7621384d64cf..3bb41fe6ac48 100644
 --- a/mm/vma.c
 +++ b/mm/vma.c
 @@ -248,7 +248,7 @@ static void vma_complete(struct vma_prepare *vp, struct vma_iterator *vmi,
@@ -419,16 +410,16 @@ index b21ffec33f8e..b41a629ca9f2 100644
  		}
  		if (vp->remove->anon_vma)
  			anon_vma_merge(vp->vma, vp->remove);
-@@ -329,7 +329,7 @@ void remove_vma(struct vm_area_struct *vma, bool unreachable, bool closed)
- 	if (!closed && vma->vm_ops && vma->vm_ops->close)
- 		vma->vm_ops->close(vma);
+@@ -328,7 +328,7 @@ void remove_vma(struct vm_area_struct *vma, bool unreachable)
+ 	might_sleep();
+ 	vma_close(vma);
  	if (vma->vm_file)
 -		fput(vma->vm_file);
 +		vma_fput(vma);
  	mpol_put(vma_policy(vma));
  	if (unreachable)
  		__vm_area_free(vma);
-@@ -406,7 +406,7 @@ static int __split_vma(struct vma_iterator *vmi, struct vm_area_struct *vma,
+@@ -405,7 +405,7 @@ static int __split_vma(struct vma_iterator *vmi, struct vm_area_struct *vma,
  		goto out_free_mpol;
  
  	if (new->vm_file)
@@ -437,7 +428,7 @@ index b21ffec33f8e..b41a629ca9f2 100644
  
  	if (new->vm_ops && new->vm_ops->open)
  		new->vm_ops->open(new);
-@@ -1674,7 +1674,7 @@ struct vm_area_struct *copy_vma(struct vm_area_struct **vmap,
+@@ -1671,7 +1671,7 @@ struct vm_area_struct *copy_vma(struct vm_area_struct **vmap,
  		if (anon_vma_clone(new_vma, vma))
  			goto out_free_mempol;
  		if (new_vma->vm_file)
@@ -446,8 +437,8 @@ index b21ffec33f8e..b41a629ca9f2 100644
  		if (new_vma->vm_ops && new_vma->vm_ops->open)
  			new_vma->vm_ops->open(new_vma);
  		if (vma_link(mm, new_vma))
-@@ -1688,7 +1688,7 @@ struct vm_area_struct *copy_vma(struct vm_area_struct **vmap,
- 		new_vma->vm_ops->close(new_vma);
+@@ -1684,7 +1684,7 @@ struct vm_area_struct *copy_vma(struct vm_area_struct **vmap,
+ 	vma_close(new_vma);
  
  	if (new_vma->vm_file)
 -		fput(new_vma->vm_file);
