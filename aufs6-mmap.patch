@@ -31,7 +31,7 @@ index c6e7ebc63756..d7ccfd909764 100644
  		ino = inode->i_ino;
  	}
 diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
-index e52bd96137a6..9494d69abaad 100644
+index 7eb010de39fe..0c576103f7f1 100644
 --- a/fs/proc/task_mmu.c
 +++ b/fs/proc/task_mmu.c
 @@ -264,7 +264,8 @@ static void get_vma_name(struct vm_area_struct *vma,
@@ -54,7 +54,7 @@ index e52bd96137a6..9494d69abaad 100644
  
  		dev = inode->i_sb->s_dev;
  		ino = inode->i_ino;
-@@ -3006,7 +3008,7 @@ static int show_numa_map(struct seq_file *m, void *v)
+@@ -3008,7 +3010,7 @@ static int show_numa_map(struct seq_file *m, void *v)
  	struct proc_maps_private *proc_priv = &numa_priv->proc_maps;
  	struct vm_area_struct *vma = v;
  	struct numa_maps *md = &numa_priv->md;
@@ -262,7 +262,7 @@ index 79d541f1502b..50430bfa4d82 100644
  		mm_populate(ret, populate);
  	if (!IS_ERR_VALUE(ret))
 diff --git a/mm/nommu.c b/mm/nommu.c
-index e9b5f527ab5b..0f069bf29964 100644
+index 9cb6e99215e2..5add36afa978 100644
 --- a/mm/nommu.c
 +++ b/mm/nommu.c
 @@ -512,7 +512,7 @@ static void __put_nommu_region(struct vm_region *region)

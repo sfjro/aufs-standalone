@@ -2,7 +2,7 @@ SPDX-License-Identifier: GPL-2.0
 aufs6.x-rcN base patch
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 21fdaa19229a..e60ed502f8ef 100644
+index b878ddc99f94..8489754030b9 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
 @@ -3666,6 +3666,19 @@ F:	kernel/audit*
