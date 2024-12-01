@@ -27,6 +27,7 @@
 
 #include <linux/dcache.h>
 #include <linux/fs.h>
+#include "vfsub.h"
 
 struct au_dpage {
 	int ndentry;
@@ -67,7 +68,8 @@ static inline int au_d_hashed_positive(struct dentry *d)
 	err = 0;
 	if (unlikely(d_unhashed(d)
 		     || d_is_negative(d)
-		     || !inode->i_nlink))
+		     /* to support both aufs and branches */
+		     || !vfsub_inode_nlink(inode, AU_I_UNKNOWN)))
 		err = -ENOENT;
 	return err;
 }
@@ -97,7 +99,7 @@ static inline int au_d_alive(struct dentry *d)
 		inode = d_inode(d);
 		if (unlikely(d_unlinked(d)
 			     || d_is_negative(d)
-			     || !inode->i_nlink))
+			     || !vfsub_inode_nlink(inode, AU_I_UNKNOWN)))
 			err = -ENOENT;
 	}
 	return err;
