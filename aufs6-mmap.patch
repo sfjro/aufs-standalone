@@ -187,7 +187,7 @@ index 56fa431c52af..d55fe4e7bcfd 100644
  	if (folio->mapping != mapping) {
  		folio_unlock(folio);
 diff --git a/mm/mmap.c b/mm/mmap.c
-index 79d541f1502b..50430bfa4d82 100644
+index 79d541f1502b..2dc64f6dc018 100644
 --- a/mm/mmap.c
 +++ b/mm/mmap.c
 @@ -1484,7 +1484,7 @@ static unsigned long __mmap_region(struct file *file, unsigned long addr,
@@ -203,18 +203,20 @@ index 79d541f1502b..50430bfa4d82 100644
  	unsigned long ret = -EINVAL;
  	struct file *file;
  	vm_flags_t vm_flags;
-+	struct file *prfile;
++	struct file *prfile = NULL; /* aufs */
  
  	pr_warn_once("%s (%d) uses deprecated remap_file_pages() syscall. See Documentation/mm/remap_file_pages.rst.\n",
  		     current->comm, current->pid);
-@@ -1696,14 +1697,16 @@ SYSCALL_DEFINE5(remap_file_pages, unsigned long, start, unsigned long, size,
+@@ -1696,14 +1697,18 @@ SYSCALL_DEFINE5(remap_file_pages, unsigned long, start, unsigned long, size,
  
  	/* Save vm_flags used to calculate prot and flags, and recheck later. */
  	vm_flags = vma->vm_flags;
 -	file = get_file(vma->vm_file);
 +	vma_get_file(vma);
 +	file = vma->vm_file;
++#if 1 /* IS_ENABLED(CONFIG_AUFS_FS) */
 +	prfile = vma->vm_prfile;
++#endif
  
  	mmap_read_unlock(mm);
  
@@ -226,7 +228,7 @@ index 79d541f1502b..50430bfa4d82 100644
  		return ret;
  	}
  
-@@ -1711,7 +1714,7 @@ SYSCALL_DEFINE5(remap_file_pages, unsigned long, start, unsigned long, size,
+@@ -1711,7 +1716,7 @@ SYSCALL_DEFINE5(remap_file_pages, unsigned long, start, unsigned long, size,
  
  	/* OK security check passed, take write lock + let it rip. */
  	if (mmap_write_lock_killable(mm)) {
@@ -235,10 +237,11 @@ index 79d541f1502b..50430bfa4d82 100644
  		return -EINTR;
  	}
  
-@@ -1753,9 +1756,25 @@ SYSCALL_DEFINE5(remap_file_pages, unsigned long, start, unsigned long, size,
+@@ -1753,9 +1758,27 @@ SYSCALL_DEFINE5(remap_file_pages, unsigned long, start, unsigned long, size,
  
  	ret = do_mmap(vma->vm_file, start, size,
  			prot, flags, 0, pgoff, &populate, NULL);
++#if 1 /* IS_ENABLED(CONFIG_AUFS_FS) */
 +	if (!IS_ERR_VALUE(ret) && file && prfile) {
 +		struct vm_area_struct *new_vma;
 +
@@ -248,6 +251,7 @@ index 79d541f1502b..50430bfa4d82 100644
 +		if (prfile)
 +			get_file(prfile);
 +	}
++#endif
 +
  out:
  	mmap_write_unlock(mm);
