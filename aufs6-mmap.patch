@@ -80,10 +80,10 @@ index bce674533000..b12b5a75c799 100644
  		ino = inode->i_ino;
  		pgoff = (loff_t)vma->vm_pgoff << PAGE_SHIFT;
 diff --git a/include/linux/mm.h b/include/linux/mm.h
-index c39c4945946c..4a3a38f71e0c 100644
+index 338a76ce9083..cb68469c46f6 100644
 --- a/include/linux/mm.h
 +++ b/include/linux/mm.h
-@@ -2479,6 +2479,43 @@ static inline void unmap_shared_mapping_range(struct address_space *mapping,
+@@ -2480,6 +2480,43 @@ static inline void unmap_shared_mapping_range(struct address_space *mapping,
  static inline struct vm_area_struct *vma_lookup(struct mm_struct *mm,
  						unsigned long addr);
  
@@ -152,10 +152,10 @@ index 7361a8f3ab68..c7a9e7ea36f7 100644
  
  #ifdef CONFIG_ANON_VMA_NAME
 diff --git a/kernel/fork.c b/kernel/fork.c
-index 1450b461d196..423acd357eff 100644
+index 9b301180fd41..d843da822c9e 100644
 --- a/kernel/fork.c
 +++ b/kernel/fork.c
-@@ -735,7 +735,7 @@ static __latent_entropy int dup_mmap(struct mm_struct *mm,
+@@ -732,7 +732,7 @@ static __latent_entropy int dup_mmap(struct mm_struct *mm,
  		if (file) {
  			struct address_space *mapping = file->f_mapping;
  
@@ -174,7 +174,7 @@ index dba52bb0da8a..cb956783721a 100644
  obj-$(CONFIG_TMPFS_QUOTA) += shmem_quota.o
 +obj-y += prfile.o
 diff --git a/mm/filemap.c b/mm/filemap.c
-index 7c76a123ba18..96f40aa3201c 100644
+index f61cf51c2238..124d00dd1a35 100644
 --- a/mm/filemap.c
 +++ b/mm/filemap.c
 @@ -3708,7 +3708,7 @@ vm_fault_t filemap_page_mkwrite(struct vm_fault *vmf)
@@ -187,10 +187,10 @@ index 7c76a123ba18..96f40aa3201c 100644
  	if (folio->mapping != mapping) {
  		folio_unlock(folio);
 diff --git a/mm/mmap.c b/mm/mmap.c
-index 386429f7db5a..25b2af3da3b8 100644
+index d32b7e701058..4b986ceac077 100644
 --- a/mm/mmap.c
 +++ b/mm/mmap.c
-@@ -1398,6 +1398,7 @@ SYSCALL_DEFINE5(remap_file_pages, unsigned long, start, unsigned long, size,
+@@ -1399,6 +1399,7 @@ SYSCALL_DEFINE5(remap_file_pages, unsigned long, start, unsigned long, size,
  	unsigned long ret = -EINVAL;
  	struct file *file;
  	vm_flags_t vm_flags;
@@ -198,7 +198,7 @@ index 386429f7db5a..25b2af3da3b8 100644
  
  	pr_warn_once("%s (%d) uses deprecated remap_file_pages() syscall. See Documentation/mm/remap_file_pages.rst.\n",
  		     current->comm, current->pid);
-@@ -1440,14 +1441,18 @@ SYSCALL_DEFINE5(remap_file_pages, unsigned long, start, unsigned long, size,
+@@ -1441,14 +1442,18 @@ SYSCALL_DEFINE5(remap_file_pages, unsigned long, start, unsigned long, size,
  
  	/* Save vm_flags used to calculate prot and flags, and recheck later. */
  	vm_flags = vma->vm_flags;
@@ -219,7 +219,7 @@ index 386429f7db5a..25b2af3da3b8 100644
  		return ret;
  	}
  
-@@ -1455,7 +1460,7 @@ SYSCALL_DEFINE5(remap_file_pages, unsigned long, start, unsigned long, size,
+@@ -1456,7 +1461,7 @@ SYSCALL_DEFINE5(remap_file_pages, unsigned long, start, unsigned long, size,
  
  	/* OK security check passed, take write lock + let it rip. */
  	if (mmap_write_lock_killable(mm)) {
@@ -228,7 +228,7 @@ index 386429f7db5a..25b2af3da3b8 100644
  		return -EINTR;
  	}
  
-@@ -1497,9 +1502,27 @@ SYSCALL_DEFINE5(remap_file_pages, unsigned long, start, unsigned long, size,
+@@ -1498,9 +1503,27 @@ SYSCALL_DEFINE5(remap_file_pages, unsigned long, start, unsigned long, size,
  
  	ret = do_mmap(vma->vm_file, start, size,
  			prot, flags, 0, pgoff, &populate, NULL);
@@ -393,7 +393,7 @@ index 000000000000..8f820a235364
 +}
 +#endif /* !CONFIG_MMU */
 diff --git a/mm/vma.c b/mm/vma.c
-index 8a454a7bbc80..ca544f998d38 100644
+index bb2119e5a0d0..ab30ebc7f55d 100644
 --- a/mm/vma.c
 +++ b/mm/vma.c
 @@ -299,7 +299,7 @@ static void vma_complete(struct vma_prepare *vp, struct vma_iterator *vmi,
