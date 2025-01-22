@@ -2,10 +2,10 @@ SPDX-License-Identifier: GPL-2.0
 aufs6.x-rcN base patch
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 30cbc3d44cd5..ca2e2500c40f 100644
+index 0fa7c5728f1e..bda931857680 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -3724,6 +3724,19 @@ S:	Supported
+@@ -3722,6 +3722,19 @@ S:	Supported
  F:	Documentation/dev-tools/autofdo.rst
  F:	scripts/Makefile.autofdo
  
@@ -102,10 +102,10 @@ index 49884fa3c81d..065c3aa7a5dd 100644
  		return error;
  
 diff --git a/fs/namespace.c b/fs/namespace.c
-index 23e81c2a1e3f..009c8491a01a 100644
+index eac057e56948..dcbf4e86fe2f 100644
 --- a/fs/namespace.c
 +++ b/fs/namespace.c
-@@ -966,6 +966,12 @@ static inline int check_mnt(struct mount *mnt)
+@@ -967,6 +967,12 @@ static inline int check_mnt(struct mount *mnt)
  	return mnt->mnt_ns == current->nsproxy->mnt_ns;
  }
  

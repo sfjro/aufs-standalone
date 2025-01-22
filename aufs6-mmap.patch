@@ -174,7 +174,7 @@ index dba52bb0da8a..cb956783721a 100644
  obj-$(CONFIG_TMPFS_QUOTA) += shmem_quota.o
 +obj-y += prfile.o
 diff --git a/mm/filemap.c b/mm/filemap.c
-index 33b60d448fca..fdd728b00d63 100644
+index 4f476411a9a2..402f135f0214 100644
 --- a/mm/filemap.c
 +++ b/mm/filemap.c
 @@ -3699,7 +3699,7 @@ vm_fault_t filemap_page_mkwrite(struct vm_fault *vmf)
