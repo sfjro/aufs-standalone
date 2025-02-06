@@ -2,10 +2,10 @@ SPDX-License-Identifier: GPL-2.0
 aufs6.x-rcN base patch
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 0fa7c5728f1e..bda931857680 100644
+index 896a307fa065..57e1f04cbedb 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -3722,6 +3722,19 @@ S:	Supported
+@@ -3773,6 +3773,19 @@ S:	Supported
  F:	Documentation/dev-tools/autofdo.rst
  F:	scripts/Makefile.autofdo
  
@@ -26,10 +26,10 @@ index 0fa7c5728f1e..bda931857680 100644
  M:	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
  R:	Dave Ertman <david.m.ertman@intel.com>
 diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index 8f6761c27c68..78dc1c0c6680 100644
+index c05fe27a96b6..360a30bda4ec 100644
 --- a/drivers/block/loop.c
 +++ b/drivers/block/loop.c
-@@ -661,6 +661,26 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
+@@ -665,6 +665,26 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
  	goto done;
  }
  
@@ -57,10 +57,10 @@ index 8f6761c27c68..78dc1c0c6680 100644
  
  static ssize_t loop_attr_show(struct device *dev, char *page,
 diff --git a/fs/dcache.c b/fs/dcache.c
-index b4d5e9e1e43d..0a6069e6d4ca 100644
+index 9cc0d47da321..1f7d0494e801 100644
 --- a/fs/dcache.c
 +++ b/fs/dcache.c
-@@ -1233,6 +1233,9 @@ enum d_walk_ret {
+@@ -1251,6 +1251,9 @@ enum d_walk_ret {
  	D_WALK_SKIP,
  };
  
@@ -70,7 +70,7 @@ index b4d5e9e1e43d..0a6069e6d4ca 100644
  /**
   * d_walk - walk the dentry tree
   * @parent:	start of walk
-@@ -1241,7 +1244,7 @@ enum d_walk_ret {
+@@ -1259,7 +1262,7 @@ enum d_walk_ret {
   *
   * The @enter() callbacks are called with d_lock held.
   */
@@ -80,7 +80,7 @@ index b4d5e9e1e43d..0a6069e6d4ca 100644
  {
  	struct dentry *this_parent, *dentry;
 diff --git a/fs/fcntl.c b/fs/fcntl.c
-index 49884fa3c81d..065c3aa7a5dd 100644
+index 5598e4d57422..90af6a47fbad 100644
 --- a/fs/fcntl.c
 +++ b/fs/fcntl.c
 @@ -36,7 +36,7 @@
@@ -102,10 +102,10 @@ index 49884fa3c81d..065c3aa7a5dd 100644
  		return error;
  
 diff --git a/fs/namespace.c b/fs/namespace.c
-index eac057e56948..dcbf4e86fe2f 100644
+index a3ed3f2980cb..4b1c2cb42d15 100644
 --- a/fs/namespace.c
 +++ b/fs/namespace.c
-@@ -967,6 +967,12 @@ static inline int check_mnt(struct mount *mnt)
+@@ -998,6 +998,12 @@ static inline int check_mnt(struct mount *mnt)
  	return mnt->mnt_ns == current->nsproxy->mnt_ns;
  }
  
@@ -119,7 +119,7 @@ index eac057e56948..dcbf4e86fe2f 100644
   * vfsmount lock must be held for write
   */
 diff --git a/fs/splice.c b/fs/splice.c
-index 2898fa1e9e63..73b9e968b28d 100644
+index 28cfa63aa236..89497db37e15 100644
 --- a/fs/splice.c
 +++ b/fs/splice.c
 @@ -933,7 +933,7 @@ static int warn_unsupported(struct file *file, const char *op)
@@ -132,10 +132,10 @@ index 2898fa1e9e63..73b9e968b28d 100644
  {
  	if (unlikely(!out->f_op->splice_write))
 diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 7e29433c5ecc..b74af4ae6dd4 100644
+index be3ad155ec9f..74e6b695c291 100644
 --- a/include/linux/fs.h
 +++ b/include/linux/fs.h
-@@ -1162,6 +1162,7 @@ extern void fasync_free(struct fasync_struct *);
+@@ -1209,6 +1209,7 @@ extern void fasync_free(struct fasync_struct *);
  /* can be called from interrupts */
  extern void kill_fasync(struct fasync_struct **, int, int);
  
@@ -143,7 +143,7 @@ index 7e29433c5ecc..b74af4ae6dd4 100644
  extern void __f_setown(struct file *filp, struct pid *, enum pid_type, int force);
  extern int f_setown(struct file *filp, int who, int force);
  extern void f_delown(struct file *filp);
-@@ -2091,6 +2092,7 @@ struct file_operations {
+@@ -2139,6 +2140,7 @@ struct file_operations {
  	int (*lock) (struct file *, int, struct file_lock *);
  	unsigned long (*get_unmapped_area)(struct file *, unsigned long, unsigned long, unsigned long, unsigned long);
  	int (*check_flags)(int);
@@ -198,10 +198,10 @@ index 9dec4861d09f..14583d846864 100644
 +			      loff_t *ppos, size_t len, unsigned int flags);
  #endif
 diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 2d8ec0351ef9..25c1fb3172d9 100644
+index 4470680f0226..89e8e8b38357 100644
 --- a/kernel/locking/lockdep.c
 +++ b/kernel/locking/lockdep.c
-@@ -218,7 +218,7 @@ unsigned long max_lock_class_idx;
+@@ -220,7 +220,7 @@ unsigned long max_lock_class_idx;
  struct lock_class lock_classes[MAX_LOCKDEP_KEYS];
  DECLARE_BITMAP(lock_classes_in_use, MAX_LOCKDEP_KEYS);
  
@@ -210,7 +210,7 @@ index 2d8ec0351ef9..25c1fb3172d9 100644
  {
  	unsigned int class_idx = hlock->class_idx;
  
-@@ -239,6 +239,7 @@ static inline struct lock_class *hlock_class(struct held_lock *hlock)
+@@ -241,6 +241,7 @@ static inline struct lock_class *hlock_class(struct held_lock *hlock)
  	 */
  	return lock_classes + class_idx;
  }
