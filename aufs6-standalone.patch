@@ -2,7 +2,7 @@ SPDX-License-Identifier: GPL-2.0
 aufs6.x-rcN standalone patch
 
 diff --git a/fs/dcache.c b/fs/dcache.c
-index 1f7d0494e801..cda8b2f89cad 100644
+index cc6665e8c5e9..f7bbc4fcc53c 100644
 --- a/fs/dcache.c
 +++ b/fs/dcache.c
 @@ -1361,6 +1361,7 @@ void d_walk(struct dentry *parent, void *data,
@@ -46,10 +46,10 @@ index 90af6a47fbad..7d4eaaff13bc 100644
  /*
   * Allocate an file->f_owner struct if it doesn't exist, handling racing
 diff --git a/fs/file_table.c b/fs/file_table.c
-index f0291a66f9db..79f6d27bcf56 100644
+index 5c00dc38558d..b6b56d522e6f 100644
 --- a/fs/file_table.c
 +++ b/fs/file_table.c
-@@ -247,6 +247,7 @@ struct file *alloc_empty_file(int flags, const struct cred *cred)
+@@ -252,6 +252,7 @@ struct file *alloc_empty_file(int flags, const struct cred *cred)
  	}
  	return ERR_PTR(-ENFILE);
  }
@@ -58,7 +58,7 @@ index f0291a66f9db..79f6d27bcf56 100644
  /*
   * Variant of alloc_empty_file() that doesn't check and modify nr_files.
 diff --git a/fs/namespace.c b/fs/namespace.c
-index 4b1c2cb42d15..ed124520218c 100644
+index 1374f84b05f0..3bea84be70be 100644
 --- a/fs/namespace.c
 +++ b/fs/namespace.c
 @@ -1003,6 +1003,7 @@ int is_current_mnt_ns(struct vfsmount *mnt)
@@ -94,7 +94,7 @@ index 4b1c2cb42d15..ed124520218c 100644
  static void lock_mnt_tree(struct mount *mnt)
  {
 diff --git a/fs/notify/fsnotify.c b/fs/notify/fsnotify.c
-index 8ee495a58d0a..5a152cbdca76 100644
+index fae1b6d397ea..006e81726883 100644
 --- a/fs/notify/fsnotify.c
 +++ b/fs/notify/fsnotify.c
 @@ -220,6 +220,7 @@ int fsnotify_pre_content(const struct path *path, const loff_t *ppos,
@@ -118,7 +118,7 @@ index 18446b7b0d49..09138e0b8a6a 100644
  /*
   * Drop a reference to a group.  Free it if it's through.
 diff --git a/fs/open.c b/fs/open.c
-index 932e5a6de63b..a0b36d10fa48 100644
+index 1be20de9f283..7a8463b5a6fd 100644
 --- a/fs/open.c
 +++ b/fs/open.c
 @@ -66,6 +66,7 @@ int do_truncate(struct mnt_idmap *idmap, struct dentry *dentry,
@@ -150,7 +150,7 @@ index a6133241dfb8..5e095d512e35 100644
  /* file_ppos returns &file->f_pos or NULL if file is stream */
  static inline loff_t *file_ppos(struct file *file)
 diff --git a/fs/splice.c b/fs/splice.c
-index 89497db37e15..56111a7bd83d 100644
+index 7b0db4b3b485..0d4845b98b84 100644
 --- a/fs/splice.c
 +++ b/fs/splice.c
 @@ -940,6 +940,7 @@ ssize_t do_splice_from(struct pipe_inode_info *pipe, struct file *out,
