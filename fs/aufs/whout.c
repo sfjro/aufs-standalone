@@ -317,6 +317,7 @@ static int test_linkable(struct dentry *h_root)
 static int au_whdir(struct inode *h_dir, struct path *path)
 {
 	int err;
+	struct dentry *ret;
 
 	err = -EEXIST;
 	if (d_is_negative(path->dentry)) {
@@ -324,7 +325,14 @@ static int au_whdir(struct inode *h_dir, struct path *path)
 
 		if (au_test_nfs(path->dentry->d_sb))
 			mode |= 0111;
-		err = vfsub_mkdir(h_dir, path, mode);
+		ret = vfsub_mkdir(h_dir, path, mode);
+		if (IS_ERR(ret))
+			err = PTR_ERR(ret);
+		else {
+			err = 0;
+			if (ret && ret != path->dentry)
+				path->dentry = ret;
+		}
 	} else if (d_is_dir(path->dentry))
 		err = 0;
 	else
@@ -376,6 +384,10 @@ static int au_wh_init_rw_nolink(struct dentry *h_root, struct au_wbr *wbr,
 		err = au_whdir(h_dir, h_path);
 		if (unlikely(err))
 			goto out;
+		else if (h_path->dentry != base[AuBrWh_PLINK].dentry) {
+			dput(base[AuBrWh_PLINK].dentry);
+			base[AuBrWh_PLINK].dentry = dget(h_path->dentry);
+		}
 		wbr->wbr_plink = dget(base[AuBrWh_PLINK].dentry);
 	} else
 		au_wh_clean(h_dir, h_path, /*isdir*/1);
@@ -383,6 +395,10 @@ static int au_wh_init_rw_nolink(struct dentry *h_root, struct au_wbr *wbr,
 	err = au_whdir(h_dir, h_path);
 	if (unlikely(err))
 		goto out;
+	else if (h_path->dentry != base[AuBrWh_ORPH].dentry) {
+		dput(base[AuBrWh_ORPH].dentry);
+		base[AuBrWh_ORPH].dentry = dget(h_path->dentry);
+	}
 	wbr->wbr_orph = dget(base[AuBrWh_ORPH].dentry);
 
 out:
@@ -432,6 +448,10 @@ static int au_wh_init_rw(struct dentry *h_root, struct au_wbr *wbr,
 		err = au_whdir(h_dir, h_path);
 		if (unlikely(err))
 			goto out;
+		else if (h_path->dentry != base[AuBrWh_PLINK].dentry) {
+			dput(base[AuBrWh_PLINK].dentry);
+			base[AuBrWh_PLINK].dentry = dget(h_path->dentry);
+		}
 		wbr->wbr_plink = dget(base[AuBrWh_PLINK].dentry);
 	} else
 		au_wh_clean(h_dir, h_path, /*isdir*/1);
@@ -441,6 +461,10 @@ static int au_wh_init_rw(struct dentry *h_root, struct au_wbr *wbr,
 	err = au_whdir(h_dir, h_path);
 	if (unlikely(err))
 		goto out;
+	else if (h_path->dentry != base[AuBrWh_ORPH].dentry) {
+		dput(base[AuBrWh_ORPH].dentry);
+		base[AuBrWh_ORPH].dentry = dget(h_path->dentry);
+	}
 	wbr->wbr_orph = dget(base[AuBrWh_ORPH].dentry);
 
 out:
