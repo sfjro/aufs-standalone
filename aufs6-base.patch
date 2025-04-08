@@ -2,7 +2,7 @@ SPDX-License-Identifier: GPL-2.0
 aufs6.6.4 base patch
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index dd5de540ec0b..1b495555a80c 100644
+index dd5de540ec0b5..1b495555a80c6 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
 @@ -3334,6 +3334,19 @@ F:	include/uapi/linux/audit.h
@@ -26,7 +26,7 @@ index dd5de540ec0b..1b495555a80c 100644
  M:	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
  R:	Dave Ertman <david.m.ertman@intel.com>
 diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index 9f2d412fc560..1fefc6a8d049 100644
+index 9f2d412fc560e..1fefc6a8d049c 100644
 --- a/drivers/block/loop.c
 +++ b/drivers/block/loop.c
 @@ -645,6 +645,24 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
@@ -55,7 +55,7 @@ index 9f2d412fc560..1fefc6a8d049 100644
  
  static ssize_t loop_attr_show(struct device *dev, char *page,
 diff --git a/fs/dcache.c b/fs/dcache.c
-index 25ac74d30bff..6c930ceed526 100644
+index 25ac74d30bff3..6c930ceed526d 100644
 --- a/fs/dcache.c
 +++ b/fs/dcache.c
 @@ -1345,7 +1345,7 @@ enum d_walk_ret {
@@ -68,7 +68,7 @@ index 25ac74d30bff..6c930ceed526 100644
  {
  	struct dentry *this_parent;
 diff --git a/fs/fcntl.c b/fs/fcntl.c
-index e871009f6c88..d62e114c1b1a 100644
+index e871009f6c889..d62e114c1b1ad 100644
 --- a/fs/fcntl.c
 +++ b/fs/fcntl.c
 @@ -34,7 +34,7 @@
@@ -90,7 +90,7 @@ index e871009f6c88..d62e114c1b1a 100644
  		return error;
  
 diff --git a/fs/namespace.c b/fs/namespace.c
-index e157efc54023..6c57487f126b 100644
+index e157efc54023a..6c57487f126bb 100644
 --- a/fs/namespace.c
 +++ b/fs/namespace.c
 @@ -872,6 +872,12 @@ static inline int check_mnt(struct mount *mnt)
@@ -107,7 +107,7 @@ index e157efc54023..6c57487f126b 100644
   * vfsmount lock must be held for write
   */
 diff --git a/fs/splice.c b/fs/splice.c
-index d983d375ff11..7216ef993b5f 100644
+index d983d375ff113..7216ef993b5f9 100644
 --- a/fs/splice.c
 +++ b/fs/splice.c
 @@ -925,8 +925,8 @@ static int warn_unsupported(struct file *file, const char *op)
@@ -122,7 +122,7 @@ index d983d375ff11..7216ef993b5f 100644
  	if (unlikely(!out->f_op->splice_write))
  		return warn_unsupported(out, "write");
 diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 4a40823c3c67..a46e516bfc32 100644
+index 4a40823c3c678..a46e516bfc32e 100644
 --- a/include/linux/fs.h
 +++ b/include/linux/fs.h
 @@ -1099,6 +1099,7 @@ extern void fasync_free(struct fasync_struct *);
@@ -142,7 +142,7 @@ index 4a40823c3c67..a46e516bfc32 100644
  	ssize_t (*splice_write)(struct pipe_inode_info *, struct file *, loff_t *, size_t, unsigned int);
  	ssize_t (*splice_read)(struct file *, loff_t *, struct pipe_inode_info *, size_t, unsigned int);
 diff --git a/include/linux/lockdep.h b/include/linux/lockdep.h
-index dc2844b071c2..069ffb776c2c 100644
+index dc2844b071c2c..069ffb776c2c1 100644
 --- a/include/linux/lockdep.h
 +++ b/include/linux/lockdep.h
 @@ -249,6 +249,8 @@ static inline int lockdep_match_key(struct lockdep_map *lock,
@@ -155,7 +155,7 @@ index dc2844b071c2..069ffb776c2c 100644
   * Acquire a lock.
   *
 diff --git a/include/linux/mnt_namespace.h b/include/linux/mnt_namespace.h
-index 8f882f5881e8..6b9808f09843 100644
+index 8f882f5881e87..6b9808f098435 100644
 --- a/include/linux/mnt_namespace.h
 +++ b/include/linux/mnt_namespace.h
 @@ -7,12 +7,15 @@ struct mnt_namespace;
@@ -175,7 +175,7 @@ index 8f882f5881e8..6b9808f09843 100644
  extern const struct file_operations proc_mountinfo_operations;
  extern const struct file_operations proc_mountstats_operations;
 diff --git a/include/linux/splice.h b/include/linux/splice.h
-index 6c461573434d..f08de3775987 100644
+index 6c461573434dd..f08de37759877 100644
 --- a/include/linux/splice.h
 +++ b/include/linux/splice.h
 @@ -99,4 +99,7 @@ extern void splice_shrink_spd(struct splice_pipe_desc *);
@@ -187,7 +187,7 @@ index 6c461573434d..f08de3775987 100644
 +			   loff_t *ppos, size_t len, unsigned int flags);
  #endif
 diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 151bd3de5936..2223ee909c10 100644
+index 151bd3de59363..2223ee909c10f 100644
 --- a/kernel/locking/lockdep.c
 +++ b/kernel/locking/lockdep.c
 @@ -218,7 +218,7 @@ unsigned long max_lock_class_idx;
