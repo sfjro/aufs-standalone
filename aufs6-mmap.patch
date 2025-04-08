@@ -2,7 +2,7 @@ SPDX-License-Identifier: GPL-2.0
 aufs6.8 mmap patch
 
 diff --git a/fs/proc/base.c b/fs/proc/base.c
-index 18550c071d71..560be8fb4fca 100644
+index 18550c071d71c..560be8fb4fca2 100644
 --- a/fs/proc/base.c
 +++ b/fs/proc/base.c
 @@ -2213,7 +2213,7 @@ static int map_files_get_link(struct dentry *dentry, struct path *path)
@@ -15,7 +15,7 @@ index 18550c071d71..560be8fb4fca 100644
  		rc = 0;
  	}
 diff --git a/fs/proc/nommu.c b/fs/proc/nommu.c
-index c6e7ebc63756..d7ccfd909764 100644
+index c6e7ebc637562..d7ccfd9097646 100644
 --- a/fs/proc/nommu.c
 +++ b/fs/proc/nommu.c
 @@ -39,7 +39,10 @@ static int nommu_region_show(struct seq_file *m, struct vm_region *region)
@@ -31,7 +31,7 @@ index c6e7ebc63756..d7ccfd909764 100644
  		ino = inode->i_ino;
  	}
 diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
-index 3f78ebbb795f..f96ec77db39e 100644
+index 3f78ebbb795fe..f96ec77db39e2 100644
 --- a/fs/proc/task_mmu.c
 +++ b/fs/proc/task_mmu.c
 @@ -273,7 +273,8 @@ show_map_vma(struct seq_file *m, struct vm_area_struct *vma)
@@ -54,7 +54,7 @@ index 3f78ebbb795f..f96ec77db39e 100644
  	char buffer[64];
  	struct mempolicy *pol;
 diff --git a/fs/proc/task_nommu.c b/fs/proc/task_nommu.c
-index bce674533000..b12b5a75c799 100644
+index bce6745330003..b12b5a75c799c 100644
 --- a/fs/proc/task_nommu.c
 +++ b/fs/proc/task_nommu.c
 @@ -137,7 +137,10 @@ static int nommu_vma_show(struct seq_file *m, struct vm_area_struct *vma)
@@ -70,7 +70,7 @@ index bce674533000..b12b5a75c799 100644
  		ino = inode->i_ino;
  		pgoff = (loff_t)vma->vm_pgoff << PAGE_SHIFT;
 diff --git a/include/linux/mm.h b/include/linux/mm.h
-index f5a97dec5169..a5b0edc8e290 100644
+index f5a97dec51694..a5b0edc8e2900 100644
 --- a/include/linux/mm.h
 +++ b/include/linux/mm.h
 @@ -2432,6 +2432,43 @@ static inline void unmap_shared_mapping_range(struct address_space *mapping,
@@ -118,7 +118,7 @@ index f5a97dec5169..a5b0edc8e290 100644
  		void *buf, int len, unsigned int gup_flags);
  extern int access_remote_vm(struct mm_struct *mm, unsigned long addr,
 diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
-index 8b611e13153e..838af328941a 100644
+index 8b611e13153e6..838af328941af 100644
 --- a/include/linux/mm_types.h
 +++ b/include/linux/mm_types.h
 @@ -527,6 +527,9 @@ struct vm_region {
@@ -142,7 +142,7 @@ index 8b611e13153e..838af328941a 100644
  
  #ifdef CONFIG_ANON_VMA_NAME
 diff --git a/kernel/fork.c b/kernel/fork.c
-index 0d944e92a43f..bc073aaca2dc 100644
+index 0d944e92a43ff..bc073aaca2dc1 100644
 --- a/kernel/fork.c
 +++ b/kernel/fork.c
 @@ -716,7 +716,7 @@ static __latent_entropy int dup_mmap(struct mm_struct *mm,
@@ -155,7 +155,7 @@ index 0d944e92a43f..bc073aaca2dc 100644
  			if (vma_is_shared_maywrite(tmp))
  				mapping_allow_writable(mapping);
 diff --git a/mm/Makefile b/mm/Makefile
-index e4b5b75aaec9..2ec2544009fb 100644
+index e4b5b75aaec9c..2ec2544009fbd 100644
 --- a/mm/Makefile
 +++ b/mm/Makefile
 @@ -134,3 +134,4 @@ obj-$(CONFIG_IO_MAPPING) += io-mapping.o
@@ -164,7 +164,7 @@ index e4b5b75aaec9..2ec2544009fb 100644
  obj-$(CONFIG_SHRINKER_DEBUG) += shrinker_debug.o
 +obj-y += prfile.o
 diff --git a/mm/filemap.c b/mm/filemap.c
-index 4a30de98a8c7..8f0f43c74cc4 100644
+index 4a30de98a8c75..8f0f43c74cc44 100644
 --- a/mm/filemap.c
 +++ b/mm/filemap.c
 @@ -3587,7 +3587,7 @@ vm_fault_t filemap_page_mkwrite(struct vm_fault *vmf)
@@ -177,7 +177,7 @@ index 4a30de98a8c7..8f0f43c74cc4 100644
  	if (folio->mapping != mapping) {
  		folio_unlock(folio);
 diff --git a/mm/mmap.c b/mm/mmap.c
-index 3281287771c9..9126c6f1d19a 100644
+index 3281287771c9c..9126c6f1d19a8 100644
 --- a/mm/mmap.c
 +++ b/mm/mmap.c
 @@ -140,7 +140,7 @@ static void remove_vma(struct vm_area_struct *vma, bool unreachable)
@@ -289,7 +289,7 @@ index 3281287771c9..9126c6f1d19a 100644
  	unlink_anon_vmas(new_vma);
  out_free_mempol:
 diff --git a/mm/nommu.c b/mm/nommu.c
-index b6dc558d3144..d96655486468 100644
+index b6dc558d31440..d96655486468e 100644
 --- a/mm/nommu.c
 +++ b/mm/nommu.c
 @@ -523,7 +523,7 @@ static void __put_nommu_region(struct vm_region *region)
@@ -334,7 +334,7 @@ index b6dc558d3144..d96655486468 100644
  
 diff --git a/mm/prfile.c b/mm/prfile.c
 new file mode 100644
-index 000000000000..b034d160a18f
+index 0000000000000..b034d160a18f4
 --- /dev/null
 +++ b/mm/prfile.c
 @@ -0,0 +1,86 @@
