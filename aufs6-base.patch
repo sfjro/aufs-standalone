@@ -2,7 +2,7 @@ SPDX-License-Identifier: GPL-2.0
 aufs6.12 base patch
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index b878ddc99f94..8489754030b9 100644
+index b878ddc99f94e..8489754030b99 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
 @@ -3666,6 +3666,19 @@ F:	kernel/audit*
@@ -26,7 +26,7 @@ index b878ddc99f94..8489754030b9 100644
  M:	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
  R:	Dave Ertman <david.m.ertman@intel.com>
 diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index 78a7bb28defe..479480f25a6c 100644
+index 78a7bb28defe4..479480f25a6c0 100644
 --- a/drivers/block/loop.c
 +++ b/drivers/block/loop.c
 @@ -661,6 +661,26 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
@@ -57,7 +57,7 @@ index 78a7bb28defe..479480f25a6c 100644
  
  static ssize_t loop_attr_show(struct device *dev, char *page,
 diff --git a/fs/dcache.c b/fs/dcache.c
-index 0f6b16ba30d0..1ab11cad60e8 100644
+index 0f6b16ba30d08..1ab11cad60e8c 100644
 --- a/fs/dcache.c
 +++ b/fs/dcache.c
 @@ -1223,6 +1223,9 @@ enum d_walk_ret {
@@ -80,7 +80,7 @@ index 0f6b16ba30d0..1ab11cad60e8 100644
  {
  	struct dentry *this_parent, *dentry;
 diff --git a/fs/fcntl.c b/fs/fcntl.c
-index 22dd9dcce7ec..460791727fd9 100644
+index 22dd9dcce7ecc..460791727fd9c 100644
 --- a/fs/fcntl.c
 +++ b/fs/fcntl.c
 @@ -37,7 +37,7 @@
@@ -102,7 +102,7 @@ index 22dd9dcce7ec..460791727fd9 100644
  		return error;
  
 diff --git a/fs/namespace.c b/fs/namespace.c
-index d26f5e6d2ca3..85739e2d64c0 100644
+index d26f5e6d2ca35..85739e2d64c00 100644
 --- a/fs/namespace.c
 +++ b/fs/namespace.c
 @@ -966,6 +966,12 @@ static inline int check_mnt(struct mount *mnt)
@@ -119,7 +119,7 @@ index d26f5e6d2ca3..85739e2d64c0 100644
   * vfsmount lock must be held for write
   */
 diff --git a/fs/splice.c b/fs/splice.c
-index 06232d7e505f..b15fd6073b6d 100644
+index 06232d7e505f6..b15fd6073b6d3 100644
 --- a/fs/splice.c
 +++ b/fs/splice.c
 @@ -933,7 +933,7 @@ static int warn_unsupported(struct file *file, const char *op)
@@ -132,7 +132,7 @@ index 06232d7e505f..b15fd6073b6d 100644
  {
  	if (unlikely(!out->f_op->splice_write))
 diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 3559446279c1..51b64b2ad82c 100644
+index 3559446279c15..51b64b2ad82c4 100644
 --- a/include/linux/fs.h
 +++ b/include/linux/fs.h
 @@ -1160,6 +1160,7 @@ extern void fasync_free(struct fasync_struct *);
@@ -152,7 +152,7 @@ index 3559446279c1..51b64b2ad82c 100644
  	ssize_t (*splice_write)(struct pipe_inode_info *, struct file *, loff_t *, size_t, unsigned int);
  	ssize_t (*splice_read)(struct file *, loff_t *, struct pipe_inode_info *, size_t, unsigned int);
 diff --git a/include/linux/lockdep.h b/include/linux/lockdep.h
-index 217f7abf2cbf..0e17b8c23f10 100644
+index 217f7abf2cbfa..0e17b8c23f105 100644
 --- a/include/linux/lockdep.h
 +++ b/include/linux/lockdep.h
 @@ -210,6 +210,8 @@ static inline int lockdep_match_key(struct lockdep_map *lock,
@@ -165,7 +165,7 @@ index 217f7abf2cbf..0e17b8c23f10 100644
   * Acquire a lock.
   *
 diff --git a/include/linux/mnt_namespace.h b/include/linux/mnt_namespace.h
-index 70b366b64816..08cfdabb2721 100644
+index 70b366b648160..08cfdabb2721f 100644
 --- a/include/linux/mnt_namespace.h
 +++ b/include/linux/mnt_namespace.h
 @@ -10,6 +10,7 @@ struct mnt_namespace;
@@ -186,7 +186,7 @@ index 70b366b64816..08cfdabb2721 100644
  extern const struct file_operations proc_mountinfo_operations;
  extern const struct file_operations proc_mountstats_operations;
 diff --git a/include/linux/splice.h b/include/linux/splice.h
-index 9dec4861d09f..14583d846864 100644
+index 9dec4861d09f6..14583d8468640 100644
 --- a/include/linux/splice.h
 +++ b/include/linux/splice.h
 @@ -108,4 +108,7 @@ extern void splice_shrink_spd(struct splice_pipe_desc *);
@@ -198,7 +198,7 @@ index 9dec4861d09f..14583d846864 100644
 +			      loff_t *ppos, size_t len, unsigned int flags);
  #endif
 diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 536bd471557f..34b378cf7a95 100644
+index 536bd471557f5..34b378cf7a95f 100644
 --- a/kernel/locking/lockdep.c
 +++ b/kernel/locking/lockdep.c
 @@ -218,7 +218,7 @@ unsigned long max_lock_class_idx;
