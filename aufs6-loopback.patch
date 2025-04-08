@@ -2,7 +2,7 @@ SPDX-License-Identifier: GPL-2.0
 aufs6.6.44 loopback patch
 
 diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index ad953bc6d08a..799119d6b95a 100644
+index ad953bc6d08af..799119d6b95ad 100644
 --- a/drivers/block/loop.c
 +++ b/drivers/block/loop.c
 @@ -54,7 +54,7 @@ struct loop_device {
@@ -149,7 +149,7 @@ index ad953bc6d08a..799119d6b95a 100644
  
  static int loop_clr_fd(struct loop_device *lo)
 diff --git a/fs/aufs/f_op.c b/fs/aufs/f_op.c
-index db7e9fcf1056..6d202136d29a 100644
+index db7e9fcf1056a..6d202136d29af 100644
 --- a/fs/aufs/f_op.c
 +++ b/fs/aufs/f_op.c
 @@ -317,7 +317,7 @@ static ssize_t aufs_read_iter(struct kiocb *kio, struct iov_iter *iov_iter)
@@ -162,7 +162,7 @@ index db7e9fcf1056..6d202136d29a 100644
  		if (file->f_mapping != h_file->f_mapping) {
  			file->f_mapping = h_file->f_mapping;
 diff --git a/fs/aufs/loop.c b/fs/aufs/loop.c
-index 69dea4cda00c..92a74affb220 100644
+index 69dea4cda00c0..92a74affb2208 100644
 --- a/fs/aufs/loop.c
 +++ b/fs/aufs/loop.c
 @@ -133,3 +133,19 @@ void au_loopback_fin(void)
@@ -186,7 +186,7 @@ index 69dea4cda00c..92a74affb220 100644
 +	return f;
 +}
 diff --git a/fs/aufs/loop.h b/fs/aufs/loop.h
-index 519efba31c70..ac701381da79 100644
+index 519efba31c700..ac701381da792 100644
 --- a/fs/aufs/loop.h
 +++ b/fs/aufs/loop.h
 @@ -26,6 +26,8 @@ void au_warn_loopback(struct super_block *h_sb);
@@ -208,7 +208,7 @@ index 519efba31c70..ac701381da79 100644
  
  #endif /* __KERNEL__ */
 diff --git a/fs/aufs/super.c b/fs/aufs/super.c
-index 9c30cba52742..8161108d0f6d 100644
+index 9c30cba527421..8161108d0f6d5 100644
 --- a/fs/aufs/super.c
 +++ b/fs/aufs/super.c
 @@ -758,7 +758,10 @@ const struct super_operations aufs_sop = {
@@ -224,7 +224,7 @@ index 9c30cba52742..8161108d0f6d 100644
  
  /* ---------------------------------------------------------------------- */
 diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 6be2a585c4c0..9b4d72242362 100644
+index 6be2a585c4c0a..9b4d72242362d 100644
 --- a/include/linux/fs.h
 +++ b/include/linux/fs.h
 @@ -2088,6 +2088,11 @@ struct super_operations {
