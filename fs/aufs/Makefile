@@ -6,6 +6,7 @@ include ${src}/conf.mk
 endif
 -include ${src}/priv_def.mk
 
+ccflags-y += ${EXTRA_CFLAGS}
 # cf. include/linux/kernel.h
 # enable pr_debug
 ccflags-y += -DDEBUG
