@@ -2,10 +2,10 @@ SPDX-License-Identifier: GPL-2.0
 aufs6.x-rcN base patch
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 00e94bec401e..fc5f009fdc2b 100644
+index 96b8270495018..d097f92ca42d5 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -3776,6 +3776,19 @@ S:	Supported
+@@ -3863,6 +3863,19 @@ S:	Supported
  F:	Documentation/dev-tools/autofdo.rst
  F:	scripts/Makefile.autofdo
  
@@ -26,10 +26,10 @@ index 00e94bec401e..fc5f009fdc2b 100644
  M:	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
  R:	Dave Ertman <david.m.ertman@intel.com>
 diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index c05fe27a96b6..360a30bda4ec 100644
+index 674527d770dc6..9b8cd855ecf0b 100644
 --- a/drivers/block/loop.c
 +++ b/drivers/block/loop.c
-@@ -665,6 +665,26 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
+@@ -678,6 +678,26 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
  	goto done;
  }
  
@@ -57,10 +57,10 @@ index c05fe27a96b6..360a30bda4ec 100644
  
  static ssize_t loop_attr_show(struct device *dev, char *page,
 diff --git a/fs/dcache.c b/fs/dcache.c
-index e3634916ffb9..cc6665e8c5e9 100644
+index bd5aa136153ac..f27934816c452 100644
 --- a/fs/dcache.c
 +++ b/fs/dcache.c
-@@ -1251,6 +1251,9 @@ enum d_walk_ret {
+@@ -1268,6 +1268,9 @@ enum d_walk_ret {
  	D_WALK_SKIP,
  };
  
@@ -70,7 +70,7 @@ index e3634916ffb9..cc6665e8c5e9 100644
  /**
   * d_walk - walk the dentry tree
   * @parent:	start of walk
-@@ -1259,7 +1262,7 @@ enum d_walk_ret {
+@@ -1276,7 +1279,7 @@ enum d_walk_ret {
   *
   * The @enter() callbacks are called with d_lock held.
   */
@@ -80,7 +80,7 @@ index e3634916ffb9..cc6665e8c5e9 100644
  {
  	struct dentry *this_parent, *dentry;
 diff --git a/fs/fcntl.c b/fs/fcntl.c
-index 5598e4d57422..90af6a47fbad 100644
+index 5598e4d574229..90af6a47fbadc 100644
 --- a/fs/fcntl.c
 +++ b/fs/fcntl.c
 @@ -36,7 +36,7 @@
@@ -102,10 +102,10 @@ index 5598e4d57422..90af6a47fbad 100644
  		return error;
  
 diff --git a/fs/namespace.c b/fs/namespace.c
-index 8f1000f9f3df..1374f84b05f0 100644
+index 14935a0500a20..5440ecbef575a 100644
 --- a/fs/namespace.c
 +++ b/fs/namespace.c
-@@ -998,6 +998,12 @@ static inline int check_mnt(struct mount *mnt)
+@@ -1007,6 +1007,12 @@ static inline int check_mnt(struct mount *mnt)
  	return mnt->mnt_ns == current->nsproxy->mnt_ns;
  }
  
@@ -115,14 +115,14 @@ index 8f1000f9f3df..1374f84b05f0 100644
 +	return check_mnt(real_mount(mnt));
 +}
 +
- /*
-  * vfsmount lock must be held for write
-  */
+ static inline bool check_anonymous_mnt(struct mount *mnt)
+ {
+ 	u64 seq;
 diff --git a/fs/splice.c b/fs/splice.c
-index 23fa5561b944..7b0db4b3b485 100644
+index 90d464241f151..a81fe7bfe3ef9 100644
 --- a/fs/splice.c
 +++ b/fs/splice.c
-@@ -933,7 +933,7 @@ static int warn_unsupported(struct file *file, const char *op)
+@@ -927,7 +927,7 @@ static int warn_unsupported(struct file *file, const char *op)
  /*
   * Attempt to initiate a splice from pipe to file.
   */
@@ -132,10 +132,10 @@ index 23fa5561b944..7b0db4b3b485 100644
  {
  	if (unlikely(!out->f_op->splice_write))
 diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 2788df98080f..80443e8d30b7 100644
+index 016b0fe1536e3..fed72def0eb0b 100644
 --- a/include/linux/fs.h
 +++ b/include/linux/fs.h
-@@ -1221,6 +1221,7 @@ extern void fasync_free(struct fasync_struct *);
+@@ -1211,6 +1211,7 @@ extern void fasync_free(struct fasync_struct *);
  /* can be called from interrupts */
  extern void kill_fasync(struct fasync_struct **, int, int);
  
@@ -143,7 +143,7 @@ index 2788df98080f..80443e8d30b7 100644
  extern void __f_setown(struct file *filp, struct pid *, enum pid_type, int force);
  extern int f_setown(struct file *filp, int who, int force);
  extern void f_delown(struct file *filp);
-@@ -2151,6 +2152,7 @@ struct file_operations {
+@@ -2149,6 +2150,7 @@ struct file_operations {
  	int (*lock) (struct file *, int, struct file_lock *);
  	unsigned long (*get_unmapped_area)(struct file *, unsigned long, unsigned long, unsigned long, unsigned long);
  	int (*check_flags)(int);
@@ -152,7 +152,7 @@ index 2788df98080f..80443e8d30b7 100644
  	ssize_t (*splice_write)(struct pipe_inode_info *, struct file *, loff_t *, size_t, unsigned int);
  	ssize_t (*splice_read)(struct file *, loff_t *, struct pipe_inode_info *, size_t, unsigned int);
 diff --git a/include/linux/lockdep.h b/include/linux/lockdep.h
-index 67964dc4db95..517ef3ea8c85 100644
+index 67964dc4db952..517ef3ea8c85f 100644
 --- a/include/linux/lockdep.h
 +++ b/include/linux/lockdep.h
 @@ -210,6 +210,8 @@ static inline int lockdep_match_key(struct lockdep_map *lock,
@@ -165,7 +165,7 @@ index 67964dc4db95..517ef3ea8c85 100644
   * Acquire a lock.
   *
 diff --git a/include/linux/mnt_namespace.h b/include/linux/mnt_namespace.h
-index 70b366b64816..08cfdabb2721 100644
+index 70b366b648160..08cfdabb2721f 100644
 --- a/include/linux/mnt_namespace.h
 +++ b/include/linux/mnt_namespace.h
 @@ -10,6 +10,7 @@ struct mnt_namespace;
@@ -186,7 +186,7 @@ index 70b366b64816..08cfdabb2721 100644
  extern const struct file_operations proc_mountinfo_operations;
  extern const struct file_operations proc_mountstats_operations;
 diff --git a/include/linux/splice.h b/include/linux/splice.h
-index 9dec4861d09f..14583d846864 100644
+index 9dec4861d09f6..14583d8468640 100644
 --- a/include/linux/splice.h
 +++ b/include/linux/splice.h
 @@ -108,4 +108,7 @@ extern void splice_shrink_spd(struct splice_pipe_desc *);
@@ -198,10 +198,10 @@ index 9dec4861d09f..14583d846864 100644
 +			      loff_t *ppos, size_t len, unsigned int flags);
  #endif
 diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 4470680f0226..89e8e8b38357 100644
+index 58d78a33ac65b..2dbd6fe56413c 100644
 --- a/kernel/locking/lockdep.c
 +++ b/kernel/locking/lockdep.c
-@@ -220,7 +220,7 @@ unsigned long max_lock_class_idx;
+@@ -223,7 +223,7 @@ unsigned long max_lock_class_idx;
  struct lock_class lock_classes[MAX_LOCKDEP_KEYS];
  DECLARE_BITMAP(lock_classes_in_use, MAX_LOCKDEP_KEYS);
  
@@ -210,7 +210,7 @@ index 4470680f0226..89e8e8b38357 100644
  {
  	unsigned int class_idx = hlock->class_idx;
  
-@@ -241,6 +241,7 @@ static inline struct lock_class *hlock_class(struct held_lock *hlock)
+@@ -244,6 +244,7 @@ static inline struct lock_class *hlock_class(struct held_lock *hlock)
  	 */
  	return lock_classes + class_idx;
  }
