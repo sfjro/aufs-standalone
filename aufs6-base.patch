@@ -2,10 +2,10 @@ SPDX-License-Identifier: GPL-2.0
 aufs6.x-rcN base patch
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 96b8270495018..d097f92ca42d5 100644
+index f21f1dabb5fe1..41d0d4b41ad04 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -3863,6 +3863,19 @@ S:	Supported
+@@ -3870,6 +3870,19 @@ S:	Supported
  F:	Documentation/dev-tools/autofdo.rst
  F:	scripts/Makefile.autofdo
  
@@ -26,10 +26,10 @@ index 96b8270495018..d097f92ca42d5 100644
  M:	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
  R:	Dave Ertman <david.m.ertman@intel.com>
 diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index 674527d770dc6..9b8cd855ecf0b 100644
+index b8ba7de087539..25337d8591aa3 100644
 --- a/drivers/block/loop.c
 +++ b/drivers/block/loop.c
-@@ -678,6 +678,26 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
+@@ -617,6 +617,26 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
  	goto done;
  }
  
@@ -102,10 +102,10 @@ index 5598e4d574229..90af6a47fbadc 100644
  		return error;
  
 diff --git a/fs/namespace.c b/fs/namespace.c
-index 14935a0500a20..5440ecbef575a 100644
+index 1b466c54a357d..45e8ebee87f2a 100644
 --- a/fs/namespace.c
 +++ b/fs/namespace.c
-@@ -1007,6 +1007,12 @@ static inline int check_mnt(struct mount *mnt)
+@@ -1003,6 +1003,12 @@ static inline int check_mnt(struct mount *mnt)
  	return mnt->mnt_ns == current->nsproxy->mnt_ns;
  }
  
@@ -119,7 +119,7 @@ index 14935a0500a20..5440ecbef575a 100644
  {
  	u64 seq;
 diff --git a/fs/splice.c b/fs/splice.c
-index 90d464241f151..a81fe7bfe3ef9 100644
+index 4d6df083e0c06..73cd917c821fe 100644
 --- a/fs/splice.c
 +++ b/fs/splice.c
 @@ -927,7 +927,7 @@ static int warn_unsupported(struct file *file, const char *op)
