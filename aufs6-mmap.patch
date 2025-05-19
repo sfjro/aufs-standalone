@@ -163,7 +163,7 @@ index 56d07edd01f91..d5a8bd5e15ce4 100644
  
  #ifdef CONFIG_SWAP
 diff --git a/kernel/fork.c b/kernel/fork.c
-index c4b26cd8998b8..5116df7605603 100644
+index 168681fc4b25a..cf8e0f7eec280 100644
 --- a/kernel/fork.c
 +++ b/kernel/fork.c
 @@ -457,6 +457,7 @@ static void vm_area_init_from(const struct vm_area_struct *src,
@@ -174,7 +174,7 @@ index c4b26cd8998b8..5116df7605603 100644
  	dest->vm_private_data = src->vm_private_data;
  	vm_flags_init(dest, src->vm_flags);
  	memcpy(&dest->vm_page_prot, &src->vm_page_prot,
-@@ -710,7 +711,7 @@ static __latent_entropy int dup_mmap(struct mm_struct *mm,
+@@ -711,7 +712,7 @@ static __latent_entropy int dup_mmap(struct mm_struct *mm,
  		if (file) {
  			struct address_space *mapping = file->f_mapping;
  

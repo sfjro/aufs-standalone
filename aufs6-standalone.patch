@@ -162,7 +162,7 @@ index 73cd917c821fe..eb7b4d93a3523 100644
  /*
   * Indicate to the caller that there was a premature EOF when reading from the
 diff --git a/fs/xattr.c b/fs/xattr.c
-index fabb2a04501ee..6b3a1a90570df 100644
+index 8ec5b0204bfdc..29b754a861fc3 100644
 --- a/fs/xattr.c
 +++ b/fs/xattr.c
 @@ -405,6 +405,7 @@ vfs_getxattr_alloc(struct mnt_idmap *idmap, struct dentry *dentry,
