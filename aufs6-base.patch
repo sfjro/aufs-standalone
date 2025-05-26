@@ -2,7 +2,7 @@ SPDX-License-Identifier: GPL-2.0
 aufs6.x-rcN base patch
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index d48dd6726fe6b..d8e852d7bea92 100644
+index dd844ac8d9107..845564059a505 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
 @@ -3870,6 +3870,19 @@ S:	Supported
@@ -26,7 +26,7 @@ index d48dd6726fe6b..d8e852d7bea92 100644
  M:	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
  R:	Dave Ertman <david.m.ertman@intel.com>
 diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index b8ba7de087539..25337d8591aa3 100644
+index e2b1f377f5856..ea328c8498c53 100644
 --- a/drivers/block/loop.c
 +++ b/drivers/block/loop.c
 @@ -617,6 +617,26 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
@@ -132,7 +132,7 @@ index 4d6df083e0c06..73cd917c821fe 100644
  {
  	if (unlikely(!out->f_op->splice_write))
 diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 016b0fe1536e3..fed72def0eb0b 100644
+index a4fd649e2c3fc..b5505b712998a 100644
 --- a/include/linux/fs.h
 +++ b/include/linux/fs.h
 @@ -1211,6 +1211,7 @@ extern void fasync_free(struct fasync_struct *);

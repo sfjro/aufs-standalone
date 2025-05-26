@@ -80,7 +80,7 @@ index bce6745330003..b12b5a75c799c 100644
  		ino = inode->i_ino;
  		pgoff = (loff_t)vma->vm_pgoff << PAGE_SHIFT;
 diff --git a/include/linux/mm.h b/include/linux/mm.h
-index bf55206935c46..1ded10c638970 100644
+index fdda6b16263b3..62034da6a7b13 100644
 --- a/include/linux/mm.h
 +++ b/include/linux/mm.h
 @@ -2578,6 +2578,54 @@ static inline void unmap_shared_mapping_range(struct address_space *mapping,
@@ -410,7 +410,7 @@ index 0000000000000..b034d160a18f4
 +}
 +#endif /* !CONFIG_MMU */
 diff --git a/mm/vma.c b/mm/vma.c
-index 839d12f02c885..a4076eb9d1c21 100644
+index a468d4c29c0cd..aef6d4781baa1 100644
 --- a/mm/vma.c
 +++ b/mm/vma.c
 @@ -345,7 +345,7 @@ static void vma_complete(struct vma_prepare *vp, struct vma_iterator *vmi,
@@ -449,7 +449,7 @@ index 839d12f02c885..a4076eb9d1c21 100644
  		if (new_vma->vm_ops && new_vma->vm_ops->open)
  			new_vma->vm_ops->open(new_vma);
  		if (vma_link(mm, new_vma))
-@@ -1837,7 +1837,7 @@ struct vm_area_struct *copy_vma(struct vm_area_struct **vmap,
+@@ -1838,7 +1838,7 @@ struct vm_area_struct *copy_vma(struct vm_area_struct **vmap,
  	vma_close(new_vma);
  
  	if (new_vma->vm_file)
