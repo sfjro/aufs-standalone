@@ -2,10 +2,10 @@ SPDX-License-Identifier: GPL-2.0
 aufs6.x-rcN base patch
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index dd844ac8d9107..845564059a505 100644
+index a92290fffa163..1fa525e3c46e9 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -3870,6 +3870,19 @@ S:	Supported
+@@ -3944,6 +3944,19 @@ S:	Supported
  F:	Documentation/dev-tools/autofdo.rst
  F:	scripts/Makefile.autofdo
  
@@ -26,10 +26,10 @@ index dd844ac8d9107..845564059a505 100644
  M:	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
  R:	Dave Ertman <david.m.ertman@intel.com>
 diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index e2b1f377f5856..ea328c8498c53 100644
+index f8d136684109a..c6bdc54fc3308 100644
 --- a/drivers/block/loop.c
 +++ b/drivers/block/loop.c
-@@ -617,6 +617,26 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
+@@ -621,6 +621,26 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
  	goto done;
  }
  
@@ -57,10 +57,10 @@ index e2b1f377f5856..ea328c8498c53 100644
  
  static ssize_t loop_attr_show(struct device *dev, char *page,
 diff --git a/fs/dcache.c b/fs/dcache.c
-index bd5aa136153ac..f27934816c452 100644
+index 03d58b2d4fa34..7f483c97810f2 100644
 --- a/fs/dcache.c
 +++ b/fs/dcache.c
-@@ -1268,6 +1268,9 @@ enum d_walk_ret {
+@@ -1277,6 +1277,9 @@ enum d_walk_ret {
  	D_WALK_SKIP,
  };
  
@@ -70,7 +70,7 @@ index bd5aa136153ac..f27934816c452 100644
  /**
   * d_walk - walk the dentry tree
   * @parent:	start of walk
-@@ -1276,7 +1279,7 @@ enum d_walk_ret {
+@@ -1285,7 +1288,7 @@ enum d_walk_ret {
   *
   * The @enter() callbacks are called with d_lock held.
   */
@@ -102,10 +102,10 @@ index 5598e4d574229..90af6a47fbadc 100644
  		return error;
  
 diff --git a/fs/namespace.c b/fs/namespace.c
-index 1b466c54a357d..45e8ebee87f2a 100644
+index e13d9ab4f5649..b844d3729cb78 100644
 --- a/fs/namespace.c
 +++ b/fs/namespace.c
-@@ -1003,6 +1003,12 @@ static inline int check_mnt(struct mount *mnt)
+@@ -1004,6 +1004,12 @@ static inline int check_mnt(struct mount *mnt)
  	return mnt->mnt_ns == current->nsproxy->mnt_ns;
  }
  
@@ -132,10 +132,10 @@ index 4d6df083e0c06..73cd917c821fe 100644
  {
  	if (unlikely(!out->f_op->splice_write))
 diff --git a/include/linux/fs.h b/include/linux/fs.h
-index a4fd649e2c3fc..b5505b712998a 100644
+index 96c7925a65519..826bc3d607dd6 100644
 --- a/include/linux/fs.h
 +++ b/include/linux/fs.h
-@@ -1211,6 +1211,7 @@ extern void fasync_free(struct fasync_struct *);
+@@ -1221,6 +1221,7 @@ extern void fasync_free(struct fasync_struct *);
  /* can be called from interrupts */
  extern void kill_fasync(struct fasync_struct **, int, int);
  
@@ -143,7 +143,7 @@ index a4fd649e2c3fc..b5505b712998a 100644
  extern void __f_setown(struct file *filp, struct pid *, enum pid_type, int force);
  extern int f_setown(struct file *filp, int who, int force);
  extern void f_delown(struct file *filp);
-@@ -2149,6 +2150,7 @@ struct file_operations {
+@@ -2169,6 +2170,7 @@ struct file_operations {
  	int (*lock) (struct file *, int, struct file_lock *);
  	unsigned long (*get_unmapped_area)(struct file *, unsigned long, unsigned long, unsigned long, unsigned long);
  	int (*check_flags)(int);
@@ -198,10 +198,10 @@ index 9dec4861d09f6..14583d8468640 100644
 +			      loff_t *ppos, size_t len, unsigned int flags);
  #endif
 diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 58d78a33ac65b..2dbd6fe56413c 100644
+index dd2bbf73718b0..e3a5bfdb88c62 100644
 --- a/kernel/locking/lockdep.c
 +++ b/kernel/locking/lockdep.c
-@@ -223,7 +223,7 @@ unsigned long max_lock_class_idx;
+@@ -224,7 +224,7 @@ unsigned long max_lock_class_idx;
  struct lock_class lock_classes[MAX_LOCKDEP_KEYS];
  DECLARE_BITMAP(lock_classes_in_use, MAX_LOCKDEP_KEYS);
  
@@ -210,7 +210,7 @@ index 58d78a33ac65b..2dbd6fe56413c 100644
  {
  	unsigned int class_idx = hlock->class_idx;
  
-@@ -244,6 +244,7 @@ static inline struct lock_class *hlock_class(struct held_lock *hlock)
+@@ -245,6 +245,7 @@ static inline struct lock_class *hlock_class(struct held_lock *hlock)
  	 */
  	return lock_classes + class_idx;
  }

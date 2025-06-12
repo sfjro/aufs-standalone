@@ -2,10 +2,10 @@ SPDX-License-Identifier: GPL-2.0
 aufs6.x-rcN standalone patch
 
 diff --git a/fs/dcache.c b/fs/dcache.c
-index f27934816c452..d711c216bd070 100644
+index 7f483c97810f2..7f1b9af1355be 100644
 --- a/fs/dcache.c
 +++ b/fs/dcache.c
-@@ -1378,6 +1378,7 @@ void d_walk(struct dentry *parent, void *data,
+@@ -1387,6 +1387,7 @@ void d_walk(struct dentry *parent, void *data,
  	seq = 1;
  	goto again;
  }
@@ -13,7 +13,7 @@ index f27934816c452..d711c216bd070 100644
  
  struct check_mount {
  	struct vfsmount *mnt;
-@@ -2894,6 +2895,7 @@ void d_exchange(struct dentry *dentry1, struct dentry *dentry2)
+@@ -2902,6 +2903,7 @@ void d_exchange(struct dentry *dentry1, struct dentry *dentry2)
  
  	write_sequnlock(&rename_lock);
  }
@@ -22,16 +22,16 @@ index f27934816c452..d711c216bd070 100644
  /**
   * d_ancestor - search for an ancestor
 diff --git a/fs/exec.c b/fs/exec.c
-index 8e4ea5f1e64c6..fcdda54dd4c9e 100644
+index 1f5fdd2e096e3..34d831a775c13 100644
 --- a/fs/exec.c
 +++ b/fs/exec.c
-@@ -114,6 +114,7 @@ bool path_noexec(const struct path *path)
+@@ -117,6 +117,7 @@ bool path_noexec(const struct path *path)
  	return (path->mnt->mnt_flags & MNT_NOEXEC) ||
  	       (path->mnt->mnt_sb->s_iflags & SB_I_NOEXEC);
  }
 +EXPORT_SYMBOL_GPL(path_noexec);
  
- #ifdef CONFIG_USELIB
+ #ifdef CONFIG_MMU
  /*
 diff --git a/fs/fcntl.c b/fs/fcntl.c
 index 90af6a47fbadc..7d4eaaff13bc9 100644
@@ -46,7 +46,7 @@ index 90af6a47fbadc..7d4eaaff13bc9 100644
  /*
   * Allocate an file->f_owner struct if it doesn't exist, handling racing
 diff --git a/fs/file_table.c b/fs/file_table.c
-index c04ed94cdc4b2..2b464937aaf19 100644
+index 138114d643077..1b95604f19e29 100644
 --- a/fs/file_table.c
 +++ b/fs/file_table.c
 @@ -253,6 +253,7 @@ struct file *alloc_empty_file(int flags, const struct cred *cred)
@@ -58,10 +58,10 @@ index c04ed94cdc4b2..2b464937aaf19 100644
  /*
   * Variant of alloc_empty_file() that doesn't check and modify nr_files.
 diff --git a/fs/namespace.c b/fs/namespace.c
-index 45e8ebee87f2a..c72ef12585d32 100644
+index b844d3729cb78..3359fe694fc90 100644
 --- a/fs/namespace.c
 +++ b/fs/namespace.c
-@@ -1008,6 +1008,7 @@ int is_current_mnt_ns(struct vfsmount *mnt)
+@@ -1009,6 +1009,7 @@ int is_current_mnt_ns(struct vfsmount *mnt)
  {
  	return check_mnt(real_mount(mnt));
  }
@@ -69,7 +69,7 @@ index 45e8ebee87f2a..c72ef12585d32 100644
  
  static inline bool check_anonymous_mnt(struct mount *mnt)
  {
-@@ -2346,6 +2347,7 @@ struct vfsmount *collect_mounts(const struct path *path)
+@@ -2332,6 +2333,7 @@ struct vfsmount *collect_mounts(const struct path *path)
  		return ERR_CAST(tree);
  	return &tree->mnt;
  }
@@ -77,13 +77,13 @@ index 45e8ebee87f2a..c72ef12585d32 100644
  
  static void free_mnt_ns(struct mnt_namespace *);
  static struct mnt_namespace *alloc_mnt_ns(struct user_namespace *, bool);
-@@ -2429,6 +2431,7 @@ void drop_collected_mounts(struct vfsmount *mnt)
+@@ -2415,6 +2417,7 @@ void drop_collected_mounts(struct vfsmount *mnt)
  	unlock_mount_hash();
  	namespace_unlock();
  }
 +EXPORT_SYMBOL_GPL(drop_collected_mounts);
  
- bool has_locked_children(struct mount *mnt, struct dentry *dentry)
+ static bool __has_locked_children(struct mount *mnt, struct dentry *dentry)
  {
 @@ -2531,6 +2534,7 @@ int iterate_mounts(int (*f)(struct vfsmount *, void *), void *arg,
  	}
@@ -118,10 +118,10 @@ index 18446b7b0d495..09138e0b8a6a5 100644
  /*
   * Drop a reference to a group.  Free it if it's through.
 diff --git a/fs/open.c b/fs/open.c
-index a9063cca99118..e0bfa20a14e9f 100644
+index 7828234a7caa4..bdc55f69a9dba 100644
 --- a/fs/open.c
 +++ b/fs/open.c
-@@ -66,6 +66,7 @@ int do_truncate(struct mnt_idmap *idmap, struct dentry *dentry,
+@@ -69,6 +69,7 @@ int do_truncate(struct mnt_idmap *idmap, struct dentry *dentry,
  	inode_unlock(dentry->d_inode);
  	return ret;
  }
@@ -130,10 +130,10 @@ index a9063cca99118..e0bfa20a14e9f 100644
  int vfs_truncate(const struct path *path, loff_t length)
  {
 diff --git a/fs/read_write.c b/fs/read_write.c
-index bb0ed26a0b3ae..2fe0b1f9b42e5 100644
+index 0ef70e128c4af..52806554f78e9 100644
 --- a/fs/read_write.c
 +++ b/fs/read_write.c
-@@ -577,6 +577,7 @@ ssize_t vfs_read(struct file *file, char __user *buf, size_t count, loff_t *pos)
+@@ -579,6 +579,7 @@ ssize_t vfs_read(struct file *file, char __user *buf, size_t count, loff_t *pos)
  	inc_syscr(current);
  	return ret;
  }
@@ -141,7 +141,7 @@ index bb0ed26a0b3ae..2fe0b1f9b42e5 100644
  
  static ssize_t new_sync_write(struct file *filp, const char __user *buf, size_t len, loff_t *ppos)
  {
-@@ -692,6 +693,7 @@ ssize_t vfs_write(struct file *file, const char __user *buf, size_t count, loff_
+@@ -694,6 +695,7 @@ ssize_t vfs_write(struct file *file, const char __user *buf, size_t count, loff_
  	file_end_write(file);
  	return ret;
  }
@@ -174,10 +174,10 @@ index 8ec5b0204bfdc..29b754a861fc3 100644
  ssize_t
  __vfs_getxattr(struct dentry *dentry, struct inode *inode, const char *name,
 diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 2dbd6fe56413c..0eba3fe81a0a5 100644
+index e3a5bfdb88c62..d82ca73a54e61 100644
 --- a/kernel/locking/lockdep.c
 +++ b/kernel/locking/lockdep.c
-@@ -244,6 +244,7 @@ inline struct lock_class *lockdep_hlock_class(struct held_lock *hlock)
+@@ -245,6 +245,7 @@ inline struct lock_class *lockdep_hlock_class(struct held_lock *hlock)
  	 */
  	return lock_classes + class_idx;
  }
@@ -195,7 +195,7 @@ index d1efec571a4a4..eed18cc26c370 100644
  }
 +EXPORT_SYMBOL_GPL(task_work_run);
 diff --git a/security/security.c b/security/security.c
-index fb57e8fddd911..bb46cbe40f6ae 100644
+index 596d418185773..19fd676e50c1b 100644
 --- a/security/security.c
 +++ b/security/security.c
 @@ -1948,6 +1948,7 @@ int security_path_rmdir(const struct path *dir, struct dentry *dentry)
