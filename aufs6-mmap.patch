@@ -397,7 +397,7 @@ index 0000000000000..b034d160a18f4
 +}
 +#endif /* !CONFIG_MMU */
 diff --git a/mm/vma.c b/mm/vma.c
-index 726b2a31ce59a..49ec544b0c5d4 100644
+index fef67a66a0959..4febf77b68e30 100644
 --- a/mm/vma.c
 +++ b/mm/vma.c
 @@ -376,7 +376,7 @@ static void vma_complete(struct vma_prepare *vp, struct vma_iterator *vmi,
@@ -427,7 +427,7 @@ index 726b2a31ce59a..49ec544b0c5d4 100644
  
  	if (new->vm_ops && new->vm_ops->open)
  		new->vm_ops->open(new);
-@@ -1885,7 +1885,7 @@ struct vm_area_struct *copy_vma(struct vm_area_struct **vmap,
+@@ -1871,7 +1871,7 @@ struct vm_area_struct *copy_vma(struct vm_area_struct **vmap,
  		if (anon_vma_clone(new_vma, vma))
  			goto out_free_mempol;
  		if (new_vma->vm_file)
@@ -436,7 +436,7 @@ index 726b2a31ce59a..49ec544b0c5d4 100644
  		if (new_vma->vm_ops && new_vma->vm_ops->open)
  			new_vma->vm_ops->open(new_vma);
  		if (vma_link(mm, new_vma))
-@@ -1899,7 +1899,7 @@ struct vm_area_struct *copy_vma(struct vm_area_struct **vmap,
+@@ -1885,7 +1885,7 @@ struct vm_area_struct *copy_vma(struct vm_area_struct **vmap,
  	vma_close(new_vma);
  
  	if (new_vma->vm_file)
