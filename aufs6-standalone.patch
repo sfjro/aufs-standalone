@@ -58,7 +58,7 @@ index 138114d643077..1b95604f19e29 100644
  /*
   * Variant of alloc_empty_file() that doesn't check and modify nr_files.
 diff --git a/fs/namespace.c b/fs/namespace.c
-index b844d3729cb78..3359fe694fc90 100644
+index fca52af064af1..1c172584695ea 100644
 --- a/fs/namespace.c
 +++ b/fs/namespace.c
 @@ -1009,6 +1009,7 @@ int is_current_mnt_ns(struct vfsmount *mnt)
@@ -69,30 +69,22 @@ index b844d3729cb78..3359fe694fc90 100644
  
  static inline bool check_anonymous_mnt(struct mount *mnt)
  {
-@@ -2332,6 +2333,7 @@ struct vfsmount *collect_mounts(const struct path *path)
- 		return ERR_CAST(tree);
- 	return &tree->mnt;
+@@ -2365,6 +2366,7 @@ struct path *collect_paths(const struct path *path,
+ 		path_get(p);
+ 	return res;
  }
-+EXPORT_SYMBOL_GPL(collect_mounts);
++EXPORT_SYMBOL_GPL(collect_paths);
+ 
+ void drop_collected_paths(struct path *paths, struct path *prealloc)
+ {
+@@ -2373,6 +2375,7 @@ void drop_collected_paths(struct path *paths, struct path *prealloc)
+ 	if (paths != prealloc)
+ 		kfree(paths);
+ }
++EXPORT_SYMBOL_GPL(drop_collected_paths);
  
  static void free_mnt_ns(struct mnt_namespace *);
  static struct mnt_namespace *alloc_mnt_ns(struct user_namespace *, bool);
-@@ -2415,6 +2417,7 @@ void drop_collected_mounts(struct vfsmount *mnt)
- 	unlock_mount_hash();
- 	namespace_unlock();
- }
-+EXPORT_SYMBOL_GPL(drop_collected_mounts);
- 
- static bool __has_locked_children(struct mount *mnt, struct dentry *dentry)
- {
-@@ -2531,6 +2534,7 @@ int iterate_mounts(int (*f)(struct vfsmount *, void *), void *arg,
- 	}
- 	return 0;
- }
-+EXPORT_SYMBOL_GPL(iterate_mounts);
- 
- static void lock_mnt_tree(struct mount *mnt)
- {
 diff --git a/fs/notify/fsnotify.c b/fs/notify/fsnotify.c
 index e2b4f17a48bb7..7a411ea72cea4 100644
 --- a/fs/notify/fsnotify.c
@@ -162,7 +154,7 @@ index 73cd917c821fe..eb7b4d93a3523 100644
  /*
   * Indicate to the caller that there was a premature EOF when reading from the
 diff --git a/fs/xattr.c b/fs/xattr.c
-index 8ec5b0204bfdc..29b754a861fc3 100644
+index 600ae97969cf2..ffe4d60b01f96 100644
 --- a/fs/xattr.c
 +++ b/fs/xattr.c
 @@ -405,6 +405,7 @@ vfs_getxattr_alloc(struct mnt_idmap *idmap, struct dentry *dentry,

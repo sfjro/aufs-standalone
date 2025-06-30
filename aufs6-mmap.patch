@@ -31,7 +31,7 @@ index c6e7ebc637562..d7ccfd9097646 100644
  		ino = inode->i_ino;
  	}
 diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
-index 27972c0749e78..ec6ccbbe46e65 100644
+index 4be91eb6ea5ca..a6f2d73750f80 100644
 --- a/fs/proc/task_mmu.c
 +++ b/fs/proc/task_mmu.c
 @@ -264,7 +264,8 @@ static void get_vma_name(struct vm_area_struct *vma,
