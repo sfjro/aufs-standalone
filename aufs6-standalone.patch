@@ -22,10 +22,10 @@ index 7f483c97810f2..7f1b9af1355be 100644
  /**
   * d_ancestor - search for an ancestor
 diff --git a/fs/exec.c b/fs/exec.c
-index 1f5fdd2e096e3..34d831a775c13 100644
+index ba400aafd6406..31f0a6e5acaca 100644
 --- a/fs/exec.c
 +++ b/fs/exec.c
-@@ -117,6 +117,7 @@ bool path_noexec(const struct path *path)
+@@ -120,6 +120,7 @@ bool path_noexec(const struct path *path)
  	return (path->mnt->mnt_flags & MNT_NOEXEC) ||
  	       (path->mnt->mnt_sb->s_iflags & SB_I_NOEXEC);
  }
