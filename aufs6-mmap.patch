@@ -31,7 +31,7 @@ index c6e7ebc637562..d7ccfd9097646 100644
  		ino = inode->i_ino;
  	}
 diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
-index 3d6d8a9f13fc1..ef0bb86547aa2 100644
+index 29cca0e6d0ff5..4f824954212ee 100644
 --- a/fs/proc/task_mmu.c
 +++ b/fs/proc/task_mmu.c
 @@ -392,7 +392,8 @@ static void get_vma_name(struct vm_area_struct *vma,
@@ -54,7 +54,7 @@ index 3d6d8a9f13fc1..ef0bb86547aa2 100644
  
  		dev = inode->i_sb->s_dev;
  		ino = inode->i_ino;
-@@ -3165,7 +3167,7 @@ static int show_numa_map(struct seq_file *m, void *v)
+@@ -3177,7 +3179,7 @@ static int show_numa_map(struct seq_file *m, void *v)
  	struct proc_maps_private *proc_priv = &numa_priv->proc_maps;
  	struct vm_area_struct *vma = v;
  	struct numa_maps *md = &numa_priv->md;
@@ -185,7 +185,7 @@ index 751838ef05e51..e325eaa54151e 100644
  	if (folio->mapping != mapping) {
  		folio_unlock(folio);
 diff --git a/mm/mmap.c b/mm/mmap.c
-index 7306253cc3b57..641aeb2842ec9 100644
+index 7306253cc3b57..8f020c8fd01f0 100644
 --- a/mm/mmap.c
 +++ b/mm/mmap.c
 @@ -1094,6 +1094,7 @@ SYSCALL_DEFINE5(remap_file_pages, unsigned long, start, unsigned long, size,
@@ -252,10 +252,11 @@ index 7306253cc3b57..641aeb2842ec9 100644
  	if (populate)
  		mm_populate(ret, populate);
  	if (!IS_ERR_VALUE(ret))
-@@ -1819,6 +1840,7 @@ __latent_entropy int dup_mmap(struct mm_struct *mm, struct mm_struct *oldmm)
+@@ -1818,7 +1839,7 @@ __latent_entropy int dup_mmap(struct mm_struct *mm, struct mm_struct *oldmm)
+ 		if (file) {
  			struct address_space *mapping = file->f_mapping;
  
- 			get_file(file);
+-			get_file(file);
 +			vma_get_file(tmp);
  			i_mmap_lock_write(mapping);
  			if (vma_is_shared_maywrite(tmp))

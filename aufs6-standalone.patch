@@ -58,7 +58,7 @@ index 81c72576e548f..8852477affcfe 100644
  /*
   * Variant of alloc_empty_file() that doesn't check and modify nr_files.
 diff --git a/fs/namespace.c b/fs/namespace.c
-index eb6857d6e3501..73d5a567a4a5d 100644
+index 5d88471b090ab..523a599429f3e 100644
 --- a/fs/namespace.c
 +++ b/fs/namespace.c
 @@ -1014,6 +1014,7 @@ int is_current_mnt_ns(struct vfsmount *mnt)
@@ -69,7 +69,7 @@ index eb6857d6e3501..73d5a567a4a5d 100644
  
  static inline bool check_anonymous_mnt(struct mount *mnt)
  {
-@@ -2340,6 +2341,7 @@ struct path *collect_paths(const struct path *path,
+@@ -2337,6 +2338,7 @@ struct path *collect_paths(const struct path *path,
  		path_get(p);
  	return res;
  }
@@ -77,7 +77,7 @@ index eb6857d6e3501..73d5a567a4a5d 100644
  
  void drop_collected_paths(struct path *paths, struct path *prealloc)
  {
-@@ -2348,6 +2350,7 @@ void drop_collected_paths(struct path *paths, struct path *prealloc)
+@@ -2345,6 +2347,7 @@ void drop_collected_paths(struct path *paths, struct path *prealloc)
  	if (paths != prealloc)
  		kfree(paths);
  }
@@ -142,10 +142,10 @@ index c5b6265d984ba..93a9a9d9e9da5 100644
  /* file_ppos returns &file->f_pos or NULL if file is stream */
  static inline loff_t *file_ppos(struct file *file)
 diff --git a/fs/splice.c b/fs/splice.c
-index 73cd917c821fe..eb7b4d93a3523 100644
+index 19c0ba712acc1..657ad35bdf9ff 100644
 --- a/fs/splice.c
 +++ b/fs/splice.c
-@@ -934,6 +934,7 @@ ssize_t do_splice_from(struct pipe_inode_info *pipe, struct file *out,
+@@ -937,6 +937,7 @@ ssize_t do_splice_from(struct pipe_inode_info *pipe, struct file *out,
  		return warn_unsupported(out, "write");
  	return out->f_op->splice_write(pipe, out, ppos, len, flags);
  }

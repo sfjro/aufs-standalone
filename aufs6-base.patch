@@ -2,7 +2,7 @@ SPDX-License-Identifier: GPL-2.0
 aufs6.x-rcN base patch
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index fe168477caa45..3649a22aebe9b 100644
+index fed6cd812d796..1b1266e2bfcb5 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
 @@ -4039,6 +4039,19 @@ S:	Supported
@@ -26,10 +26,10 @@ index fe168477caa45..3649a22aebe9b 100644
  M:	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
  R:	Dave Ertman <david.m.ertman@intel.com>
 diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index 1b6ee91f8eb98..55eab3561515e 100644
+index 57263c273f0fb..baf0d49c895c7 100644
 --- a/drivers/block/loop.c
 +++ b/drivers/block/loop.c
-@@ -620,6 +620,26 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
+@@ -624,6 +624,26 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
  	goto done;
  }
  
@@ -102,7 +102,7 @@ index 5598e4d574229..90af6a47fbadc 100644
  		return error;
  
 diff --git a/fs/namespace.c b/fs/namespace.c
-index ddfd4457d3383..eb6857d6e3501 100644
+index ae6d1312b1849..5d88471b090ab 100644
 --- a/fs/namespace.c
 +++ b/fs/namespace.c
 @@ -1009,6 +1009,12 @@ static inline int check_mnt(struct mount *mnt)
@@ -119,10 +119,10 @@ index ddfd4457d3383..eb6857d6e3501 100644
  {
  	u64 seq;
 diff --git a/fs/splice.c b/fs/splice.c
-index 4d6df083e0c06..73cd917c821fe 100644
+index f5094b6d00a09..19c0ba712acc1 100644
 --- a/fs/splice.c
 +++ b/fs/splice.c
-@@ -927,7 +927,7 @@ static int warn_unsupported(struct file *file, const char *op)
+@@ -930,7 +930,7 @@ static int warn_unsupported(struct file *file, const char *op)
  /*
   * Attempt to initiate a splice from pipe to file.
   */

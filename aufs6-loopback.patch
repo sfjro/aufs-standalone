@@ -2,7 +2,7 @@ SPDX-License-Identifier: GPL-2.0
 aufs6.x-rcN loopback patch
 
 diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index 55eab3561515e..65f9e64f1042b 100644
+index baf0d49c895c7..58dfa6502626c 100644
 --- a/drivers/block/loop.c
 +++ b/drivers/block/loop.c
 @@ -52,7 +52,7 @@ struct loop_device {
@@ -14,7 +14,7 @@ index 55eab3561515e..65f9e64f1042b 100644
  	unsigned int	lo_min_dio_size;
  	struct block_device *lo_device;
  
-@@ -431,6 +431,15 @@ static int do_req_filebacked(struct loop_device *lo, struct request *rq)
+@@ -435,6 +435,15 @@ static int do_req_filebacked(struct loop_device *lo, struct request *rq)
  	}
  }
  
@@ -30,7 +30,7 @@ index 55eab3561515e..65f9e64f1042b 100644
  static void loop_reread_partitions(struct loop_device *lo)
  {
  	int rc;
-@@ -532,6 +541,7 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
+@@ -536,6 +545,7 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
  {
  	struct file *file = fget(arg);
  	struct file *old_file;
@@ -38,7 +38,7 @@ index 55eab3561515e..65f9e64f1042b 100644
  	unsigned int memflags;
  	int error;
  	bool partscan;
-@@ -560,11 +570,19 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
+@@ -564,11 +574,19 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
  	if (!(lo->lo_flags & LO_FLAGS_READ_ONLY))
  		goto out_err;
  
@@ -58,7 +58,7 @@ index 55eab3561515e..65f9e64f1042b 100644
  
  	error = -EINVAL;
  
-@@ -584,6 +602,7 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
+@@ -588,6 +606,7 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
  	memflags = blk_mq_freeze_queue(lo->lo_queue);
  	mapping_set_gfp_mask(old_file->f_mapping, lo->old_gfp_mask);
  	loop_assign_backing_file(lo, file);
@@ -66,7 +66,7 @@ index 55eab3561515e..65f9e64f1042b 100644
  	loop_update_dio(lo);
  	blk_mq_unfreeze_queue(lo->lo_queue, memflags);
  	partscan = lo->lo_flags & LO_FLAGS_PARTSCAN;
-@@ -603,6 +622,9 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
+@@ -607,6 +626,9 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
  	 * dependency.
  	 */
  	fput(old_file);
@@ -76,7 +76,7 @@ index 55eab3561515e..65f9e64f1042b 100644
  	dev_set_uevent_suppress(disk_to_dev(lo->lo_disk), 0);
  	if (partscan)
  		loop_reread_partitions(lo);
-@@ -616,6 +638,9 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
+@@ -620,6 +642,9 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
  	loop_global_unlock(lo, is_loop);
  out_putf:
  	fput(file);
@@ -86,7 +86,7 @@ index 55eab3561515e..65f9e64f1042b 100644
  	dev_set_uevent_suppress(disk_to_dev(lo->lo_disk), 0);
  	goto done;
  }
-@@ -993,6 +1018,7 @@ static int loop_configure(struct loop_device *lo, blk_mode_t mode,
+@@ -997,6 +1022,7 @@ static int loop_configure(struct loop_device *lo, blk_mode_t mode,
  			  const struct loop_config *config)
  {
  	struct file *file = fget(config->fd);
@@ -94,7 +94,7 @@ index 55eab3561515e..65f9e64f1042b 100644
  	struct queue_limits lim;
  	int error;
  	loff_t size;
-@@ -1011,6 +1037,13 @@ static int loop_configure(struct loop_device *lo, blk_mode_t mode,
+@@ -1015,6 +1041,13 @@ static int loop_configure(struct loop_device *lo, blk_mode_t mode,
  	/* This is safe, since we have a reference from open(). */
  	__module_get(THIS_MODULE);
  
@@ -108,7 +108,7 @@ index 55eab3561515e..65f9e64f1042b 100644
  	/*
  	 * If we don't hold exclusive handle for the device, upgrade to it
  	 * here to avoid changing device under exclusive owner.
-@@ -1065,6 +1098,7 @@ static int loop_configure(struct loop_device *lo, blk_mode_t mode,
+@@ -1069,6 +1102,7 @@ static int loop_configure(struct loop_device *lo, blk_mode_t mode,
  
  	lo->lo_device = bdev;
  	loop_assign_backing_file(lo, file);
@@ -116,7 +116,7 @@ index 55eab3561515e..65f9e64f1042b 100644
  
  	lim = queue_limits_start_update(lo->lo_queue);
  	loop_update_limits(lo, &lim, config->block_size);
-@@ -1115,6 +1149,8 @@ static int loop_configure(struct loop_device *lo, blk_mode_t mode,
+@@ -1119,6 +1153,8 @@ static int loop_configure(struct loop_device *lo, blk_mode_t mode,
  		bd_abort_claiming(bdev, loop_configure);
  out_putf:
  	fput(file);
@@ -125,7 +125,7 @@ index 55eab3561515e..65f9e64f1042b 100644
  	/* This is safe: open() is still holding a reference. */
  	module_put(THIS_MODULE);
  	return error;
-@@ -1124,11 +1160,13 @@ static void __loop_clr_fd(struct loop_device *lo)
+@@ -1128,11 +1164,13 @@ static void __loop_clr_fd(struct loop_device *lo)
  {
  	struct queue_limits lim;
  	struct file *filp;
@@ -139,7 +139,7 @@ index 55eab3561515e..65f9e64f1042b 100644
  	spin_unlock_irq(&lo->lo_lock);
  
  	lo->lo_device = NULL;
-@@ -1195,6 +1233,8 @@ static void __loop_clr_fd(struct loop_device *lo)
+@@ -1199,6 +1237,8 @@ static void __loop_clr_fd(struct loop_device *lo)
  	 * fput can take open_mutex which is usually taken before lo_mutex.
  	 */
  	fput(filp);
