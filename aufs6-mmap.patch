@@ -185,7 +185,7 @@ index bada249b9fb76..661211f75261f 100644
  	if (folio->mapping != mapping) {
  		folio_unlock(folio);
 diff --git a/mm/mmap.c b/mm/mmap.c
-index 09c563c951123..670327a26f75b 100644
+index 09c563c951123..b2d7179cde4b5 100644
 --- a/mm/mmap.c
 +++ b/mm/mmap.c
 @@ -1098,6 +1098,7 @@ SYSCALL_DEFINE5(remap_file_pages, unsigned long, start, unsigned long, size,
@@ -252,10 +252,11 @@ index 09c563c951123..670327a26f75b 100644
  	if (populate)
  		mm_populate(ret, populate);
  	if (!IS_ERR_VALUE(ret))
-@@ -1823,6 +1844,7 @@ __latent_entropy int dup_mmap(struct mm_struct *mm, struct mm_struct *oldmm)
+@@ -1822,7 +1843,7 @@ __latent_entropy int dup_mmap(struct mm_struct *mm, struct mm_struct *oldmm)
+ 		if (file) {
  			struct address_space *mapping = file->f_mapping;
  
- 			get_file(file);
+-			get_file(file);
 +			vma_get_file(tmp);
  			i_mmap_lock_write(mapping);
  			if (vma_is_shared_maywrite(tmp))
