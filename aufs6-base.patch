@@ -2,10 +2,10 @@ SPDX-License-Identifier: GPL-2.0
 aufs6.x-rcN base patch
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index fed6cd812d796..1b1266e2bfcb5 100644
+index cd7ff55b5d321..48d3053081b31 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -4039,6 +4039,19 @@ S:	Supported
+@@ -4040,6 +4040,19 @@ S:	Supported
  F:	Documentation/dev-tools/autofdo.rst
  F:	scripts/Makefile.autofdo
  
@@ -26,10 +26,10 @@ index fed6cd812d796..1b1266e2bfcb5 100644
  M:	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
  R:	Dave Ertman <david.m.ertman@intel.com>
 diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index 57263c273f0fb..baf0d49c895c7 100644
+index 053a086d547ec..28f606fd10056 100644
 --- a/drivers/block/loop.c
 +++ b/drivers/block/loop.c
-@@ -624,6 +624,26 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
+@@ -630,6 +630,26 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
  	goto done;
  }
  
