@@ -17,10 +17,14 @@ index 76bdb36b7a2a8..fa238fd4f2fd6 100644
  obj-$(CONFIG_PROC_FS)		+= proc_namespace.o
 diff --git a/fs/au_mf.c b/fs/au_mf.c
 new file mode 100644
-index 0000000000000..82f9a2a8df0d4
+index 0000000000000..bacf13696a772
 --- /dev/null
 +++ b/fs/au_mf.c
-@@ -0,0 +1,56 @@
+@@ -0,0 +1,60 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2025 Junjiro R. Okajima
++ */
 +
 +#include <linux/fs.h>
 +#include <linux/module.h>
@@ -93,7 +97,7 @@ index db7eb6ba8ef0f..6781ffc5b093c 100644
  /* declared in include/linux/fs.h */
  #endif
 diff --git a/fs/aufs/mf.c b/fs/aufs/mf.c
-index c8654c756b037..33e0c1b6593c4 100644
+index 109578a2cc18d..d97837d45e545 100644
 --- a/fs/aufs/mf.c
 +++ b/fs/aufs/mf.c
 @@ -19,7 +19,7 @@
@@ -103,7 +107,7 @@ index c8654c756b037..33e0c1b6593c4 100644
 -static unsigned int au_mf_hash(struct file *h_file)
 +static unsigned int au_mf_hash(const struct file *h_file)
  {
- 	unsigned long long ull;
+ 	uintptr_t ptr;
  
 @@ -55,7 +55,7 @@ void au_mf_del(struct file *h_file, struct file *file)
  	au_hbl_del(&finfo->fi_mf, hbl_head);
@@ -172,10 +176,10 @@ index 59bfd61d653aa..a67d967f75d39 100644
  		ino = inode->i_ino;
  		pgoff = (loff_t)vma->vm_pgoff << PAGE_SHIFT;
 diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 829e1dcb3e1ac..dd8ed8f8c7ecb 100644
+index 92a229c4b95c1..a921b5cc813db 100644
 --- a/include/linux/fs.h
 +++ b/include/linux/fs.h
-@@ -2883,6 +2883,21 @@ struct file *dentry_create(const struct path *path, int flags, umode_t mode,
+@@ -2884,6 +2884,21 @@ struct file *dentry_create(const struct path *path, int flags, umode_t mode,
  			   const struct cred *cred);
  struct path *backing_file_user_path(const struct file *f);
  
@@ -197,7 +201,7 @@ index 829e1dcb3e1ac..dd8ed8f8c7ecb 100644
  /*
   * When mmapping a file on a stackable filesystem (e.g., overlayfs), the file
   * stored in ->vm_file is a backing file whose f_inode is on the underlying
-@@ -2895,15 +2910,25 @@ struct path *backing_file_user_path(const struct file *f);
+@@ -2896,15 +2911,25 @@ struct path *backing_file_user_path(const struct file *f);
  /* Get the path to display in /proc/<pid>/maps */
  static inline const struct path *file_user_path(const struct file *f)
  {

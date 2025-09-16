@@ -2,7 +2,7 @@ SPDX-License-Identifier: GPL-2.0
 aufs6.x-rcN base patch
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index cd7ff55b5d321..48d3053081b31 100644
+index f6206963efbf0..1befc625702de 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
 @@ -4040,6 +4040,19 @@ S:	Supported
@@ -102,7 +102,7 @@ index 5598e4d574229..90af6a47fbadc 100644
  		return error;
  
 diff --git a/fs/namespace.c b/fs/namespace.c
-index ae6d1312b1849..5d88471b090ab 100644
+index 51f77c65c0c61..c97877af1142b 100644
 --- a/fs/namespace.c
 +++ b/fs/namespace.c
 @@ -1009,6 +1009,12 @@ static inline int check_mnt(struct mount *mnt)
@@ -132,10 +132,10 @@ index f5094b6d00a09..19c0ba712acc1 100644
  {
  	if (unlikely(!out->f_op->splice_write))
 diff --git a/include/linux/fs.h b/include/linux/fs.h
-index d7ab4f96d7051..829e1dcb3e1ac 100644
+index 601d036a6c78e..92a229c4b95c1 100644
 --- a/include/linux/fs.h
 +++ b/include/linux/fs.h
-@@ -1225,6 +1225,7 @@ extern void fasync_free(struct fasync_struct *);
+@@ -1226,6 +1226,7 @@ extern void fasync_free(struct fasync_struct *);
  /* can be called from interrupts */
  extern void kill_fasync(struct fasync_struct **, int, int);
  
@@ -143,7 +143,7 @@ index d7ab4f96d7051..829e1dcb3e1ac 100644
  extern void __f_setown(struct file *filp, struct pid *, enum pid_type, int force);
  extern int f_setown(struct file *filp, int who, int force);
  extern void f_delown(struct file *filp);
-@@ -2174,6 +2175,7 @@ struct file_operations {
+@@ -2175,6 +2176,7 @@ struct file_operations {
  	int (*lock) (struct file *, int, struct file_lock *);
  	unsigned long (*get_unmapped_area)(struct file *, unsigned long, unsigned long, unsigned long, unsigned long);
  	int (*check_flags)(int);

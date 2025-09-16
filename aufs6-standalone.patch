@@ -22,7 +22,7 @@ index f69e432ca64cd..ab035b1ad4fcd 100644
  /**
   * d_ancestor - search for an ancestor
 diff --git a/fs/exec.c b/fs/exec.c
-index 2a1e5e4042a14..7d55b0991509e 100644
+index e861a4b7ffda9..10b3646c6b2f0 100644
 --- a/fs/exec.c
 +++ b/fs/exec.c
 @@ -120,6 +120,7 @@ bool path_noexec(const struct path *path)
@@ -58,7 +58,7 @@ index 81c72576e548f..8852477affcfe 100644
  /*
   * Variant of alloc_empty_file() that doesn't check and modify nr_files.
 diff --git a/fs/namespace.c b/fs/namespace.c
-index 5d88471b090ab..523a599429f3e 100644
+index c97877af1142b..175b3f7ac8cdf 100644
 --- a/fs/namespace.c
 +++ b/fs/namespace.c
 @@ -1014,6 +1014,7 @@ int is_current_mnt_ns(struct vfsmount *mnt)
