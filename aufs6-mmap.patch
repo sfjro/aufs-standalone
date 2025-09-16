@@ -17,10 +17,14 @@ index dcd049ca86b77..385d1a9aaa7f4 100644
  obj-$(CONFIG_PROC_FS)		+= proc_namespace.o
 diff --git a/fs/au_mf.c b/fs/au_mf.c
 new file mode 100644
-index 0000000000000..7b6a7a4940f45
+index 0000000000000..ee1ff03778b98
 --- /dev/null
 +++ b/fs/au_mf.c
-@@ -0,0 +1,56 @@
+@@ -0,0 +1,60 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2025 Junjiro R. Okajima
++ */
 +
 +#include <linux/fs.h>
 +#include <linux/module.h>
