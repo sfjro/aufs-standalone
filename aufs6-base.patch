@@ -2,10 +2,10 @@ SPDX-License-Identifier: GPL-2.0
 aufs6.x-rcN base patch
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index f6206963efbf0..1befc625702de 100644
+index 97d958c945e4f..fab4c3261c238 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -4040,6 +4040,19 @@ S:	Supported
+@@ -4038,6 +4038,19 @@ S:	Supported
  F:	Documentation/dev-tools/autofdo.rst
  F:	scripts/Makefile.autofdo
  
