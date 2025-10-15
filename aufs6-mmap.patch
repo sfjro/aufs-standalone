@@ -2,7 +2,7 @@ SPDX-License-Identifier: GPL-2.0
 aufs6.x-rcN mmap patch
 
 diff --git a/fs/Makefile b/fs/Makefile
-index 76bdb36b7a2a8..fa238fd4f2fd6 100644
+index d841d50e6ae87..e4c3707cf45e2 100644
 --- a/fs/Makefile
 +++ b/fs/Makefile
 @@ -17,6 +17,9 @@ obj-y :=	open.o read_write.o file_table.o super.o \
@@ -82,7 +82,7 @@ index 0000000000000..bacf13696a772
 +}
 +EXPORT_SYMBOL_GPL(au_file_user_inode);
 diff --git a/fs/proc/base.c b/fs/proc/base.c
-index 62d35631ba8c3..7c3061d1df6cb 100644
+index 6299878e3d97e..2905284f1dfa8 100644
 --- a/fs/proc/base.c
 +++ b/fs/proc/base.c
 @@ -1788,7 +1788,7 @@ static int proc_exe_link(struct dentry *dentry, struct path *exe_path)
@@ -108,7 +108,7 @@ index c6e7ebc637562..12c340dcdec3d 100644
  		ino = inode->i_ino;
  	}
 diff --git a/fs/proc/task_nommu.c b/fs/proc/task_nommu.c
-index 59bfd61d653aa..a67d967f75d39 100644
+index d362919f4f688..79a2590d40f4d 100644
 --- a/fs/proc/task_nommu.c
 +++ b/fs/proc/task_nommu.c
 @@ -137,7 +137,7 @@ static int nommu_vma_show(struct seq_file *m, struct vm_area_struct *vma)
@@ -121,12 +121,12 @@ index 59bfd61d653aa..a67d967f75d39 100644
  		ino = inode->i_ino;
  		pgoff = (loff_t)vma->vm_pgoff << PAGE_SHIFT;
 diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 92a229c4b95c1..a921b5cc813db 100644
+index 64c58c34b1e03..44ab29d90484d 100644
 --- a/include/linux/fs.h
 +++ b/include/linux/fs.h
-@@ -2884,6 +2884,21 @@ struct file *dentry_create(const struct path *path, int flags, umode_t mode,
+@@ -2887,6 +2887,21 @@ struct file *dentry_create(const struct path *path, int flags, umode_t mode,
  			   const struct cred *cred);
- struct path *backing_file_user_path(const struct file *f);
+ const struct path *backing_file_user_path(const struct file *f);
  
 +#if IS_MODULE(CONFIG_AUFS_FS)
 +/* fs/au_mf.c */
@@ -146,7 +146,7 @@ index 92a229c4b95c1..a921b5cc813db 100644
  /*
   * When mmapping a file on a stackable filesystem (e.g., overlayfs), the file
   * stored in ->vm_file is a backing file whose f_inode is on the underlying
-@@ -2896,15 +2911,25 @@ struct path *backing_file_user_path(const struct file *f);
+@@ -2899,15 +2914,25 @@ const struct path *backing_file_user_path(const struct file *f);
  /* Get the path to display in /proc/<pid>/maps */
  static inline const struct path *file_user_path(const struct file *f)
  {
