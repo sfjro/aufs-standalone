@@ -98,7 +98,7 @@ void vfsub_set_nlink(struct inode *inode, unsigned int nlink)
 	au_nlink_unlock(inode);
 }
 
-int vfsub_update_h_iattr(struct path *h_path, int *did)
+int vfsub_update_h_iattr(const struct path *h_path, int *did)
 {
 	int err;
 	struct kstat st;
@@ -171,8 +171,8 @@ int vfsub_atomic_open(struct inode *dir, struct dentry *dentry,
 		goto out;
 
 	au_lcnt_inc(&br->br_nfiles);
-	file->f_path.dentry = DENTRY_NOT_SET;
-	file->f_path.mnt = au_br_mnt(br);
+	file->__f_path.dentry = DENTRY_NOT_SET;
+	file->__f_path.mnt = au_br_mnt(br);
 	AuDbg("%ps\n", dir->i_op->atomic_open);
 	err = dir->i_op->atomic_open(dir, dentry, file, args->open_flag,
 				     args->create_mode);
@@ -474,10 +474,9 @@ int vfsub_rename(struct inode *src_dir, struct dentry *src_dentry,
 	if (unlikely(err))
 		goto out;
 
-	rd.old_mnt_idmap = mnt_idmap(path->mnt);
+	rd.mnt_idmap = mnt_idmap(path->mnt);
 	rd.old_dentry = src_dentry;
 	rd.old_parent = rd.old_dentry->d_parent;
-	rd.new_mnt_idmap = rd.old_mnt_idmap;
 	rd.new_dentry = path->dentry;
 	rd.new_parent = rd.new_dentry->d_parent;
 	rd.delegated_inode = delegated_inode;
@@ -694,7 +693,7 @@ ssize_t vfsub_splice_from(struct pipe_inode_info *pipe, struct file *out,
 	return err;
 }
 
-int vfsub_fsync(struct file *file, struct path *path, int datasync)
+int vfsub_fsync(struct file *file, const struct path *path, int datasync)
 {
 	int err;
 
@@ -713,7 +712,7 @@ int vfsub_fsync(struct file *file, struct path *path, int datasync)
 }
 
 /* cf. open.c:do_sys_truncate() and do_sys_ftruncate() */
-int vfsub_trunc(struct path *h_path, loff_t length, unsigned int attr,
+int vfsub_trunc(const struct path *h_path, loff_t length, unsigned int attr,
 		struct file *h_file)
 {
 	int err;
@@ -828,7 +827,7 @@ int vfsub_sio_rmdir(struct inode *dir, struct path *path)
 
 struct notify_change_args {
 	int *errp;
-	struct path *path;
+	const struct path *path;
 	struct iattr *ia;
 	struct inode **delegated_inode;
 };
@@ -855,7 +854,7 @@ static void call_notify_change(void *args)
 	AuTraceErr(*a->errp);
 }
 
-int vfsub_notify_change(struct path *path, struct iattr *ia,
+int vfsub_notify_change(const struct path *path, struct iattr *ia,
 			struct inode **delegated_inode)
 {
 	int err;
@@ -894,7 +893,7 @@ int vfsub_sio_notify_change(struct path *path, struct iattr *ia,
 struct unlink_args {
 	int *errp;
 	struct inode *dir;
-	struct path *path;
+	const struct path *path;
 	struct inode **delegated_inode;
 };
 
@@ -906,12 +905,14 @@ static void call_unlink(void *args)
 	struct mnt_idmap *idmap;
 	const int stop_sillyrename = (au_test_nfs(d->d_sb)
 				      && au_dcount(d) == 1);
+	struct path tmp = {
+		.dentry = d->d_parent,
+		.mnt	= a->path->mnt
+	};
 
 	IMustLock(a->dir);
 
-	a->path->dentry = d->d_parent;
-	*a->errp = security_path_unlink(a->path, d);
-	a->path->dentry = d;
+	*a->errp = security_path_unlink(&tmp, d);
 	if (unlikely(*a->errp))
 		return;
 
@@ -927,13 +928,8 @@ static void call_unlink(void *args)
 	lockdep_off();
 	*a->errp = vfs_unlink(idmap, a->dir, d, a->delegated_inode);
 	lockdep_on();
-	if (!*a->errp) {
-		struct path tmp = {
-			.dentry = d->d_parent,
-			.mnt	= a->path->mnt
-		};
+	if (!*a->errp)
 		vfsub_update_h_iattr(&tmp, /*did*/NULL); /*ignore*/
-	}
 
 	if (!stop_sillyrename)
 		dput(d);
@@ -947,7 +943,7 @@ static void call_unlink(void *args)
  * @dir: must be locked.
  * @dentry: target dentry.
  */
-int vfsub_unlink(struct inode *dir, struct path *path,
+int vfsub_unlink(struct inode *dir, const struct path *path,
 		 struct inode **delegated_inode, int force)
 {
 	int err;
