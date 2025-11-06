@@ -2,7 +2,7 @@ SPDX-License-Identifier: GPL-2.0
 aufs6.x-rcN standalone patch
 
 diff --git a/fs/dcache.c b/fs/dcache.c
-index 2615ee5ae92b9..38993262ce32f 100644
+index 93bfb29d0b991..d32683b6cb404 100644
 --- a/fs/dcache.c
 +++ b/fs/dcache.c
 @@ -1387,6 +1387,7 @@ void d_walk(struct dentry *parent, void *data,
@@ -14,7 +14,7 @@ index 2615ee5ae92b9..38993262ce32f 100644
  struct check_mount {
  	struct vfsmount *mnt;
 diff --git a/fs/exec.c b/fs/exec.c
-index 6b70c6726d316..edef6dabc2af8 100644
+index 4298e7e08d5d7..26a62cfc04376 100644
 --- a/fs/exec.c
 +++ b/fs/exec.c
 @@ -120,6 +120,7 @@ bool path_noexec(const struct path *path)
@@ -38,7 +38,7 @@ index d248048c75540..0d3731f14d9ec 100644
  /*
   * Allocate an file->f_owner struct if it doesn't exist, handling racing
 diff --git a/fs/file_table.c b/fs/file_table.c
-index b223d873e48b0..b63901293e0a9 100644
+index cd4a3db4659ac..27cd4c4d5d4bb 100644
 --- a/fs/file_table.c
 +++ b/fs/file_table.c
 @@ -256,6 +256,7 @@ struct file *alloc_empty_file(int flags, const struct cred *cred)

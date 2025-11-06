@@ -2,10 +2,10 @@ SPDX-License-Identifier: GPL-2.0
 aufs6.x-rcN base patch
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 46126ce2f968e..58aef290572d8 100644
+index 46bd8e0330421..a9712efc81fe5 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -4084,6 +4084,19 @@ S:	Supported
+@@ -4089,6 +4089,19 @@ S:	Supported
  F:	Documentation/dev-tools/autofdo.rst
  F:	scripts/Makefile.autofdo
  
@@ -57,7 +57,7 @@ index 13ce229d450cd..d667d541d5ee6 100644
  
  static ssize_t loop_attr_show(struct device *dev, char *page,
 diff --git a/fs/dcache.c b/fs/dcache.c
-index a067fa0a965a1..2615ee5ae92b9 100644
+index 035cccbc92765..93bfb29d0b991 100644
 --- a/fs/dcache.c
 +++ b/fs/dcache.c
 @@ -1277,6 +1277,9 @@ enum d_walk_ret {
