@@ -1,0 +1,24 @@
+SPDX-License-Identifier: GPL-2.0
+aufs6.18 kbuild patch
+
+diff --git a/fs/Kconfig b/fs/Kconfig
+index 0bfdaecaa8775..22d84f31397cb 100644
+--- a/fs/Kconfig
++++ b/fs/Kconfig
+@@ -332,6 +332,7 @@ source "fs/pstore/Kconfig"
+ source "fs/ufs/Kconfig"
+ source "fs/erofs/Kconfig"
+ source "fs/vboxsf/Kconfig"
++source "fs/aufs/Kconfig"
+ 
+ endif # MISC_FILESYSTEMS
+ 
+diff --git a/fs/Makefile b/fs/Makefile
+index e3523ab2e5871..d841d50e6ae87 100644
+--- a/fs/Makefile
++++ b/fs/Makefile
+@@ -129,3 +129,4 @@ obj-$(CONFIG_VBOXSF_FS)		+= vboxsf/
+ obj-$(CONFIG_ZONEFS_FS)		+= zonefs/
+ obj-$(CONFIG_BPF_LSM)		+= bpf_fs_kfuncs.o
+ obj-$(CONFIG_RESCTRL_FS)	+= resctrl/
++obj-$(CONFIG_AUFS_FS)           += aufs/
