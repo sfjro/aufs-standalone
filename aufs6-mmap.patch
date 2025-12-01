@@ -121,10 +121,10 @@ index d362919f4f688..79a2590d40f4d 100644
  		ino = inode->i_ino;
  		pgoff = (loff_t)vma->vm_pgoff << PAGE_SHIFT;
 diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 64c58c34b1e03..44ab29d90484d 100644
+index 0549e96b8db82..3428592320353 100644
 --- a/include/linux/fs.h
 +++ b/include/linux/fs.h
-@@ -2887,6 +2887,21 @@ struct file *dentry_create(const struct path *path, int flags, umode_t mode,
+@@ -2889,6 +2889,21 @@ struct file *dentry_create(const struct path *path, int flags, umode_t mode,
  			   const struct cred *cred);
  const struct path *backing_file_user_path(const struct file *f);
  
@@ -146,7 +146,7 @@ index 64c58c34b1e03..44ab29d90484d 100644
  /*
   * When mmapping a file on a stackable filesystem (e.g., overlayfs), the file
   * stored in ->vm_file is a backing file whose f_inode is on the underlying
-@@ -2899,15 +2914,25 @@ const struct path *backing_file_user_path(const struct file *f);
+@@ -2901,15 +2916,25 @@ const struct path *backing_file_user_path(const struct file *f);
  /* Get the path to display in /proc/<pid>/maps */
  static inline const struct path *file_user_path(const struct file *f)
  {

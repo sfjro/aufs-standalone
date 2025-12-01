@@ -50,10 +50,10 @@ index cd4a3db4659ac..27cd4c4d5d4bb 100644
  /*
   * Variant of alloc_empty_file() that doesn't check and modify nr_files.
 diff --git a/fs/namespace.c b/fs/namespace.c
-index 2e215a7194dc3..d65a4e12e46ce 100644
+index 5b8982f9ad13e..62f0eaa57ccef 100644
 --- a/fs/namespace.c
 +++ b/fs/namespace.c
-@@ -968,6 +968,7 @@ int is_current_mnt_ns(struct vfsmount *mnt)
+@@ -959,6 +959,7 @@ int is_current_mnt_ns(struct vfsmount *mnt)
  {
  	return check_mnt(real_mount(mnt));
  }
@@ -61,7 +61,7 @@ index 2e215a7194dc3..d65a4e12e46ce 100644
  
  static inline bool check_anonymous_mnt(struct mount *mnt)
  {
-@@ -2283,6 +2284,7 @@ const struct path *collect_paths(const struct path *path,
+@@ -2274,6 +2275,7 @@ const struct path *collect_paths(const struct path *path,
  		path_get(p);
  	return res;
  }
@@ -69,7 +69,7 @@ index 2e215a7194dc3..d65a4e12e46ce 100644
  
  void drop_collected_paths(const struct path *paths, const struct path *prealloc)
  {
-@@ -2291,6 +2293,7 @@ void drop_collected_paths(const struct path *paths, const struct path *prealloc)
+@@ -2282,6 +2284,7 @@ void drop_collected_paths(const struct path *paths, const struct path *prealloc)
  	if (paths != prealloc)
  		kfree(paths);
  }
