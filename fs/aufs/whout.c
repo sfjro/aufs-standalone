@@ -184,7 +184,7 @@ int au_whtmp_ren(struct dentry *h_dentry, struct au_branch *br)
 	struct path h_path = {
 		.mnt = au_br_mnt(br)
 	};
-	struct inode *h_dir, *delegated;
+	struct inode *h_dir;
 	struct dentry *h_parent;
 
 	h_parent = h_dentry->d_parent; /* dir inode is locked */
@@ -197,15 +197,8 @@ int au_whtmp_ren(struct dentry *h_dentry, struct au_branch *br)
 		goto out;
 
 	/* under the same dir, no need to lock_rename() */
-	delegated = NULL;
-	err = vfsub_rename(h_dir, h_dentry, h_dir, &h_path, &delegated,
-			   /*flags*/0);
+	err = vfsub_rename(h_dir, h_dentry, h_dir, &h_path, /*flags*/0);
 	AuTraceErr(err);
-	if (unlikely(err == -EWOULDBLOCK)) {
-		pr_warn("cannot retry for NFSv4 delegation"
-			" for an internal rename\n");
-		iput(delegated);
-	}
 	dput(h_path.dentry);
 
 out:
@@ -221,7 +214,6 @@ out:
 static int do_unlink_wh(struct inode *h_dir, struct path *h_path)
 {
 	int err, force;
-	struct inode *delegated;
 
 	/*
 	 * forces superio when the dir has a sticky bit.
@@ -229,13 +221,7 @@ static int do_unlink_wh(struct inode *h_dir, struct path *h_path)
 	 */
 	force = (h_dir->i_mode & S_ISVTX)
 		&& !uid_eq(current_fsuid(), d_inode(h_path->dentry)->i_uid);
-	delegated = NULL;
-	err = vfsub_unlink(h_dir, h_path, &delegated, force);
-	if (unlikely(err == -EWOULDBLOCK)) {
-		pr_warn("cannot retry for NFSv4 delegation"
-			" for an internal unlink\n");
-		iput(delegated);
-	}
+	err = vfsub_unlink(h_dir, h_path, force);
 	return err;
 }
 
@@ -280,22 +266,15 @@ static void au_wh_clean(struct inode *h_dir, struct path *whpath,
 			const int isdir)
 {
 	int err;
-	struct inode *delegated;
 
 	if (d_is_negative(whpath->dentry))
 		return;
 
 	if (isdir)
 		err = vfsub_rmdir(h_dir, whpath);
-	else {
-		delegated = NULL;
-		err = vfsub_unlink(h_dir, whpath, &delegated, /*force*/0);
-		if (unlikely(err == -EWOULDBLOCK)) {
-			pr_warn("cannot retry for NFSv4 delegation"
-				" for an internal unlink\n");
-			iput(delegated);
-		}
-	}
+	else
+		err = vfsub_unlink(h_dir, whpath, /*force*/0);
+
 	if (unlikely(err))
 		pr_warn("failed removing %pd (%d), ignored.\n",
 			whpath->dentry, err);
@@ -476,7 +455,7 @@ out:
  */
 int au_wh_init(struct au_branch *br, struct super_block *sb)
 {
-	int err, i;
+	int err, i, need_drop;
 	const unsigned char do_plink
 		= !!au_opt_test(au_mntflags(sb), PLINK);
 	struct inode *h_dir;
@@ -530,7 +509,12 @@ int au_wh_init(struct au_branch *br, struct super_block *sb)
 			wbr->wbr_wh[i] = NULL;
 		}
 
-	err = 0;
+	need_drop = 0;
+	err = vfsub_mnt_want_write(path.mnt);
+	if (unlikely(err))
+		goto out_err;
+	need_drop = 1;
+
 	if (!au_br_writable(br->br_perm)) {
 		h_dir = d_inode(h_root);
 		au_wh_init_ro(h_dir, base, &path);
@@ -553,6 +537,8 @@ out_err:
 	pr_err("an error(%d) on the writable branch %pd(%s)\n",
 	       err, h_root, au_sbtype(h_root->d_sb));
 out:
+	if (need_drop)
+		vfsub_mnt_drop_write(path.mnt);
 	for (i = 0; i < AuBrWh_Last; i++)
 		dput(base[i].dentry);
 	return err;
@@ -577,7 +563,7 @@ static void reinit_br_wh(void *arg)
 	struct path h_path;
 	struct reinit_br_wh *a = arg;
 	struct au_wbr *wbr;
-	struct inode *dir, *delegated;
+	struct inode *dir;
 	struct dentry *h_root;
 	struct au_hinode *hdir;
 
@@ -604,13 +590,10 @@ static void reinit_br_wh(void *arg)
 	if (!err) {
 		h_path.dentry = wbr->wbr_whbase;
 		h_path.mnt = au_br_mnt(a->br);
-		delegated = NULL;
-		err = vfsub_unlink(hdir->hi_inode, &h_path, &delegated,
-				   /*force*/0);
-		if (unlikely(err == -EWOULDBLOCK)) {
-			pr_warn("cannot retry for NFSv4 delegation"
-				" for an internal unlink\n");
-			iput(delegated);
+		err = vfsub_mnt_want_write(h_path.mnt);
+		if (!err) {
+			err = vfsub_unlink(hdir->hi_inode, &h_path, /*force*/0);
+			vfsub_mnt_drop_write(h_path.mnt);
 		}
 	} else {
 		pr_warn("%pd is moved, ignored\n", wbr->wbr_whbase);
@@ -685,7 +668,7 @@ static int link_or_create_wh(struct super_block *sb, aufs_bindex_t bindex,
 	struct au_branch *br;
 	struct au_wbr *wbr;
 	struct dentry *h_parent;
-	struct inode *h_dir, *delegated;
+	struct inode *h_dir;
 
 	h_parent = wh->d_parent; /* dir inode is locked */
 	h_dir = d_inode(h_parent);
@@ -696,13 +679,7 @@ static int link_or_create_wh(struct super_block *sb, aufs_bindex_t bindex,
 	wbr = br->br_wbr;
 	wbr_wh_read_lock(wbr);
 	if (wbr->wbr_whbase) {
-		delegated = NULL;
-		err = vfsub_link(wbr->wbr_whbase, h_dir, &h_path, &delegated);
-		if (unlikely(err == -EWOULDBLOCK)) {
-			pr_warn("cannot retry for NFSv4 delegation"
-				" for an internal link\n");
-			iput(delegated);
-		}
+		err = vfsub_link(wbr->wbr_whbase, h_dir, &h_path);
 		if (!err || err != -EMLINK)
 			goto out;
 
