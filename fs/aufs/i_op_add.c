@@ -332,9 +332,7 @@ static int add_simple(struct inode *dir, struct dentry *dentry,
 
 	/* revert */
 	if (created /* && d_is_positive(a->h_path.dentry) */) {
-		/* no delegation since it is just created */
-		rerr = vfsub_unlink(h_dir, &a->h_path, /*delegated*/NULL,
-				    /*force*/0);
+		rerr = vfsub_unlink(h_dir, &a->h_path, /*force*/0);
 		if (rerr) {
 			AuIOErr("%pd revert failure(%d, %d)\n",
 				dentry, err, rerr);
@@ -505,6 +503,7 @@ int aufs_tmpfile(struct mnt_idmap *idmap, struct inode *dir,
 	}
 
 	vfsub_inode_nlink_init(inode, 1);
+	au_ii(inode)->ii_tmpfile = 1;
 	d_tmpfile(file, inode);
 	au_di(dentry)->di_tmpfile = 1;
 	get_file(h_file);
@@ -599,7 +598,7 @@ static int au_cpup_or_link(struct dentry *src_dentry, struct dentry *dentry,
 	unsigned char plink;
 	aufs_bindex_t bbot;
 	struct dentry *h_src_dentry;
-	struct inode *h_inode, *inode, *delegated;
+	struct inode *h_inode, *inode;
 	struct super_block *sb;
 	struct file *h_file;
 
@@ -666,14 +665,8 @@ static int au_cpup_or_link(struct dentry *src_dentry, struct dentry *dentry,
 
 		}
 		if (h_src_dentry) {
-			delegated = NULL;
 			err = vfsub_link(h_src_dentry, au_pinned_h_dir(&a->pin),
-					 &a->h_path, &delegated);
-			if (unlikely(err == -EWOULDBLOCK)) {
-				pr_warn("cannot retry for NFSv4 delegation"
-					" for an internal link\n");
-				iput(delegated);
-			}
+					 &a->h_path);
 			dput(h_src_dentry);
 		} else {
 			AuIOErr("no dentry found for hi%lu on b%d\n",
@@ -697,7 +690,7 @@ int aufs_link(struct dentry *src_dentry, struct inode *dir,
 	struct au_dtime dt;
 	struct au_link_args *a;
 	struct dentry *wh_dentry, *h_src_dentry;
-	struct inode *inode, *delegated;
+	struct inode *inode;
 	struct super_block *sb;
 	struct au_wr_dir_args wr_dir_args = {
 		/* .force_btgt	= -1, */
@@ -762,16 +755,9 @@ int aufs_link(struct dentry *src_dentry, struct inode *dir,
 		if (a->bdst < a->bsrc
 		    /* && h_src_dentry->d_sb != a->h_path.dentry->d_sb */)
 			err = au_cpup_or_link(src_dentry, dentry, a);
-		else {
-			delegated = NULL;
+		else
 			err = vfsub_link(h_src_dentry, au_pinned_h_dir(&a->pin),
-					 &a->h_path, &delegated);
-			if (unlikely(err == -EWOULDBLOCK)) {
-				pr_warn("cannot retry for NFSv4 delegation"
-					" for an internal link\n");
-				iput(delegated);
-			}
-		}
+					 &a->h_path);
 		dput(h_src_dentry);
 	} else {
 		/*
@@ -795,18 +781,10 @@ int aufs_link(struct dentry *src_dentry, struct inode *dir,
 		if (!err) {
 			h_src_dentry = au_h_dptr(src_dentry, a->bdst);
 			err = -ENOENT;
-			if (h_src_dentry && d_is_positive(h_src_dentry)) {
-				delegated = NULL;
+			if (h_src_dentry && d_is_positive(h_src_dentry))
 				err = vfsub_link(h_src_dentry,
 						 au_pinned_h_dir(&a->pin),
-						 &a->h_path, &delegated);
-				if (unlikely(err == -EWOULDBLOCK)) {
-					pr_warn("cannot retry"
-						" for NFSv4 delegation"
-						" for an internal link\n");
-					iput(delegated);
-				}
-			}
+						 &a->h_path);
 		}
 	}
 	if (unlikely(err))
@@ -833,9 +811,7 @@ int aufs_link(struct dentry *src_dentry, struct inode *dir,
 	goto out_unpin; /* success */
 
 out_revert:
-	/* no delegation since it is just created */
-	rerr = vfsub_unlink(au_pinned_h_dir(&a->pin), &a->h_path,
-			    /*delegated*/NULL, /*force*/0);
+	rerr = vfsub_unlink(au_pinned_h_dir(&a->pin), &a->h_path, /*force*/0);
 	if (unlikely(rerr)) {
 		AuIOErr("%pd reverting failed(%d, %d)\n", dentry, err, rerr);
 		err = -EIO;
