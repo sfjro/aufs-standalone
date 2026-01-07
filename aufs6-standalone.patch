@@ -179,10 +179,18 @@ index d1efec571a4a4..eed18cc26c370 100644
  }
 +EXPORT_SYMBOL_GPL(task_work_run);
 diff --git a/security/security.c b/security/security.c
-index 4d3c03a4524c5..ed6612a365810 100644
+index 4d3c03a4524c5..29540ce958dad 100644
 --- a/security/security.c
 +++ b/security/security.c
-@@ -1987,6 +1987,7 @@ int security_path_rmdir(const struct path *dir, struct dentry *dentry)
+@@ -1952,6 +1952,7 @@ void security_path_post_mknod(struct mnt_idmap *idmap, struct dentry *dentry)
+ 		return;
+ 	call_void_hook(path_post_mknod, idmap, dentry);
+ }
++EXPORT_SYMBOL_GPL(security_path_post_mknod);
+ 
+ /**
+  * security_path_mkdir() - Check if creating a new directory is allowed
+@@ -1987,6 +1988,7 @@ int security_path_rmdir(const struct path *dir, struct dentry *dentry)
  		return 0;
  	return call_int_hook(path_rmdir, dir, dentry);
  }
@@ -190,7 +198,7 @@ index 4d3c03a4524c5..ed6612a365810 100644
  
  /**
   * security_path_unlink() - Check if removing a hard link is allowed
-@@ -2022,6 +2023,7 @@ int security_path_symlink(const struct path *dir, struct dentry *dentry,
+@@ -2022,6 +2024,7 @@ int security_path_symlink(const struct path *dir, struct dentry *dentry,
  		return 0;
  	return call_int_hook(path_symlink, dir, dentry, old_name);
  }
@@ -198,7 +206,7 @@ index 4d3c03a4524c5..ed6612a365810 100644
  
  /**
   * security_path_link - Check if creating a hard link is allowed
-@@ -2040,6 +2042,7 @@ int security_path_link(struct dentry *old_dentry, const struct path *new_dir,
+@@ -2040,6 +2043,7 @@ int security_path_link(struct dentry *old_dentry, const struct path *new_dir,
  		return 0;
  	return call_int_hook(path_link, old_dentry, new_dir, new_dentry);
  }
@@ -206,7 +214,7 @@ index 4d3c03a4524c5..ed6612a365810 100644
  
  /**
   * security_path_rename() - Check if renaming a file is allowed
-@@ -2101,6 +2104,7 @@ int security_path_chmod(const struct path *path, umode_t mode)
+@@ -2101,6 +2105,7 @@ int security_path_chmod(const struct path *path, umode_t mode)
  		return 0;
  	return call_int_hook(path_chmod, path, mode);
  }
@@ -214,7 +222,7 @@ index 4d3c03a4524c5..ed6612a365810 100644
  
  /**
   * security_path_chown() - Check if changing the file's owner/group is allowed
-@@ -2118,6 +2122,7 @@ int security_path_chown(const struct path *path, kuid_t uid, kgid_t gid)
+@@ -2118,6 +2123,7 @@ int security_path_chown(const struct path *path, kuid_t uid, kgid_t gid)
  		return 0;
  	return call_int_hook(path_chown, path, uid, gid);
  }
@@ -222,7 +230,7 @@ index 4d3c03a4524c5..ed6612a365810 100644
  
  /**
   * security_path_chroot() - Check if changing the root directory is allowed
-@@ -2362,6 +2367,7 @@ int security_inode_permission(struct inode *inode, int mask)
+@@ -2362,6 +2368,7 @@ int security_inode_permission(struct inode *inode, int mask)
  		return 0;
  	return call_int_hook(inode_permission, inode, mask);
  }
@@ -230,7 +238,7 @@ index 4d3c03a4524c5..ed6612a365810 100644
  
  /**
   * security_inode_setattr() - Check if setting file attributes is allowed
-@@ -2912,6 +2918,7 @@ int security_file_permission(struct file *file, int mask)
+@@ -2912,6 +2919,7 @@ int security_file_permission(struct file *file, int mask)
  {
  	return call_int_hook(file_permission, file, mask);
  }
@@ -238,7 +246,7 @@ index 4d3c03a4524c5..ed6612a365810 100644
  
  /**
   * security_file_alloc() - Allocate and init a file's LSM blob
-@@ -3214,6 +3221,7 @@ int security_file_truncate(struct file *file)
+@@ -3214,6 +3222,7 @@ int security_file_truncate(struct file *file)
  {
  	return call_int_hook(file_truncate, file);
  }
