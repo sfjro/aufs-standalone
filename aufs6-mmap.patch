@@ -2,11 +2,11 @@ SPDX-License-Identifier: GPL-2.0
 aufs6.x-rcN mmap patch
 
 diff --git a/fs/Makefile b/fs/Makefile
-index d841d50e6ae87..e4c3707cf45e2 100644
+index 006f5585be308..e2b66da4797b9 100644
 --- a/fs/Makefile
 +++ b/fs/Makefile
 @@ -17,6 +17,9 @@ obj-y :=	open.o read_write.o file_table.o super.o \
- 		fs_types.o fs_context.o fs_parser.o fsopen.o init.o \
+ 		fs_dirent.o fs_context.o fs_parser.o fsopen.o init.o \
  		kernel_read_file.o mnt_idmapping.o remap_range.o pidfs.o \
  		file_attr.o
 +ifeq (${CONFIG_AUFS_FS},m)
@@ -82,7 +82,7 @@ index 0000000000000..bacf13696a772
 +}
 +EXPORT_SYMBOL_GPL(au_file_user_inode);
 diff --git a/fs/proc/base.c b/fs/proc/base.c
-index 6299878e3d97e..2905284f1dfa8 100644
+index 4eec684baca9f..9ff978a58a0b6 100644
 --- a/fs/proc/base.c
 +++ b/fs/proc/base.c
 @@ -1788,7 +1788,7 @@ static int proc_exe_link(struct dentry *dentry, struct path *exe_path)
@@ -121,10 +121,10 @@ index d362919f4f688..79a2590d40f4d 100644
  		ino = inode->i_ino;
  		pgoff = (loff_t)vma->vm_pgoff << PAGE_SHIFT;
 diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 0549e96b8db82..3428592320353 100644
+index 2cd870e253579..3bfe3b9c889ef 100644
 --- a/include/linux/fs.h
 +++ b/include/linux/fs.h
-@@ -2889,6 +2889,21 @@ struct file *dentry_create(const struct path *path, int flags, umode_t mode,
+@@ -2463,6 +2463,21 @@ struct file *dentry_create(const struct path *path, int flags, umode_t mode,
  			   const struct cred *cred);
  const struct path *backing_file_user_path(const struct file *f);
  
@@ -146,7 +146,7 @@ index 0549e96b8db82..3428592320353 100644
  /*
   * When mmapping a file on a stackable filesystem (e.g., overlayfs), the file
   * stored in ->vm_file is a backing file whose f_inode is on the underlying
-@@ -2901,15 +2916,25 @@ const struct path *backing_file_user_path(const struct file *f);
+@@ -2475,15 +2490,25 @@ const struct path *backing_file_user_path(const struct file *f);
  /* Get the path to display in /proc/<pid>/maps */
  static inline const struct path *file_user_path(const struct file *f)
  {
