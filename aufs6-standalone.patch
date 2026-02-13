@@ -58,18 +58,10 @@ index 18735dc8269a1..42ab3cc5aeeb9 100644
  /*
   * Variant of alloc_empty_file() that doesn't check and modify nr_files.
 diff --git a/fs/namespace.c b/fs/namespace.c
-index 3a8f55b2225d4..a6f32c184d5c5 100644
+index c3c1e8c644f2e..12ef6a9fe6915 100644
 --- a/fs/namespace.c
 +++ b/fs/namespace.c
-@@ -972,6 +972,7 @@ int is_current_mnt_ns(struct vfsmount *mnt)
- {
- 	return check_mnt(real_mount(mnt));
- }
-+EXPORT_SYMBOL_GPL(is_current_mnt_ns);
- 
- /*
-  * vfsmount lock must be held for write
-@@ -2206,6 +2207,7 @@ struct vfsmount *collect_mounts(const struct path *path)
+@@ -2200,6 +2200,7 @@ struct vfsmount *collect_mounts(const struct path *path)
  		return ERR_CAST(tree);
  	return &tree->mnt;
  }
@@ -77,7 +69,7 @@ index 3a8f55b2225d4..a6f32c184d5c5 100644
  
  static void free_mnt_ns(struct mnt_namespace *);
  static struct mnt_namespace *alloc_mnt_ns(struct user_namespace *, bool);
-@@ -2236,6 +2238,7 @@ void drop_collected_mounts(struct vfsmount *mnt)
+@@ -2230,6 +2231,7 @@ void drop_collected_mounts(struct vfsmount *mnt)
  	unlock_mount_hash();
  	namespace_unlock();
  }
@@ -85,13 +77,21 @@ index 3a8f55b2225d4..a6f32c184d5c5 100644
  
  bool has_locked_children(struct mount *mnt, struct dentry *dentry)
  {
-@@ -2307,6 +2310,7 @@ int iterate_mounts(int (*f)(struct vfsmount *, void *), void *arg,
+@@ -2301,6 +2303,7 @@ int iterate_mounts(int (*f)(struct vfsmount *, void *), void *arg,
  	}
  	return 0;
  }
 +EXPORT_SYMBOL_GPL(iterate_mounts);
  
  static void lock_mnt_tree(struct mount *mnt)
+ {
+@@ -5618,6 +5621,7 @@ bool our_mnt(struct vfsmount *mnt)
+ {
+ 	return check_mnt(real_mount(mnt));
+ }
++EXPORT_SYMBOL_GPL(our_mnt);
+ 
+ bool current_chrooted(void)
  {
 diff --git a/fs/notify/group.c b/fs/notify/group.c
 index 18446b7b0d495..09138e0b8a6a5 100644
