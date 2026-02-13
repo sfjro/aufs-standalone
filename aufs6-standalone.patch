@@ -2,10 +2,10 @@ SPDX-License-Identifier: GPL-2.0
 aufs6.x-rcN standalone patch
 
 diff --git a/fs/dcache.c b/fs/dcache.c
-index 7e82da6694764..4d95cb8032ba3 100644
+index 4901c481a26f7..5b673c17aec04 100644
 --- a/fs/dcache.c
 +++ b/fs/dcache.c
-@@ -1411,6 +1411,7 @@ void d_walk(struct dentry *parent, void *data,
+@@ -1421,6 +1421,7 @@ void d_walk(struct dentry *parent, void *data,
  	seq = 1;
  	goto again;
  }
@@ -50,18 +50,10 @@ index cd4a3db4659ac..27cd4c4d5d4bb 100644
  /*
   * Variant of alloc_empty_file() that doesn't check and modify nr_files.
 diff --git a/fs/namespace.c b/fs/namespace.c
-index 71b882e8747ea..5e5f6b9c30c9c 100644
+index c58674a20cad5..3d3bdcebce86c 100644
 --- a/fs/namespace.c
 +++ b/fs/namespace.c
-@@ -959,6 +959,7 @@ int is_current_mnt_ns(struct vfsmount *mnt)
- {
- 	return check_mnt(real_mount(mnt));
- }
-+EXPORT_SYMBOL_GPL(is_current_mnt_ns);
- 
- static inline bool check_anonymous_mnt(struct mount *mnt)
- {
-@@ -2280,6 +2281,7 @@ const struct path *collect_paths(const struct path *path,
+@@ -2274,6 +2274,7 @@ const struct path *collect_paths(const struct path *path,
  		path_get(p);
  	return res;
  }
@@ -69,7 +61,7 @@ index 71b882e8747ea..5e5f6b9c30c9c 100644
  
  void drop_collected_paths(const struct path *paths, const struct path *prealloc)
  {
-@@ -2288,6 +2290,7 @@ void drop_collected_paths(const struct path *paths, const struct path *prealloc)
+@@ -2282,6 +2283,7 @@ void drop_collected_paths(const struct path *paths, const struct path *prealloc)
  	if (paths != prealloc)
  		kfree(paths);
  }
@@ -77,6 +69,14 @@ index 71b882e8747ea..5e5f6b9c30c9c 100644
  
  static struct mnt_namespace *alloc_mnt_ns(struct user_namespace *, bool);
  
+@@ -6080,6 +6082,7 @@ bool our_mnt(struct vfsmount *mnt)
+ {
+ 	return check_mnt(real_mount(mnt));
+ }
++EXPORT_SYMBOL_GPL(our_mnt);
+ 
+ bool current_chrooted(void)
+ {
 diff --git a/fs/notify/fsnotify.c b/fs/notify/fsnotify.c
 index 71bd44e5ab6da..a43cbad381e4f 100644
 --- a/fs/notify/fsnotify.c

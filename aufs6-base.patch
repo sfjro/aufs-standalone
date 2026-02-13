@@ -2,10 +2,10 @@ SPDX-License-Identifier: GPL-2.0
 aufs6.x-rcN base patch
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 765ad2daa2183..742b15687beb2 100644
+index e087673237636..e627ead70473d 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -4161,6 +4161,19 @@ S:	Supported
+@@ -4165,6 +4165,19 @@ S:	Supported
  F:	Documentation/dev-tools/autofdo.rst
  F:	scripts/Makefile.autofdo
  
@@ -57,10 +57,10 @@ index 32a3a5b138029..4f88a720f30f5 100644
  
  static ssize_t loop_attr_show(struct device *dev, char *page,
 diff --git a/fs/dcache.c b/fs/dcache.c
-index dc2fff4811d15..7e82da6694764 100644
+index 66dd1bb830d1a..4901c481a26f7 100644
 --- a/fs/dcache.c
 +++ b/fs/dcache.c
-@@ -1301,6 +1301,9 @@ enum d_walk_ret {
+@@ -1311,6 +1311,9 @@ enum d_walk_ret {
  	D_WALK_SKIP,
  };
  
@@ -70,7 +70,7 @@ index dc2fff4811d15..7e82da6694764 100644
  /**
   * d_walk - walk the dentry tree
   * @parent:	start of walk
-@@ -1309,7 +1312,7 @@ enum d_walk_ret {
+@@ -1319,7 +1322,7 @@ enum d_walk_ret {
   *
   * The @enter() callbacks are called with d_lock held.
   */
@@ -101,23 +101,6 @@ index f93dbca084355..0cfe817a82525 100644
  	if (error)
  		return error;
  
-diff --git a/fs/namespace.c b/fs/namespace.c
-index c58674a20cad5..71b882e8747ea 100644
---- a/fs/namespace.c
-+++ b/fs/namespace.c
-@@ -954,6 +954,12 @@ static inline int check_mnt(const struct mount *mnt)
- 	return mnt->mnt_ns == current->nsproxy->mnt_ns;
- }
- 
-+/* for aufs, CONFIG_AUFS_BR_FUSE */
-+int is_current_mnt_ns(struct vfsmount *mnt)
-+{
-+	return check_mnt(real_mount(mnt));
-+}
-+
- static inline bool check_anonymous_mnt(struct mount *mnt)
- {
- 	u64 seq;
 diff --git a/fs/splice.c b/fs/splice.c
 index d338fe56b50b3..966271869bbf3 100644
 --- a/fs/splice.c
@@ -132,7 +115,7 @@ index d338fe56b50b3..966271869bbf3 100644
  {
  	if (unlikely(!out->f_op->splice_write))
 diff --git a/include/linux/fs.h b/include/linux/fs.h
-index f5c9cf28c4dcf..2cd870e253579 100644
+index a01621fa636a6..befa7e70ca088 100644
 --- a/include/linux/fs.h
 +++ b/include/linux/fs.h
 @@ -1388,6 +1388,7 @@ extern void fasync_free(struct fasync_struct *);
@@ -143,7 +126,7 @@ index f5c9cf28c4dcf..2cd870e253579 100644
  extern void __f_setown(struct file *filp, struct pid *, enum pid_type, int force);
  extern int f_setown(struct file *filp, int who, int force);
  extern void f_delown(struct file *filp);
-@@ -1936,6 +1937,7 @@ struct file_operations {
+@@ -1938,6 +1939,7 @@ struct file_operations {
  	int (*lock) (struct file *, int, struct file_lock *);
  	unsigned long (*get_unmapped_area)(struct file *, unsigned long, unsigned long, unsigned long, unsigned long);
  	int (*check_flags)(int);
@@ -165,7 +148,7 @@ index dd634103b014e..20799d7c7ba78 100644
   * Acquire a lock.
   *
 diff --git a/include/linux/mnt_namespace.h b/include/linux/mnt_namespace.h
-index 0acd1089d149c..6fb188373a7ef 100644
+index 0acd1089d149c..0cbc3ad54ffa7 100644
 --- a/include/linux/mnt_namespace.h
 +++ b/include/linux/mnt_namespace.h
 @@ -10,6 +10,7 @@ struct mnt_namespace;
@@ -176,15 +159,6 @@ index 0acd1089d149c..6fb188373a7ef 100644
  
  extern struct mnt_namespace init_mnt_ns;
  
-@@ -19,6 +20,8 @@ extern void put_mnt_ns(struct mnt_namespace *ns);
- DEFINE_FREE(put_mnt_ns, struct mnt_namespace *, if (!IS_ERR_OR_NULL(_T)) put_mnt_ns(_T))
- extern struct ns_common *from_mnt_ns(struct mnt_namespace *);
- 
-+extern int is_current_mnt_ns(struct vfsmount *mnt);
-+
- extern const struct file_operations proc_mounts_operations;
- extern const struct file_operations proc_mountinfo_operations;
- extern const struct file_operations proc_mountstats_operations;
 diff --git a/include/linux/splice.h b/include/linux/splice.h
 index 9dec4861d09f6..14583d8468640 100644
 --- a/include/linux/splice.h
