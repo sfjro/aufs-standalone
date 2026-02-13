@@ -50,18 +50,10 @@ index cd4a3db4659ac..27cd4c4d5d4bb 100644
  /*
   * Variant of alloc_empty_file() that doesn't check and modify nr_files.
 diff --git a/fs/namespace.c b/fs/namespace.c
-index 5b8982f9ad13e..62f0eaa57ccef 100644
+index 4272349650b14..87a6839796e31 100644
 --- a/fs/namespace.c
 +++ b/fs/namespace.c
-@@ -959,6 +959,7 @@ int is_current_mnt_ns(struct vfsmount *mnt)
- {
- 	return check_mnt(real_mount(mnt));
- }
-+EXPORT_SYMBOL_GPL(is_current_mnt_ns);
- 
- static inline bool check_anonymous_mnt(struct mount *mnt)
- {
-@@ -2274,6 +2275,7 @@ const struct path *collect_paths(const struct path *path,
+@@ -2268,6 +2268,7 @@ const struct path *collect_paths(const struct path *path,
  		path_get(p);
  	return res;
  }
@@ -69,7 +61,7 @@ index 5b8982f9ad13e..62f0eaa57ccef 100644
  
  void drop_collected_paths(const struct path *paths, const struct path *prealloc)
  {
-@@ -2282,6 +2284,7 @@ void drop_collected_paths(const struct path *paths, const struct path *prealloc)
+@@ -2276,6 +2277,7 @@ void drop_collected_paths(const struct path *paths, const struct path *prealloc)
  	if (paths != prealloc)
  		kfree(paths);
  }
@@ -77,6 +69,14 @@ index 5b8982f9ad13e..62f0eaa57ccef 100644
  
  static struct mnt_namespace *alloc_mnt_ns(struct user_namespace *, bool);
  
+@@ -6099,6 +6101,7 @@ bool our_mnt(struct vfsmount *mnt)
+ {
+ 	return check_mnt(real_mount(mnt));
+ }
++EXPORT_SYMBOL_GPL(our_mnt);
+ 
+ bool current_chrooted(void)
+ {
 diff --git a/fs/notify/fsnotify.c b/fs/notify/fsnotify.c
 index 46bfc543f9467..49be3944ece01 100644
 --- a/fs/notify/fsnotify.c
