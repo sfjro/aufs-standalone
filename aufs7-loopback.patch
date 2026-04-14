@@ -224,7 +224,7 @@ index e3243187beb6..41e0bcb2d92c 100644
  
  /* ---------------------------------------------------------------------- */
 diff --git a/include/linux/fs/super_types.h b/include/linux/fs/super_types.h
-index fa7638b81246..f277c7b351ea 100644
+index 383050e7fdf5..30a1dd86247e 100644
 --- a/include/linux/fs/super_types.h
 +++ b/include/linux/fs/super_types.h
 @@ -127,6 +127,11 @@ struct super_operations {
