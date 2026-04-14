@@ -1,0 +1,296 @@
+SPDX-License-Identifier: GPL-2.0
+aufs7.0 base patch
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index d1cc0e12fe1f..7a33d5b80baa 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -4231,6 +4231,19 @@ F:	kernel/audit*
+ F:	lib/*audit.c
+ K:	\baudit_[a-z_0-9]\+\b
+ 
++AUFS (advanced multi layered unification filesystem) FILESYSTEM
++M:	"J. R. Okajima" <hooanon05g@gmail.com>
++L:	aufs-users@lists.sourceforge.net (members only)
++L:	linux-unionfs@vger.kernel.org
++S:	Supported
++W:	http://aufs.sourceforge.net
++T:	git://github.com/sfjro/aufs-linux.git
++F:	Documentation/ABI/testing/debugfs-aufs
++F:	Documentation/ABI/testing/sysfs-aufs
++F:	Documentation/filesystems/aufs/
++F:	fs/aufs/
++F:	include/uapi/linux/aufs_type.h
++
+ AUTOFDO BUILD
+ M:	Rong Xu <xur@google.com>
+ M:	Han Shen <shenhan@google.com>
+diff --git a/drivers/block/loop.c b/drivers/block/loop.c
+index 0000913f7efc..e7dadac7dd17 100644
+--- a/drivers/block/loop.c
++++ b/drivers/block/loop.c
+@@ -630,6 +630,26 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
+ 	goto done;
+ }
+ 
++/*
++ * for AUFS
++ * no get/put for file.
++ */
++/* Just to make the compiler silence, declare it */
++struct file *loop_backing_file(struct super_block *sb);
++struct file *loop_backing_file(struct super_block *sb)
++{
++	struct file *ret;
++	struct loop_device *l;
++
++	ret = NULL;
++	if (MAJOR(sb->s_dev) == LOOP_MAJOR) {
++		l = sb->s_bdev->bd_disk->private_data;
++		ret = l->lo_backing_file;
++	}
++	return ret;
++}
++EXPORT_SYMBOL_GPL(loop_backing_file);
++
+ /* loop sysfs attributes */
+ 
+ static ssize_t loop_attr_show(struct device *dev, char *page,
+diff --git a/fs/dcache.c b/fs/dcache.c
+index 7ba1801d8132..79b9f1a239d6 100644
+--- a/fs/dcache.c
++++ b/fs/dcache.c
+@@ -1311,6 +1311,10 @@ enum d_walk_ret {
+ 	D_WALK_SKIP,
+ };
+ 
++/* AUFS calls d_walk(). Just to make the compiler silence, declare it */
++void d_walk(struct dentry *parent, void *data,
++		   enum d_walk_ret (*enter)(void *, struct dentry *));
++
+ /**
+  * d_walk - walk the dentry tree
+  * @parent:	start of walk
+@@ -1319,7 +1323,7 @@ enum d_walk_ret {
+  *
+  * The @enter() callbacks are called with d_lock held.
+  */
+-static void d_walk(struct dentry *parent, void *data,
++void d_walk(struct dentry *parent, void *data,
+ 		   enum d_walk_ret (*enter)(void *, struct dentry *))
+ {
+ 	struct dentry *this_parent, *dentry;
+diff --git a/fs/exec.c b/fs/exec.c
+index 9ea3a775d51e..746e5fdab7b2 100644
+--- a/fs/exec.c
++++ b/fs/exec.c
+@@ -777,6 +777,9 @@ static struct file *do_open_execat(int fd, struct filename *name, int flags)
+ 		return ERR_PTR(-EINVAL);
+ 	if (flags & AT_SYMLINK_NOFOLLOW)
+ 		open_exec_flags.lookup_flags &= ~LOOKUP_FOLLOW;
++	/* for aufs, pass LOOKUP_EMPTY flag, but untested */
++	if (flags & AT_EMPTY_PATH)
++		open_exec_flags.lookup_flags |= LOOKUP_EMPTY;
+ 
+ 	file = do_file_open(fd, name, &open_exec_flags);
+ 	if (IS_ERR(file))
+diff --git a/fs/fcntl.c b/fs/fcntl.c
+index beab8080badf..c9e5300ff82b 100644
+--- a/fs/fcntl.c
++++ b/fs/fcntl.c
+@@ -36,7 +36,7 @@
+ 
+ #define SETFL_MASK (O_APPEND | O_NONBLOCK | O_NDELAY | O_DIRECT | O_NOATIME)
+ 
+-static int setfl(int fd, struct file * filp, unsigned int arg)
++int setfl(int fd, struct file * filp, unsigned int arg)
+ {
+ 	struct inode * inode = file_inode(filp);
+ 	int error = 0;
+@@ -66,6 +66,8 @@ static int setfl(int fd, struct file * filp, unsigned int arg)
+ 
+ 	if (filp->f_op->check_flags)
+ 		error = filp->f_op->check_flags(arg);
++	if (!error && filp->f_op->setfl)
++		error = filp->f_op->setfl(filp, arg);
+ 	if (error)
+ 		return error;
+ 
+diff --git a/fs/fhandle.c b/fs/fhandle.c
+index 642e3d569497..ac33be836512 100644
+--- a/fs/fhandle.c
++++ b/fs/fhandle.c
+@@ -156,6 +156,9 @@ SYSCALL_DEFINE5(name_to_handle_at, int, dfd, const char __user *, name,
+ 		fh_flags |= EXPORT_FH_CONNECTABLE;
+ 
+ 	lookup_flags = (flag & AT_SYMLINK_FOLLOW) ? LOOKUP_FOLLOW : 0;
++	/* for aufs, pass LOOKUP_EMPTY flag */
++	if (flag & AT_EMPTY_PATH)
++		lookup_flags |= LOOKUP_EMPTY;
+ 	CLASS(filename_uflags, filename)(name, flag);
+ 	err = filename_lookup(dfd, filename, lookup_flags, &path, NULL);
+ 	if (!err) {
+diff --git a/fs/fsopen.c b/fs/fsopen.c
+index ae19e5136598..3725f6730b8e 100644
+--- a/fs/fsopen.c
++++ b/fs/fsopen.c
+@@ -181,6 +181,9 @@ SYSCALL_DEFINE3(fspick, int, dfd, const char __user *, path, unsigned int, flags
+ 		lookup_flags &= ~LOOKUP_FOLLOW;
+ 	if (flags & FSPICK_NO_AUTOMOUNT)
+ 		lookup_flags &= ~LOOKUP_AUTOMOUNT;
++	/* for aufs, pass LOOKUP_EMPTY flag, but untested */
++	if (flags & FSPICK_EMPTY_PATH)
++		lookup_flags |= LOOKUP_EMPTY;
+ 	CLASS(filename_flags, filename)(path,
+ 			 (flags & FSPICK_EMPTY_PATH) ? LOOKUP_EMPTY : 0);
+ 	ret = filename_lookup(dfd, filename, lookup_flags, &target, NULL);
+diff --git a/fs/namespace.c b/fs/namespace.c
+index 854f4fc66469..f325581def78 100644
+--- a/fs/namespace.c
++++ b/fs/namespace.c
+@@ -3198,6 +3198,9 @@ static struct file *vfs_open_tree(int dfd, const char __user *filename, unsigned
+ 		lookup_flags &= ~LOOKUP_AUTOMOUNT;
+ 	if (flags & AT_SYMLINK_NOFOLLOW)
+ 		lookup_flags &= ~LOOKUP_FOLLOW;
++	/* for aufs, pass LOOKUP_EMPTY flag, but untested */
++	if (flags & AT_EMPTY_PATH)
++		lookup_flags |= LOOKUP_EMPTY;
+ 
+ 	/*
+ 	 * If we create a new mount namespace with the cloned mount tree we
+@@ -5120,6 +5123,9 @@ SYSCALL_DEFINE5(mount_setattr, int, dfd, const char __user *, path,
+ 		lookup_flags &= ~LOOKUP_AUTOMOUNT;
+ 	if (flags & AT_SYMLINK_NOFOLLOW)
+ 		lookup_flags &= ~LOOKUP_FOLLOW;
++	/* for aufs, pass LOOKUP_EMPTY flag, but untested */
++	if (flags & AT_EMPTY_PATH)
++		lookup_flags |= LOOKUP_EMPTY;
+ 
+ 	kattr = (struct mount_kattr) {
+ 		.lookup_flags	= lookup_flags,
+diff --git a/fs/open.c b/fs/open.c
+index 91f1139591ab..207d229a9069 100644
+--- a/fs/open.c
++++ b/fs/open.c
+@@ -478,6 +478,9 @@ static int do_faccessat(int dfd, const char __user *filename, int mode, int flag
+ 
+ 	if (flags & AT_SYMLINK_NOFOLLOW)
+ 		lookup_flags &= ~LOOKUP_FOLLOW;
++	/* for aufs, pass LOOKUP_EMPTY flag, but untested */
++	if (flags & AT_EMPTY_PATH)
++		lookup_flags |= LOOKUP_EMPTY;
+ 
+ 	if (access_need_override_creds(flags)) {
+ 		old_cred = access_override_creds();
+@@ -677,6 +680,9 @@ static int do_fchmodat(int dfd, const char __user *filename, umode_t mode,
+ 		return -EINVAL;
+ 
+ 	lookup_flags = (flags & AT_SYMLINK_NOFOLLOW) ? 0 : LOOKUP_FOLLOW;
++	/* for aufs, pass LOOKUP_EMPTY flag, but untested */
++	if (flags & AT_EMPTY_PATH)
++		lookup_flags |= LOOKUP_EMPTY;
+ 	CLASS(filename_uflags, name)(filename, flags);
+ retry:
+ 	error = filename_lookup(dfd, name, lookup_flags, &path, NULL);
+@@ -797,6 +803,9 @@ int do_fchownat(int dfd, const char __user *filename, uid_t user, gid_t group,
+ 		return -EINVAL;
+ 
+ 	lookup_flags = (flag & AT_SYMLINK_NOFOLLOW) ? 0 : LOOKUP_FOLLOW;
++	/* for aufs, pass LOOKUP_EMPTY flag, but untested */
++	if (flag & AT_EMPTY_PATH)
++		lookup_flags |= LOOKUP_EMPTY;
+ 	CLASS(filename_uflags, name)(filename, flag);
+ retry:
+ 	error = filename_lookup(dfd, name, lookup_flags, &path, NULL);
+diff --git a/fs/splice.c b/fs/splice.c
+index 9d8f63e2fd1a..d2b70cb432d1 100644
+--- a/fs/splice.c
++++ b/fs/splice.c
+@@ -928,7 +928,7 @@ static int warn_unsupported(struct file *file, const char *op)
+ /*
+  * Attempt to initiate a splice from pipe to file.
+  */
+-static ssize_t do_splice_from(struct pipe_inode_info *pipe, struct file *out,
++ssize_t do_splice_from(struct pipe_inode_info *pipe, struct file *out,
+ 			      loff_t *ppos, size_t len, unsigned int flags)
+ {
+ 	if (unlikely(!out->f_op->splice_write))
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index 8b3dd145b25e..53a16e37ccba 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -1389,6 +1389,7 @@ extern void fasync_free(struct fasync_struct *);
+ /* can be called from interrupts */
+ extern void kill_fasync(struct fasync_struct **, int, int);
+ 
++extern int setfl(int fd, struct file *filp, unsigned int arg);
+ extern void __f_setown(struct file *filp, struct pid *, enum pid_type, int force);
+ extern int f_setown(struct file *filp, int who, int force);
+ extern void f_delown(struct file *filp);
+@@ -1946,6 +1947,7 @@ struct file_operations {
+ 	int (*lock) (struct file *, int, struct file_lock *);
+ 	unsigned long (*get_unmapped_area)(struct file *, unsigned long, unsigned long, unsigned long, unsigned long);
+ 	int (*check_flags)(int);
++	int (*setfl)(struct file *, unsigned long);
+ 	int (*flock) (struct file *, int, struct file_lock *);
+ 	ssize_t (*splice_write)(struct pipe_inode_info *, struct file *, loff_t *, size_t, unsigned int);
+ 	ssize_t (*splice_read)(struct file *, loff_t *, struct pipe_inode_info *, size_t, unsigned int);
+diff --git a/include/linux/lockdep.h b/include/linux/lockdep.h
+index 621566345406..24d2eca0dc1d 100644
+--- a/include/linux/lockdep.h
++++ b/include/linux/lockdep.h
+@@ -210,6 +210,8 @@ static inline int lockdep_match_key(struct lockdep_map *lock,
+ 	return lock->key == key;
+ }
+ 
++struct lock_class *lockdep_hlock_class(struct held_lock *hlock);
++
+ /*
+  * Acquire a lock.
+  *
+diff --git a/include/linux/splice.h b/include/linux/splice.h
+index 9dec4861d09f..14583d846864 100644
+--- a/include/linux/splice.h
++++ b/include/linux/splice.h
+@@ -108,4 +108,7 @@ extern void splice_shrink_spd(struct splice_pipe_desc *);
+ 
+ extern const struct pipe_buf_operations page_cache_pipe_buf_ops;
+ extern const struct pipe_buf_operations default_pipe_buf_ops;
++
++extern ssize_t do_splice_from(struct pipe_inode_info *pipe, struct file *out,
++			      loff_t *ppos, size_t len, unsigned int flags);
+ #endif
+diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
+index 2d4c5bab5af8..b720d966c7b9 100644
+--- a/kernel/locking/lockdep.c
++++ b/kernel/locking/lockdep.c
+@@ -224,7 +224,7 @@ unsigned long max_lock_class_idx;
+ struct lock_class lock_classes[MAX_LOCKDEP_KEYS];
+ DECLARE_BITMAP(lock_classes_in_use, MAX_LOCKDEP_KEYS);
+ 
+-static inline struct lock_class *hlock_class(struct held_lock *hlock)
++inline struct lock_class *lockdep_hlock_class(struct held_lock *hlock)
+ {
+ 	unsigned int class_idx = hlock->class_idx;
+ 
+@@ -245,6 +245,7 @@ static inline struct lock_class *hlock_class(struct held_lock *hlock)
+ 	 */
+ 	return lock_classes + class_idx;
+ }
++#define hlock_class(hlock) lockdep_hlock_class(hlock)
+ 
+ #ifdef CONFIG_LOCK_STAT
+ static DEFINE_PER_CPU(struct lock_class_stats[MAX_LOCKDEP_KEYS], cpu_lock_stats);
+diff --git a/usr/include/Makefile b/usr/include/Makefile
+index 6d86a53c6f0a..37f8d2f7460e 100644
+--- a/usr/include/Makefile
++++ b/usr/include/Makefile
+@@ -134,6 +134,8 @@ uses-libc += linux/wireless.h
+ uses-libc += regulator/regulator.h
+ uses-libc += scsi/fc/fc_els.h
+ 
++uses-libc += linux/aufs_type.h
++
+ ifeq ($(SRCARCH),hexagon)
+ uses-libc += asm/sigcontext.h
+ endif
