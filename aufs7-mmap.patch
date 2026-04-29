@@ -2,7 +2,7 @@ SPDX-License-Identifier: GPL-2.0
 aufs7.x-rcN mmap patch
 
 diff --git a/fs/Makefile b/fs/Makefile
-index 115d521b01aa..3ee30da8f1b5 100644
+index d8827f64d0b0d..72b5ade9ee9e5 100644
 --- a/fs/Makefile
 +++ b/fs/Makefile
 @@ -18,6 +18,12 @@ obj-y :=	open.o read_write.o file_table.o super.o \
@@ -20,7 +20,7 @@ index 115d521b01aa..3ee30da8f1b5 100644
  obj-$(CONFIG_LEGACY_DIRECT_IO)	+= direct-io.o
 diff --git a/fs/au_mf.c b/fs/au_mf.c
 new file mode 100644
-index 000000000000..9cba15b883f1
+index 0000000000000..9cba15b883f17
 --- /dev/null
 +++ b/fs/au_mf.c
 @@ -0,0 +1,60 @@
@@ -85,7 +85,7 @@ index 000000000000..9cba15b883f1
 +}
 +EXPORT_SYMBOL_GPL(au_file_user_inode);
 diff --git a/fs/proc/base.c b/fs/proc/base.c
-index 4c863d17dfb4..c338133330c6 100644
+index d9acfa89c894b..295bc14a29709 100644
 --- a/fs/proc/base.c
 +++ b/fs/proc/base.c
 @@ -1788,7 +1788,7 @@ static int proc_exe_link(struct dentry *dentry, struct path *exe_path)
@@ -98,7 +98,7 @@ index 4c863d17dfb4..c338133330c6 100644
  		fput(exe_file);
  		return 0;
 diff --git a/fs/proc/nommu.c b/fs/proc/nommu.c
-index c6e7ebc63756..12c340dcdec3 100644
+index c6e7ebc637562..12c340dcdec3d 100644
 --- a/fs/proc/nommu.c
 +++ b/fs/proc/nommu.c
 @@ -39,7 +39,7 @@ static int nommu_region_show(struct seq_file *m, struct vm_region *region)
@@ -111,7 +111,7 @@ index c6e7ebc63756..12c340dcdec3 100644
  		ino = inode->i_ino;
  	}
 diff --git a/fs/proc/task_nommu.c b/fs/proc/task_nommu.c
-index d362919f4f68..79a2590d40f4 100644
+index d362919f4f688..79a2590d40f4d 100644
 --- a/fs/proc/task_nommu.c
 +++ b/fs/proc/task_nommu.c
 @@ -137,7 +137,7 @@ static int nommu_vma_show(struct seq_file *m, struct vm_area_struct *vma)
@@ -124,12 +124,12 @@ index d362919f4f68..79a2590d40f4 100644
  		ino = inode->i_ino;
  		pgoff = (loff_t)vma->vm_pgoff << PAGE_SHIFT;
 diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 53a16e37ccba..518c6a8a746d 100644
+index 391dfb0ca7719..f00a7f9efa825 100644
 --- a/include/linux/fs.h
 +++ b/include/linux/fs.h
-@@ -2477,6 +2477,21 @@ struct file *dentry_create(struct path *path, int flags, umode_t mode,
- 			   const struct cred *cred);
- const struct path *backing_file_user_path(const struct file *f);
+@@ -2491,6 +2491,21 @@ static inline void backing_file_set_security(struct file *f, void *security)
+ }
+ #endif /* CONFIG_SECURITY */
  
 +#if IS_MODULE(CONFIG_AUFS_FS)
 +/* fs/au_mf.c */
@@ -149,7 +149,7 @@ index 53a16e37ccba..518c6a8a746d 100644
  /*
   * When mmapping a file on a stackable filesystem (e.g., overlayfs), the file
   * stored in ->vm_file is a backing file whose f_inode is on the underlying
-@@ -2489,15 +2504,25 @@ const struct path *backing_file_user_path(const struct file *f);
+@@ -2503,15 +2518,25 @@ static inline void backing_file_set_security(struct file *f, void *security)
  /* Get the path to display in /proc/<pid>/maps */
  static inline const struct path *file_user_path(const struct file *f)
  {

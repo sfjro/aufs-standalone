@@ -2,10 +2,10 @@ SPDX-License-Identifier: GPL-2.0
 aufs7.x-rcN base patch
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index d1cc0e12fe1f..7a33d5b80baa 100644
+index 2fb1c75afd163..a3d547bc9c48a 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -4231,6 +4231,19 @@ F:	kernel/audit*
+@@ -4243,6 +4243,19 @@ F:	kernel/audit*
  F:	lib/*audit.c
  K:	\baudit_[a-z_0-9]\+\b
  
@@ -26,7 +26,7 @@ index d1cc0e12fe1f..7a33d5b80baa 100644
  M:	Rong Xu <xur@google.com>
  M:	Han Shen <shenhan@google.com>
 diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index 0000913f7efc..e7dadac7dd17 100644
+index 0000913f7efcc..e7dadac7dd17b 100644
 --- a/drivers/block/loop.c
 +++ b/drivers/block/loop.c
 @@ -630,6 +630,26 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
@@ -57,10 +57,10 @@ index 0000913f7efc..e7dadac7dd17 100644
  
  static ssize_t loop_attr_show(struct device *dev, char *page,
 diff --git a/fs/dcache.c b/fs/dcache.c
-index 7ba1801d8132..79b9f1a239d6 100644
+index 2c61aeea41f45..fa77362b92bc3 100644
 --- a/fs/dcache.c
 +++ b/fs/dcache.c
-@@ -1311,6 +1311,10 @@ enum d_walk_ret {
+@@ -1359,6 +1359,10 @@ enum d_walk_ret {
  	D_WALK_SKIP,
  };
  
@@ -71,7 +71,7 @@ index 7ba1801d8132..79b9f1a239d6 100644
  /**
   * d_walk - walk the dentry tree
   * @parent:	start of walk
-@@ -1319,7 +1323,7 @@ enum d_walk_ret {
+@@ -1367,7 +1371,7 @@ enum d_walk_ret {
   *
   * The @enter() callbacks are called with d_lock held.
   */
@@ -81,7 +81,7 @@ index 7ba1801d8132..79b9f1a239d6 100644
  {
  	struct dentry *this_parent, *dentry;
 diff --git a/fs/exec.c b/fs/exec.c
-index 9ea3a775d51e..746e5fdab7b2 100644
+index ba12b4c466f6d..b05e6fab20756 100644
 --- a/fs/exec.c
 +++ b/fs/exec.c
 @@ -777,6 +777,9 @@ static struct file *do_open_execat(int fd, struct filename *name, int flags)
@@ -95,7 +95,7 @@ index 9ea3a775d51e..746e5fdab7b2 100644
  	file = do_file_open(fd, name, &open_exec_flags);
  	if (IS_ERR(file))
 diff --git a/fs/fcntl.c b/fs/fcntl.c
-index beab8080badf..c9e5300ff82b 100644
+index beab8080badf6..c9e5300ff82b8 100644
 --- a/fs/fcntl.c
 +++ b/fs/fcntl.c
 @@ -36,7 +36,7 @@
@@ -117,7 +117,7 @@ index beab8080badf..c9e5300ff82b 100644
  		return error;
  
 diff --git a/fs/fhandle.c b/fs/fhandle.c
-index 642e3d569497..ac33be836512 100644
+index 642e3d5694972..ac33be836512e 100644
 --- a/fs/fhandle.c
 +++ b/fs/fhandle.c
 @@ -156,6 +156,9 @@ SYSCALL_DEFINE5(name_to_handle_at, int, dfd, const char __user *, name,
@@ -131,7 +131,7 @@ index 642e3d569497..ac33be836512 100644
  	err = filename_lookup(dfd, filename, lookup_flags, &path, NULL);
  	if (!err) {
 diff --git a/fs/fsopen.c b/fs/fsopen.c
-index ae19e5136598..3725f6730b8e 100644
+index ae19e51365986..3725f6730b8e5 100644
 --- a/fs/fsopen.c
 +++ b/fs/fsopen.c
 @@ -181,6 +181,9 @@ SYSCALL_DEFINE3(fspick, int, dfd, const char __user *, path, unsigned int, flags
@@ -144,11 +144,33 @@ index ae19e5136598..3725f6730b8e 100644
  	CLASS(filename_flags, filename)(path,
  			 (flags & FSPICK_EMPTY_PATH) ? LOOKUP_EMPTY : 0);
  	ret = filename_lookup(dfd, filename, lookup_flags, &target, NULL);
+diff --git a/fs/namei.c b/fs/namei.c
+index c7fac83c9a85e..106ba5cffdf48 100644
+--- a/fs/namei.c
++++ b/fs/namei.c
+@@ -3781,7 +3781,7 @@ static struct dentry *lock_two_directories(struct dentry *p1, struct dentry *p2)
+ /*
+  * p1 and p2 should be directories on the same fs.
+  */
+-static struct dentry *lock_rename(struct dentry *p1, struct dentry *p2)
++struct dentry *lock_rename(struct dentry *p1, struct dentry *p2)
+ {
+ 	if (p1 == p2) {
+ 		inode_lock_nested(p1->d_inode, I_MUTEX_PARENT);
+@@ -3833,7 +3833,7 @@ static struct dentry *lock_rename_child(struct dentry *c1, struct dentry *p2)
+ 	return NULL;
+ }
+ 
+-static void unlock_rename(struct dentry *p1, struct dentry *p2)
++void unlock_rename(struct dentry *p1, struct dentry *p2)
+ {
+ 	inode_unlock(p1->d_inode);
+ 	if (p1 != p2) {
 diff --git a/fs/namespace.c b/fs/namespace.c
-index 854f4fc66469..f325581def78 100644
+index fe919abd2f011..87ced06314001 100644
 --- a/fs/namespace.c
 +++ b/fs/namespace.c
-@@ -3198,6 +3198,9 @@ static struct file *vfs_open_tree(int dfd, const char __user *filename, unsigned
+@@ -3207,6 +3207,9 @@ static struct file *vfs_open_tree(int dfd, const char __user *filename, unsigned
  		lookup_flags &= ~LOOKUP_AUTOMOUNT;
  	if (flags & AT_SYMLINK_NOFOLLOW)
  		lookup_flags &= ~LOOKUP_FOLLOW;
@@ -158,7 +180,7 @@ index 854f4fc66469..f325581def78 100644
  
  	/*
  	 * If we create a new mount namespace with the cloned mount tree we
-@@ -5120,6 +5123,9 @@ SYSCALL_DEFINE5(mount_setattr, int, dfd, const char __user *, path,
+@@ -5150,6 +5153,9 @@ SYSCALL_DEFINE5(mount_setattr, int, dfd, const char __user *, path,
  		lookup_flags &= ~LOOKUP_AUTOMOUNT;
  	if (flags & AT_SYMLINK_NOFOLLOW)
  		lookup_flags &= ~LOOKUP_FOLLOW;
@@ -169,10 +191,10 @@ index 854f4fc66469..f325581def78 100644
  	kattr = (struct mount_kattr) {
  		.lookup_flags	= lookup_flags,
 diff --git a/fs/open.c b/fs/open.c
-index 91f1139591ab..207d229a9069 100644
+index 681d405bc61eb..41c7e8f23c058 100644
 --- a/fs/open.c
 +++ b/fs/open.c
-@@ -478,6 +478,9 @@ static int do_faccessat(int dfd, const char __user *filename, int mode, int flag
+@@ -476,6 +476,9 @@ static int do_faccessat(int dfd, const char __user *filename, int mode, int flag
  
  	if (flags & AT_SYMLINK_NOFOLLOW)
  		lookup_flags &= ~LOOKUP_FOLLOW;
@@ -182,7 +204,7 @@ index 91f1139591ab..207d229a9069 100644
  
  	if (access_need_override_creds(flags)) {
  		old_cred = access_override_creds();
-@@ -677,6 +680,9 @@ static int do_fchmodat(int dfd, const char __user *filename, umode_t mode,
+@@ -675,6 +678,9 @@ static int do_fchmodat(int dfd, const char __user *filename, umode_t mode,
  		return -EINVAL;
  
  	lookup_flags = (flags & AT_SYMLINK_NOFOLLOW) ? 0 : LOOKUP_FOLLOW;
@@ -192,7 +214,7 @@ index 91f1139591ab..207d229a9069 100644
  	CLASS(filename_uflags, name)(filename, flags);
  retry:
  	error = filename_lookup(dfd, name, lookup_flags, &path, NULL);
-@@ -797,6 +803,9 @@ int do_fchownat(int dfd, const char __user *filename, uid_t user, gid_t group,
+@@ -795,6 +801,9 @@ int do_fchownat(int dfd, const char __user *filename, uid_t user, gid_t group,
  		return -EINVAL;
  
  	lookup_flags = (flag & AT_SYMLINK_NOFOLLOW) ? 0 : LOOKUP_FOLLOW;
@@ -203,7 +225,7 @@ index 91f1139591ab..207d229a9069 100644
  retry:
  	error = filename_lookup(dfd, name, lookup_flags, &path, NULL);
 diff --git a/fs/splice.c b/fs/splice.c
-index 9d8f63e2fd1a..d2b70cb432d1 100644
+index 9d8f63e2fd1ab..d2b70cb432d1d 100644
 --- a/fs/splice.c
 +++ b/fs/splice.c
 @@ -928,7 +928,7 @@ static int warn_unsupported(struct file *file, const char *op)
@@ -216,10 +238,10 @@ index 9d8f63e2fd1a..d2b70cb432d1 100644
  {
  	if (unlikely(!out->f_op->splice_write))
 diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 8b3dd145b25e..53a16e37ccba 100644
+index 11559c513dfbb..391dfb0ca7719 100644
 --- a/include/linux/fs.h
 +++ b/include/linux/fs.h
-@@ -1389,6 +1389,7 @@ extern void fasync_free(struct fasync_struct *);
+@@ -1390,6 +1390,7 @@ extern void fasync_free(struct fasync_struct *);
  /* can be called from interrupts */
  extern void kill_fasync(struct fasync_struct **, int, int);
  
@@ -236,7 +258,7 @@ index 8b3dd145b25e..53a16e37ccba 100644
  	ssize_t (*splice_write)(struct pipe_inode_info *, struct file *, loff_t *, size_t, unsigned int);
  	ssize_t (*splice_read)(struct file *, loff_t *, struct pipe_inode_info *, size_t, unsigned int);
 diff --git a/include/linux/lockdep.h b/include/linux/lockdep.h
-index 621566345406..24d2eca0dc1d 100644
+index 621566345406d..24d2eca0dc1d0 100644
 --- a/include/linux/lockdep.h
 +++ b/include/linux/lockdep.h
 @@ -210,6 +210,8 @@ static inline int lockdep_match_key(struct lockdep_map *lock,
@@ -248,8 +270,21 @@ index 621566345406..24d2eca0dc1d 100644
  /*
   * Acquire a lock.
   *
+diff --git a/include/linux/namei.h b/include/linux/namei.h
+index 2ad6dd9987b90..78ca5f08511ca 100644
+--- a/include/linux/namei.h
++++ b/include/linux/namei.h
+@@ -165,6 +165,8 @@ extern int follow_down_one(struct path *);
+ extern int follow_down(struct path *path, unsigned int flags);
+ extern int follow_up(struct path *);
+ 
++struct dentry *lock_rename(struct dentry *p1, struct dentry *p2);
++void unlock_rename(struct dentry *p1, struct dentry *p2);
+ int start_renaming(struct renamedata *rd, int lookup_flags,
+ 		   struct qstr *old_last, struct qstr *new_last);
+ int start_renaming_dentry(struct renamedata *rd, int lookup_flags,
 diff --git a/include/linux/splice.h b/include/linux/splice.h
-index 9dec4861d09f..14583d846864 100644
+index 9dec4861d09f6..14583d8468640 100644
 --- a/include/linux/splice.h
 +++ b/include/linux/splice.h
 @@ -108,4 +108,7 @@ extern void splice_shrink_spd(struct splice_pipe_desc *);
@@ -261,7 +296,7 @@ index 9dec4861d09f..14583d846864 100644
 +			      loff_t *ppos, size_t len, unsigned int flags);
  #endif
 diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 2d4c5bab5af8..b720d966c7b9 100644
+index 2d4c5bab5af88..b720d966c7b92 100644
 --- a/kernel/locking/lockdep.c
 +++ b/kernel/locking/lockdep.c
 @@ -224,7 +224,7 @@ unsigned long max_lock_class_idx;
@@ -281,16 +316,109 @@ index 2d4c5bab5af8..b720d966c7b9 100644
  
  #ifdef CONFIG_LOCK_STAT
  static DEFINE_PER_CPU(struct lock_class_stats[MAX_LOCKDEP_KEYS], cpu_lock_stats);
+diff --git a/usr/dummy-include/fcntl.h b/usr/dummy-include/fcntl.h
+new file mode 100644
+index 0000000000000..3e366eefab28d
+--- /dev/null
++++ b/usr/dummy-include/fcntl.h
+@@ -0,0 +1,10 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++#ifndef _DUMMY_FCNTL_H
++#define _DUMMY_FCNTL_H
++
++#ifndef O_RDWR
++#define O_RDWR		00000002
++#endif
++extern int open (const char *__file, int __oflag, ...);
++
++#endif /* _DUMMY_FCNTL_H */
+diff --git a/usr/dummy-include/stdio.h b/usr/dummy-include/stdio.h
+new file mode 100644
+index 0000000000000..ffeed213fedae
+--- /dev/null
++++ b/usr/dummy-include/stdio.h
+@@ -0,0 +1,8 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++#ifndef _DUMMY_STDIO_H
++#define _DUMMY_STDIO_H
++
++extern int sprintf (char *__restrict __s,
++		    const char *__restrict __format, ...);
++
++#endif /* _DUMMY_STDIO_H */
+diff --git a/usr/dummy-include/sys/ioctl.h b/usr/dummy-include/sys/ioctl.h
+index e69de29bb2d1d..fa2df5b373120 100644
+--- a/usr/dummy-include/sys/ioctl.h
++++ b/usr/dummy-include/sys/ioctl.h
+@@ -0,0 +1,38 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++#ifndef _DUMMY_SYS_IOCTL_H
++#define _DUMMY_SYS_IOCTL_H
++
++#define _IOC_NRBITS	8
++#define _IOC_TYPEBITS	8
++
++#ifndef _IOC_SIZEBITS
++# define _IOC_SIZEBITS	14
++#endif
++
++#define _IOC_NRSHIFT	0
++#define _IOC_TYPESHIFT	(_IOC_NRSHIFT+_IOC_NRBITS)
++#define _IOC_SIZESHIFT	(_IOC_TYPESHIFT+_IOC_TYPEBITS)
++#define _IOC_DIRSHIFT	(_IOC_SIZESHIFT+_IOC_SIZEBITS)
++
++#ifndef _IOC_WRITE
++# define _IOC_WRITE	1U
++#endif
++
++#ifndef _IOC_READ
++# define _IOC_READ	2U
++#endif
++
++#define _IOC(dir,type,nr,size) \
++	(((dir)  << _IOC_DIRSHIFT) | \
++	 ((type) << _IOC_TYPESHIFT) | \
++	 ((nr)   << _IOC_NRSHIFT) | \
++	 ((size) << _IOC_SIZESHIFT))
++
++#define _IOC_TYPECHECK(t) (sizeof(t))
++
++#define _IOW(type,nr,size)	_IOC(_IOC_WRITE,(type),(nr),(_IOC_TYPECHECK(size)))
++#define _IOWR(type,nr,size)	_IOC(_IOC_READ|_IOC_WRITE,(type),(nr),(_IOC_TYPECHECK(size)))
++
++extern int ioctl (int __fd, unsigned long int __request, ...);
++
++#endif /* _DUMMY_SYS_IOCTL_H */
+diff --git a/usr/dummy-include/sys/stat.h b/usr/dummy-include/sys/stat.h
+new file mode 100644
+index 0000000000000..e69de29bb2d1d
+diff --git a/usr/dummy-include/unistd.h b/usr/dummy-include/unistd.h
+index e69de29bb2d1d..f28fe353db0c8 100644
+--- a/usr/dummy-include/unistd.h
++++ b/usr/dummy-include/unistd.h
+@@ -0,0 +1,12 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++#ifndef _DUMMY_UNISTD_H
++#define _DUMMY_UNISTD_H
++
++# ifndef __pid_t_defined
++typedef int pid_t;
++#  define __pid_t_defined
++# endif
++
++extern int close (int __fd);
++
++#endif /* _DUMMY_UNISTD_H */
 diff --git a/usr/include/Makefile b/usr/include/Makefile
-index 6d86a53c6f0a..37f8d2f7460e 100644
+index ee69dd9d970e5..22ecfa69b9711 100644
 --- a/usr/include/Makefile
 +++ b/usr/include/Makefile
-@@ -134,6 +134,8 @@ uses-libc += linux/wireless.h
+@@ -145,6 +145,8 @@ uses-libc += linux/wireless.h
  uses-libc += regulator/regulator.h
  uses-libc += scsi/fc/fc_els.h
  
 +uses-libc += linux/aufs_type.h
 +
- ifeq ($(SRCARCH),hexagon)
+ ifeq ($(UAPI_ARCH),hexagon)
  uses-libc += asm/sigcontext.h
  endif
