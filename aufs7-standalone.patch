@@ -82,7 +82,7 @@ index 87ced06314001..b41fdccd95665 100644
  bool current_chrooted(void)
  {
 diff --git a/fs/notify/fsnotify.c b/fs/notify/fsnotify.c
-index b7198c4744e3a..e9a913e705c6a 100644
+index 2dac70b99b0d7..f0e4cfd270881 100644
 --- a/fs/notify/fsnotify.c
 +++ b/fs/notify/fsnotify.c
 @@ -169,6 +169,11 @@ int fsnotify_pre_content(const struct path *path, const loff_t *ppos,

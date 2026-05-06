@@ -2,7 +2,7 @@ SPDX-License-Identifier: GPL-2.0
 aufs7.x-rcN base patch
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 2fb1c75afd163..a3d547bc9c48a 100644
+index 882214b0e7db5..a8b6da3675951 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
 @@ -4243,6 +4243,19 @@ F:	kernel/audit*
@@ -318,7 +318,7 @@ index 2d4c5bab5af88..b720d966c7b92 100644
  static DEFINE_PER_CPU(struct lock_class_stats[MAX_LOCKDEP_KEYS], cpu_lock_stats);
 diff --git a/usr/dummy-include/fcntl.h b/usr/dummy-include/fcntl.h
 new file mode 100644
-index 0000000000000..3e366eefab28d
+index 0000000000000..6c4bdc826c992
 --- /dev/null
 +++ b/usr/dummy-include/fcntl.h
 @@ -0,0 +1,10 @@
@@ -329,12 +329,12 @@ index 0000000000000..3e366eefab28d
 +#ifndef O_RDWR
 +#define O_RDWR		00000002
 +#endif
-+extern int open (const char *__file, int __oflag, ...);
++extern int open(const char *__file, int __oflag, ...);
 +
 +#endif /* _DUMMY_FCNTL_H */
 diff --git a/usr/dummy-include/stdio.h b/usr/dummy-include/stdio.h
 new file mode 100644
-index 0000000000000..ffeed213fedae
+index 0000000000000..12e5fd19ba81f
 --- /dev/null
 +++ b/usr/dummy-include/stdio.h
 @@ -0,0 +1,8 @@
@@ -342,12 +342,12 @@ index 0000000000000..ffeed213fedae
 +#ifndef _DUMMY_STDIO_H
 +#define _DUMMY_STDIO_H
 +
-+extern int sprintf (char *__restrict __s,
-+		    const char *__restrict __format, ...);
++extern int sprintf(char *__restrict __s,
++		   const char *__restrict __format, ...);
 +
 +#endif /* _DUMMY_STDIO_H */
 diff --git a/usr/dummy-include/sys/ioctl.h b/usr/dummy-include/sys/ioctl.h
-index e69de29bb2d1d..fa2df5b373120 100644
+index e69de29bb2d1d..110121a746414 100644
 --- a/usr/dummy-include/sys/ioctl.h
 +++ b/usr/dummy-include/sys/ioctl.h
 @@ -0,0 +1,38 @@
@@ -375,7 +375,7 @@ index e69de29bb2d1d..fa2df5b373120 100644
 +# define _IOC_READ	2U
 +#endif
 +
-+#define _IOC(dir,type,nr,size) \
++#define _IOC(dir, type, nr, size) \
 +	(((dir)  << _IOC_DIRSHIFT) | \
 +	 ((type) << _IOC_TYPESHIFT) | \
 +	 ((nr)   << _IOC_NRSHIFT) | \
@@ -383,17 +383,17 @@ index e69de29bb2d1d..fa2df5b373120 100644
 +
 +#define _IOC_TYPECHECK(t) (sizeof(t))
 +
-+#define _IOW(type,nr,size)	_IOC(_IOC_WRITE,(type),(nr),(_IOC_TYPECHECK(size)))
-+#define _IOWR(type,nr,size)	_IOC(_IOC_READ|_IOC_WRITE,(type),(nr),(_IOC_TYPECHECK(size)))
++#define _IOW(type, nr, size)	_IOC(_IOC_WRITE, (type), (nr), (_IOC_TYPECHECK(size)))
++#define _IOWR(type, nr, size)	_IOC(_IOC_READ|_IOC_WRITE, (type), (nr), (_IOC_TYPECHECK(size)))
 +
-+extern int ioctl (int __fd, unsigned long int __request, ...);
++extern int ioctl(int __fd, unsigned long __request, ...);
 +
 +#endif /* _DUMMY_SYS_IOCTL_H */
 diff --git a/usr/dummy-include/sys/stat.h b/usr/dummy-include/sys/stat.h
 new file mode 100644
 index 0000000000000..e69de29bb2d1d
 diff --git a/usr/dummy-include/unistd.h b/usr/dummy-include/unistd.h
-index e69de29bb2d1d..f28fe353db0c8 100644
+index e69de29bb2d1d..6a13344a3c126 100644
 --- a/usr/dummy-include/unistd.h
 +++ b/usr/dummy-include/unistd.h
 @@ -0,0 +1,12 @@
@@ -406,7 +406,7 @@ index e69de29bb2d1d..f28fe353db0c8 100644
 +#  define __pid_t_defined
 +# endif
 +
-+extern int close (int __fd);
++extern int close(int __fd);
 +
 +#endif /* _DUMMY_UNISTD_H */
 diff --git a/usr/include/Makefile b/usr/include/Makefile
