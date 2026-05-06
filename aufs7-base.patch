@@ -2,7 +2,7 @@ SPDX-License-Identifier: GPL-2.0
 aufs7.0 base patch
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index d1cc0e12fe1f..7a33d5b80baa 100644
+index d1cc0e12fe1f0..7a33d5b80baa0 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
 @@ -4231,6 +4231,19 @@ F:	kernel/audit*
@@ -26,7 +26,7 @@ index d1cc0e12fe1f..7a33d5b80baa 100644
  M:	Rong Xu <xur@google.com>
  M:	Han Shen <shenhan@google.com>
 diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index 0000913f7efc..e7dadac7dd17 100644
+index 0000913f7efcc..e7dadac7dd17b 100644
 --- a/drivers/block/loop.c
 +++ b/drivers/block/loop.c
 @@ -630,6 +630,26 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
@@ -57,7 +57,7 @@ index 0000913f7efc..e7dadac7dd17 100644
  
  static ssize_t loop_attr_show(struct device *dev, char *page,
 diff --git a/fs/dcache.c b/fs/dcache.c
-index 7ba1801d8132..79b9f1a239d6 100644
+index 7ba1801d81329..79b9f1a239d6e 100644
 --- a/fs/dcache.c
 +++ b/fs/dcache.c
 @@ -1311,6 +1311,10 @@ enum d_walk_ret {
@@ -81,7 +81,7 @@ index 7ba1801d8132..79b9f1a239d6 100644
  {
  	struct dentry *this_parent, *dentry;
 diff --git a/fs/exec.c b/fs/exec.c
-index 9ea3a775d51e..746e5fdab7b2 100644
+index 9ea3a775d51e9..746e5fdab7b2a 100644
 --- a/fs/exec.c
 +++ b/fs/exec.c
 @@ -777,6 +777,9 @@ static struct file *do_open_execat(int fd, struct filename *name, int flags)
@@ -95,7 +95,7 @@ index 9ea3a775d51e..746e5fdab7b2 100644
  	file = do_file_open(fd, name, &open_exec_flags);
  	if (IS_ERR(file))
 diff --git a/fs/fcntl.c b/fs/fcntl.c
-index beab8080badf..c9e5300ff82b 100644
+index beab8080badf6..c9e5300ff82b8 100644
 --- a/fs/fcntl.c
 +++ b/fs/fcntl.c
 @@ -36,7 +36,7 @@
@@ -117,7 +117,7 @@ index beab8080badf..c9e5300ff82b 100644
  		return error;
  
 diff --git a/fs/fhandle.c b/fs/fhandle.c
-index 642e3d569497..ac33be836512 100644
+index 642e3d5694972..ac33be836512e 100644
 --- a/fs/fhandle.c
 +++ b/fs/fhandle.c
 @@ -156,6 +156,9 @@ SYSCALL_DEFINE5(name_to_handle_at, int, dfd, const char __user *, name,
@@ -131,7 +131,7 @@ index 642e3d569497..ac33be836512 100644
  	err = filename_lookup(dfd, filename, lookup_flags, &path, NULL);
  	if (!err) {
 diff --git a/fs/fsopen.c b/fs/fsopen.c
-index ae19e5136598..3725f6730b8e 100644
+index ae19e51365986..3725f6730b8e5 100644
 --- a/fs/fsopen.c
 +++ b/fs/fsopen.c
 @@ -181,6 +181,9 @@ SYSCALL_DEFINE3(fspick, int, dfd, const char __user *, path, unsigned int, flags
@@ -145,7 +145,7 @@ index ae19e5136598..3725f6730b8e 100644
  			 (flags & FSPICK_EMPTY_PATH) ? LOOKUP_EMPTY : 0);
  	ret = filename_lookup(dfd, filename, lookup_flags, &target, NULL);
 diff --git a/fs/namespace.c b/fs/namespace.c
-index 854f4fc66469..f325581def78 100644
+index 854f4fc664697..f325581def786 100644
 --- a/fs/namespace.c
 +++ b/fs/namespace.c
 @@ -3198,6 +3198,9 @@ static struct file *vfs_open_tree(int dfd, const char __user *filename, unsigned
@@ -169,7 +169,7 @@ index 854f4fc66469..f325581def78 100644
  	kattr = (struct mount_kattr) {
  		.lookup_flags	= lookup_flags,
 diff --git a/fs/open.c b/fs/open.c
-index 91f1139591ab..207d229a9069 100644
+index 91f1139591abe..207d229a90699 100644
 --- a/fs/open.c
 +++ b/fs/open.c
 @@ -478,6 +478,9 @@ static int do_faccessat(int dfd, const char __user *filename, int mode, int flag
@@ -203,7 +203,7 @@ index 91f1139591ab..207d229a9069 100644
  retry:
  	error = filename_lookup(dfd, name, lookup_flags, &path, NULL);
 diff --git a/fs/splice.c b/fs/splice.c
-index 9d8f63e2fd1a..d2b70cb432d1 100644
+index 9d8f63e2fd1ab..d2b70cb432d1d 100644
 --- a/fs/splice.c
 +++ b/fs/splice.c
 @@ -928,7 +928,7 @@ static int warn_unsupported(struct file *file, const char *op)
@@ -216,7 +216,7 @@ index 9d8f63e2fd1a..d2b70cb432d1 100644
  {
  	if (unlikely(!out->f_op->splice_write))
 diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 8b3dd145b25e..53a16e37ccba 100644
+index 8b3dd145b25ec..53a16e37ccba4 100644
 --- a/include/linux/fs.h
 +++ b/include/linux/fs.h
 @@ -1389,6 +1389,7 @@ extern void fasync_free(struct fasync_struct *);
@@ -236,7 +236,7 @@ index 8b3dd145b25e..53a16e37ccba 100644
  	ssize_t (*splice_write)(struct pipe_inode_info *, struct file *, loff_t *, size_t, unsigned int);
  	ssize_t (*splice_read)(struct file *, loff_t *, struct pipe_inode_info *, size_t, unsigned int);
 diff --git a/include/linux/lockdep.h b/include/linux/lockdep.h
-index 621566345406..24d2eca0dc1d 100644
+index 621566345406d..24d2eca0dc1d0 100644
 --- a/include/linux/lockdep.h
 +++ b/include/linux/lockdep.h
 @@ -210,6 +210,8 @@ static inline int lockdep_match_key(struct lockdep_map *lock,
@@ -249,7 +249,7 @@ index 621566345406..24d2eca0dc1d 100644
   * Acquire a lock.
   *
 diff --git a/include/linux/splice.h b/include/linux/splice.h
-index 9dec4861d09f..14583d846864 100644
+index 9dec4861d09f6..14583d8468640 100644
 --- a/include/linux/splice.h
 +++ b/include/linux/splice.h
 @@ -108,4 +108,7 @@ extern void splice_shrink_spd(struct splice_pipe_desc *);
@@ -261,7 +261,7 @@ index 9dec4861d09f..14583d846864 100644
 +			      loff_t *ppos, size_t len, unsigned int flags);
  #endif
 diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 2d4c5bab5af8..b720d966c7b9 100644
+index 2d4c5bab5af88..b720d966c7b92 100644
 --- a/kernel/locking/lockdep.c
 +++ b/kernel/locking/lockdep.c
 @@ -224,7 +224,7 @@ unsigned long max_lock_class_idx;
@@ -282,7 +282,7 @@ index 2d4c5bab5af8..b720d966c7b9 100644
  #ifdef CONFIG_LOCK_STAT
  static DEFINE_PER_CPU(struct lock_class_stats[MAX_LOCKDEP_KEYS], cpu_lock_stats);
 diff --git a/usr/include/Makefile b/usr/include/Makefile
-index 6d86a53c6f0a..37f8d2f7460e 100644
+index 6d86a53c6f0a3..37f8d2f7460e4 100644
 --- a/usr/include/Makefile
 +++ b/usr/include/Makefile
 @@ -134,6 +134,8 @@ uses-libc += linux/wireless.h

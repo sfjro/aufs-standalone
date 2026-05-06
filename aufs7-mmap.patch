@@ -2,7 +2,7 @@ SPDX-License-Identifier: GPL-2.0
 aufs7.0 mmap patch
 
 diff --git a/fs/Makefile b/fs/Makefile
-index 115d521b01aa..3ee30da8f1b5 100644
+index 115d521b01aaa..3ee30da8f1b55 100644
 --- a/fs/Makefile
 +++ b/fs/Makefile
 @@ -18,6 +18,12 @@ obj-y :=	open.o read_write.o file_table.o super.o \
@@ -20,7 +20,7 @@ index 115d521b01aa..3ee30da8f1b5 100644
  obj-$(CONFIG_LEGACY_DIRECT_IO)	+= direct-io.o
 diff --git a/fs/au_mf.c b/fs/au_mf.c
 new file mode 100644
-index 000000000000..9cba15b883f1
+index 0000000000000..9cba15b883f17
 --- /dev/null
 +++ b/fs/au_mf.c
 @@ -0,0 +1,60 @@
@@ -85,7 +85,7 @@ index 000000000000..9cba15b883f1
 +}
 +EXPORT_SYMBOL_GPL(au_file_user_inode);
 diff --git a/fs/proc/base.c b/fs/proc/base.c
-index 4c863d17dfb4..c338133330c6 100644
+index 4c863d17dfb4c..c338133330c60 100644
 --- a/fs/proc/base.c
 +++ b/fs/proc/base.c
 @@ -1788,7 +1788,7 @@ static int proc_exe_link(struct dentry *dentry, struct path *exe_path)
@@ -98,7 +98,7 @@ index 4c863d17dfb4..c338133330c6 100644
  		fput(exe_file);
  		return 0;
 diff --git a/fs/proc/nommu.c b/fs/proc/nommu.c
-index c6e7ebc63756..12c340dcdec3 100644
+index c6e7ebc637562..12c340dcdec3d 100644
 --- a/fs/proc/nommu.c
 +++ b/fs/proc/nommu.c
 @@ -39,7 +39,7 @@ static int nommu_region_show(struct seq_file *m, struct vm_region *region)
@@ -111,7 +111,7 @@ index c6e7ebc63756..12c340dcdec3 100644
  		ino = inode->i_ino;
  	}
 diff --git a/fs/proc/task_nommu.c b/fs/proc/task_nommu.c
-index d362919f4f68..79a2590d40f4 100644
+index d362919f4f688..79a2590d40f4d 100644
 --- a/fs/proc/task_nommu.c
 +++ b/fs/proc/task_nommu.c
 @@ -137,7 +137,7 @@ static int nommu_vma_show(struct seq_file *m, struct vm_area_struct *vma)
@@ -124,7 +124,7 @@ index d362919f4f68..79a2590d40f4 100644
  		ino = inode->i_ino;
  		pgoff = (loff_t)vma->vm_pgoff << PAGE_SHIFT;
 diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 53a16e37ccba..518c6a8a746d 100644
+index 53a16e37ccba4..518c6a8a746d7 100644
 --- a/include/linux/fs.h
 +++ b/include/linux/fs.h
 @@ -2477,6 +2477,21 @@ struct file *dentry_create(struct path *path, int flags, umode_t mode,
