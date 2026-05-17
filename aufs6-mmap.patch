@@ -2,7 +2,7 @@ SPDX-License-Identifier: GPL-2.0
 aufs6.14.7 mmap patch
 
 diff --git a/fs/Makefile b/fs/Makefile
-index 7584856689fb3..5bfaa1db3e24d 100644
+index 16bcb1e7cf2eb..3e31cffc93bc7 100644
 --- a/fs/Makefile
 +++ b/fs/Makefile
 @@ -17,6 +17,12 @@ obj-y :=	open.o read_write.o file_table.o super.o \
@@ -11,7 +11,7 @@ index 7584856689fb3..5bfaa1db3e24d 100644
  
 +# don't move au_mf.o to the bottom of this file, otherwise it will
 +# conflict with aufs-kbuild.patch.
-+ifeq (${CONFIG_AUFS_FS},m)
++ifeq ($(CONFIG_AUFS_FS),m)
 +obj-y += au_mf.o
 +endif
 +
@@ -20,10 +20,10 @@ index 7584856689fb3..5bfaa1db3e24d 100644
  obj-$(CONFIG_LEGACY_DIRECT_IO)	+= direct-io.o
 diff --git a/fs/au_mf.c b/fs/au_mf.c
 new file mode 100644
-index 0000000000000..aaf6a1f91f719
+index 0000000000000..3524df3b21ccd
 --- /dev/null
 +++ b/fs/au_mf.c
-@@ -0,0 +1,60 @@
+@@ -0,0 +1,59 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
 + * Copyright (C) 2025 Junjiro R. Okajima
@@ -47,9 +47,8 @@ index 0000000000000..aaf6a1f91f719
 +
 +const struct path *au_file_user_path(struct file *f)
 +{
-+	const struct path *path,
-+		*(*func)(struct file *f),
-+		*au_do_file_user_path(struct file *f);
++	const struct path *path, *(*func)(struct file *f);
++	const struct path *au_do_file_user_path(struct file *f);
 +
 +	path = NULL;
 +	func = symbol_get(au_do_file_user_path);
