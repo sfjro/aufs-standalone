@@ -62,7 +62,7 @@ index f325581def786..68a32452a3e4b 100644
  bool current_chrooted(void)
  {
 diff --git a/fs/notify/fsnotify.c b/fs/notify/fsnotify.c
-index 9995de1710e59..8593d0972802b 100644
+index 9995de1710e59..6c33ace511198 100644
 --- a/fs/notify/fsnotify.c
 +++ b/fs/notify/fsnotify.c
 @@ -169,6 +169,11 @@ int fsnotify_pre_content(const struct path *path, const loff_t *ppos,
@@ -71,7 +71,7 @@ index 9995de1710e59..8593d0972802b 100644
  }
 +/*
 + * a module calls fsnotify_truncate_perm() which is an inlined function and
-+ * calls fsnotify_pre_content(). Finaly the function has to be exported.
++ * calls fsnotify_pre_content(). Finally the function has to be exported.
 +*/
 +EXPORT_SYMBOL_GPL(fsnotify_pre_content);
  
