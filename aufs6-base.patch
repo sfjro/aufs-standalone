@@ -26,16 +26,15 @@ index b878ddc99f94e..8489754030b99 100644
  M:	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
  R:	Dave Ertman <david.m.ertman@intel.com>
 diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index 78a7bb28defe4..479480f25a6c0 100644
+index 78a7bb28defe4..afea5819d150d 100644
 --- a/drivers/block/loop.c
 +++ b/drivers/block/loop.c
-@@ -661,6 +661,26 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
+@@ -661,6 +661,31 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
  	goto done;
  }
  
 +/*
 + * for AUFS
-+ * no get/put for file.
 + */
 +/* Just to make the compiler silence, declare it */
 +struct file *loop_backing_file(struct super_block *sb);
@@ -43,11 +42,17 @@ index 78a7bb28defe4..479480f25a6c0 100644
 +{
 +	struct file *ret;
 +	struct loop_device *l;
++	unsigned long flags;
 +
 +	ret = NULL;
 +	if (MAJOR(sb->s_dev) == LOOP_MAJOR) {
 +		l = sb->s_bdev->bd_disk->private_data;
++		/* slow? but it's safe */
++		spin_lock_irqsave(&l->lo_lock, flags);
 +		ret = l->lo_backing_file;
++		if (ret)
++			get_file(ret);	/* callers have to call fput() */
++		spin_unlock_irqrestore(&l->lo_lock, flags);
 +	}
 +	return ret;
 +}
