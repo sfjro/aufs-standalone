@@ -2,7 +2,7 @@ SPDX-License-Identifier: GPL-2.0
 aufs6.12.25 loopback patch
 
 diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index 564d0b8c45c18..c7f1123b503e9 100644
+index 0ec641f78b4cf..418848a0b3662 100644
 --- a/drivers/block/loop.c
 +++ b/drivers/block/loop.c
 @@ -54,7 +54,7 @@ struct loop_device {
@@ -86,7 +86,7 @@ index 564d0b8c45c18..c7f1123b503e9 100644
  	dev_set_uevent_suppress(disk_to_dev(lo->lo_disk), 0);
  	goto done;
  }
-@@ -963,6 +988,7 @@ static int loop_configure(struct loop_device *lo, blk_mode_t mode,
+@@ -968,6 +993,7 @@ static int loop_configure(struct loop_device *lo, blk_mode_t mode,
  			  const struct loop_config *config)
  {
  	struct file *file = fget(config->fd);
@@ -94,7 +94,7 @@ index 564d0b8c45c18..c7f1123b503e9 100644
  	struct address_space *mapping;
  	int error;
  	loff_t size;
-@@ -976,6 +1002,13 @@ static int loop_configure(struct loop_device *lo, blk_mode_t mode,
+@@ -981,6 +1007,13 @@ static int loop_configure(struct loop_device *lo, blk_mode_t mode,
  	/* This is safe, since we have a reference from open(). */
  	__module_get(THIS_MODULE);
  
@@ -108,7 +108,7 @@ index 564d0b8c45c18..c7f1123b503e9 100644
  	/*
  	 * If we don't hold exclusive handle for the device, upgrade to it
  	 * here to avoid changing device under exclusive owner.
-@@ -1032,6 +1065,7 @@ static int loop_configure(struct loop_device *lo, blk_mode_t mode,
+@@ -1037,6 +1070,7 @@ static int loop_configure(struct loop_device *lo, blk_mode_t mode,
  	lo->use_dio = lo->lo_flags & LO_FLAGS_DIRECT_IO;
  	lo->lo_device = bdev;
  	lo->lo_backing_file = file;
@@ -116,7 +116,7 @@ index 564d0b8c45c18..c7f1123b503e9 100644
  	lo->old_gfp_mask = mapping_gfp_mask(mapping);
  	mapping_set_gfp_mask(mapping, lo->old_gfp_mask & ~(__GFP_IO|__GFP_FS));
  
-@@ -1074,6 +1108,8 @@ static int loop_configure(struct loop_device *lo, blk_mode_t mode,
+@@ -1079,6 +1113,8 @@ static int loop_configure(struct loop_device *lo, blk_mode_t mode,
  		bd_abort_claiming(bdev, loop_configure);
  out_putf:
  	fput(file);
@@ -125,7 +125,7 @@ index 564d0b8c45c18..c7f1123b503e9 100644
  	/* This is safe: open() is still holding a reference. */
  	module_put(THIS_MODULE);
  	return error;
-@@ -1083,11 +1119,13 @@ static void __loop_clr_fd(struct loop_device *lo)
+@@ -1088,11 +1124,13 @@ static void __loop_clr_fd(struct loop_device *lo)
  {
  	struct queue_limits lim;
  	struct file *filp;
@@ -139,7 +139,7 @@ index 564d0b8c45c18..c7f1123b503e9 100644
  	spin_unlock_irq(&lo->lo_lock);
  
  	lo->lo_device = NULL;
-@@ -1149,6 +1187,8 @@ static void __loop_clr_fd(struct loop_device *lo)
+@@ -1154,6 +1192,8 @@ static void __loop_clr_fd(struct loop_device *lo)
  	 * fput can take open_mutex which is usually taken before lo_mutex.
  	 */
  	fput(filp);
@@ -162,17 +162,17 @@ index cb5781e56e1e1..93e7a6a369d0a 100644
  		if (file->f_mapping != h_file->f_mapping) {
  			file->f_mapping = h_file->f_mapping;
 diff --git a/fs/aufs/loop.c b/fs/aufs/loop.c
-index 69dea4cda00c0..92a74affb2208 100644
+index dc43d4074f0fb..c6c821c302b45 100644
 --- a/fs/aufs/loop.c
 +++ b/fs/aufs/loop.c
-@@ -133,3 +133,19 @@ void au_loopback_fin(void)
+@@ -142,3 +142,19 @@ void au_loopback_fin(void)
  		symbol_put(loop_backing_file);
  	au_kfree_try_rcu(au_warn_loopback_array);
  }
 +
 +/* ---------------------------------------------------------------------- */
 +
-+/* support the loopback block device insude aufs */
++/* support the loopback block device inside aufs */
 +
 +struct file *aufs_real_loop(struct file *file)
 +{
