@@ -84,18 +84,20 @@ index 0000000000000..3524df3b21ccd
 +}
 +EXPORT_SYMBOL_GPL(au_file_user_inode);
 diff --git a/fs/proc/base.c b/fs/proc/base.c
-index b0d4e1908b22f..8e72d1fed81b4 100644
+index b0d4e1908b22f..ddb68c661ad19 100644
 --- a/fs/proc/base.c
 +++ b/fs/proc/base.c
-@@ -1782,7 +1782,7 @@ static int proc_exe_link(struct dentry *dentry, struct path *exe_path)
+@@ -1782,8 +1782,8 @@ static int proc_exe_link(struct dentry *dentry, struct path *exe_path)
  	exe_file = get_task_exe_file(task);
  	put_task_struct(task);
  	if (exe_file) {
 -		*exe_path = exe_file->f_path;
+-		path_get(&exe_file->f_path);
 +		*exe_path = *file_user_path(exe_file);
- 		path_get(&exe_file->f_path);
++		path_get(exe_path);
  		fput(exe_file);
  		return 0;
+ 	} else
 diff --git a/fs/proc/nommu.c b/fs/proc/nommu.c
 index c6e7ebc637562..12c340dcdec3d 100644
 --- a/fs/proc/nommu.c
