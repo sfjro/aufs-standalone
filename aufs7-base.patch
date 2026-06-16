@@ -2,10 +2,10 @@ SPDX-License-Identifier: GPL-2.0
 aufs7.x-rcN base patch
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index c2c6d79275c6e..17da34936613d 100644
+index c8d4b913f26c1..f97c062d0309c 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -4249,6 +4249,19 @@ F:	kernel/audit*
+@@ -4253,6 +4253,19 @@ F:	kernel/audit*
  F:	lib/*audit.c
  K:	\baudit_[a-z_0-9]\+\b
  
@@ -122,7 +122,7 @@ index beab8080badf6..c9e5300ff82b8 100644
  		return error;
  
 diff --git a/fs/fhandle.c b/fs/fhandle.c
-index 642e3d5694972..ac33be836512e 100644
+index 1ca7eb3a6cb51..54702ef282bc1 100644
 --- a/fs/fhandle.c
 +++ b/fs/fhandle.c
 @@ -156,6 +156,9 @@ SYSCALL_DEFINE5(name_to_handle_at, int, dfd, const char __user *, name,
@@ -150,7 +150,7 @@ index ae19e51365986..3725f6730b8e5 100644
  			 (flags & FSPICK_EMPTY_PATH) ? LOOKUP_EMPTY : 0);
  	ret = filename_lookup(dfd, filename, lookup_flags, &target, NULL);
 diff --git a/fs/namei.c b/fs/namei.c
-index c7fac83c9a85e..106ba5cffdf48 100644
+index 4787244ca4a75..11779f7cfc892 100644
 --- a/fs/namei.c
 +++ b/fs/namei.c
 @@ -3781,7 +3781,7 @@ static struct dentry *lock_two_directories(struct dentry *p1, struct dentry *p2)
@@ -172,10 +172,10 @@ index c7fac83c9a85e..106ba5cffdf48 100644
  	inode_unlock(p1->d_inode);
  	if (p1 != p2) {
 diff --git a/fs/namespace.c b/fs/namespace.c
-index fe919abd2f011..87ced06314001 100644
+index 341ddd353b3a8..61e16b4a3252c 100644
 --- a/fs/namespace.c
 +++ b/fs/namespace.c
-@@ -3207,6 +3207,9 @@ static struct file *vfs_open_tree(int dfd, const char __user *filename, unsigned
+@@ -3210,6 +3210,9 @@ static struct file *vfs_open_tree(int dfd, const char __user *filename, unsigned
  		lookup_flags &= ~LOOKUP_AUTOMOUNT;
  	if (flags & AT_SYMLINK_NOFOLLOW)
  		lookup_flags &= ~LOOKUP_FOLLOW;
@@ -185,7 +185,7 @@ index fe919abd2f011..87ced06314001 100644
  
  	/*
  	 * If we create a new mount namespace with the cloned mount tree we
-@@ -5150,6 +5153,9 @@ SYSCALL_DEFINE5(mount_setattr, int, dfd, const char __user *, path,
+@@ -5153,6 +5156,9 @@ SYSCALL_DEFINE5(mount_setattr, int, dfd, const char __user *, path,
  		lookup_flags &= ~LOOKUP_AUTOMOUNT;
  	if (flags & AT_SYMLINK_NOFOLLOW)
  		lookup_flags &= ~LOOKUP_FOLLOW;
