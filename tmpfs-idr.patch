@@ -1,0 +1,126 @@
+SPDX-License-Identifier: GPL-2.0
+
+diff --git a/include/linux/shmem_fs.h b/include/linux/shmem_fs.h
+index 93a0ba872ebe..952df1673eff 100644
+--- a/include/linux/shmem_fs.h
++++ b/include/linux/shmem_fs.h
+@@ -71,8 +71,12 @@ struct shmem_quota_limits {
+ };
+ 
+ struct shmem_sb_info {
++	struct mutex idr_lock;
++	bool idr_nouse;
++	struct idr idr;		    /* manages inode-number */
+ 	unsigned long max_blocks;   /* How many blocks are allowed */
+ 	struct percpu_counter used_blocks;  /* How many are allocated */
++	/* keep the type unchanged to reduce the size of tmpfs_idr.patch. */
+ 	unsigned long max_inodes;   /* How many inodes are allowed */
+ 	unsigned long free_ispace;  /* How much ispace left for allocation */
+ 	raw_spinlock_t stat_lock;   /* Serialize shmem_sb_info changes */
+diff --git a/mm/shmem.c b/mm/shmem.c
+index 3b5dc21b323c..fa5102531294 100644
+--- a/mm/shmem.c
++++ b/mm/shmem.c
+@@ -151,9 +151,11 @@ static unsigned long shmem_default_max_blocks(void)
+ static unsigned long shmem_default_max_inodes(void)
+ {
+ 	unsigned long nr_pages = totalram_pages();
++	unsigned long ul;
+ 
+-	return min3(nr_pages - totalhigh_pages(), nr_pages / 2,
+-			ULONG_MAX / BOGO_INODE_SIZE);
++	ul = INT_MAX;
++	ul = min3(ul, nr_pages - totalhigh_pages(), nr_pages / 2);
++	return ul;
+ }
+ #endif
+ 
+@@ -1430,6 +1432,10 @@ static void shmem_evict_inode(struct inode *inode)
+ 		kfree(info->xattrs);
+ 	}
+ 	shmem_free_inode(inode->i_sb, freed);
++	if (!sbinfo->idr_nouse && inode->i_ino) {
++		mutex_lock(&sbinfo->idr_lock);
++		idr_remove(&sbinfo->idr, inode->i_ino);
++		mutex_unlock(&sbinfo->idr_lock);
+ 	WARN_ON(inode->i_blocks);
+ 	clear_inode(inode);
+ #ifdef CONFIG_TMPFS_QUOTA
+@@ -3135,6 +3141,26 @@ static struct inode *__shmem_get_inode(struct mnt_idmap *idmap,
+ 		break;
+ 	}
+ 
++	if (!sbinfo->idr_nouse) {
++		/* inum 0 and 1 are unused */
++		mutex_lock(&sbinfo->idr_lock);
++		ino = idr_alloc(&sbinfo->idr, inode, 2, INT_MAX,
++				GFP_NOFS);
++		if (ino > 0) {
++			inode->i_ino = ino;
++			mutex_unlock(&sbinfo->idr_lock);
++			/* postpone it as the original does */
++			/* __insert_inode_hash(inode, inode->i_ino); */
++		} else {
++			inode->i_ino = 0;
++			mutex_unlock(&sbinfo->idr_lock);
++			iput(inode);
++			/* shmem_free_inode() will be called */
++			inode = NULL;
++		}
++	} else
++		inode->i_ino = ino;
++
+ 	lockdep_annotate_inode_mutex_key(inode);
+ 	return inode;
+ }
+@@ -4622,7 +4648,7 @@ static int shmem_parse_one(struct fs_context *fc, struct fs_parameter *param)
+ 		break;
+ 	case Opt_nr_inodes:
+ 		ctx->inodes = memparse(param->string, &rest);
+-		if (*rest || ctx->inodes > ULONG_MAX / BOGO_INODE_SIZE)
++		if (*rest || ctx->inodes < 2 || ctx->inodes > INT_MAX)
+ 			goto bad_value;
+ 		ctx->seen |= SHMEM_SEEN_INODES;
+ 		break;
+@@ -4981,6 +5007,8 @@ static void shmem_put_super(struct super_block *sb)
+ #ifdef CONFIG_TMPFS_QUOTA
+ 	shmem_disable_quotas(sb);
+ #endif
++	if (!sbinfo->idr_nouse)
++		idr_destroy(&sbinfo->idr);
+ 	free_percpu(sbinfo->ino_batch);
+ 	percpu_counter_destroy(&sbinfo->used_blocks);
+ 	mpol_put(sbinfo->mpol);
+@@ -5048,6 +5076,8 @@ static int shmem_fill_super(struct super_block *sb, struct fs_context *fc)
+ #else
+ 	sb->s_flags |= SB_NOUSER;
+ #endif /* CONFIG_TMPFS */
++	mutex_init(&sbinfo->idr_lock);
++	idr_init(&sbinfo->idr);
+ 	sb->s_d_flags |= DCACHE_DONTCACHE;
+ 	sbinfo->max_blocks = ctx->blocks;
+ 	sbinfo->max_inodes = ctx->inodes;
+@@ -5202,6 +5232,15 @@ static int shmem_error_remove_folio(struct address_space *mapping,
+ 	return 0;
+ }
+ 
++static __init void shmem_no_idr(struct super_block *sb)
++{
++	struct shmem_sb_info *sbinfo;
++
++	sbinfo = SHMEM_SB(sb);
++	sbinfo->idr_nouse = true;
++	idr_destroy(&sbinfo->idr);
++}
++
+ static const struct address_space_operations shmem_aops = {
+ 	.dirty_folio	= noop_dirty_folio,
+ #ifdef CONFIG_TMPFS
+@@ -5439,6 +5478,7 @@ void __init shmem_init(void)
+ 		pr_err("Could not kern_mount tmpfs\n");
+ 		goto out1;
+ 	}
++	shmem_no_idr(shm_mnt->mnt_sb);
+ 
+ #if defined(CONFIG_SYSFS) && defined(CONFIG_TMPFS)
+ 	error = tmpfs_sysfs_init();
