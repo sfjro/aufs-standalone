@@ -2,10 +2,10 @@ SPDX-License-Identifier: GPL-2.0
 aufs7.x-rcN base patch
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index c8d4b913f26c1..f97c062d0309c 100644
+index 4a8b0fd665ce2..6048da4795dc6 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -4253,6 +4253,19 @@ F:	kernel/audit*
+@@ -4332,6 +4332,19 @@ F:	kernel/audit*
  F:	lib/*audit.c
  K:	\baudit_[a-z_0-9]\+\b
  
@@ -26,10 +26,10 @@ index c8d4b913f26c1..f97c062d0309c 100644
  M:	Rong Xu <xur@google.com>
  M:	Han Shen <shenhan@google.com>
 diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index 0000913f7efcc..f016a310ca460 100644
+index 310de0463beb1..7abc7687ed900 100644
 --- a/drivers/block/loop.c
 +++ b/drivers/block/loop.c
-@@ -630,6 +630,31 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
+@@ -626,6 +626,31 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
  	goto done;
  }
  
@@ -62,10 +62,10 @@ index 0000913f7efcc..f016a310ca460 100644
  
  static ssize_t loop_attr_show(struct device *dev, char *page,
 diff --git a/fs/dcache.c b/fs/dcache.c
-index 2c61aeea41f45..fa77362b92bc3 100644
+index 3e9af9de70746..93b6ce3730ed3 100644
 --- a/fs/dcache.c
 +++ b/fs/dcache.c
-@@ -1359,6 +1359,10 @@ enum d_walk_ret {
+@@ -1429,6 +1429,10 @@ enum d_walk_ret {
  	D_WALK_SKIP,
  };
  
@@ -76,7 +76,7 @@ index 2c61aeea41f45..fa77362b92bc3 100644
  /**
   * d_walk - walk the dentry tree
   * @parent:	start of walk
-@@ -1367,7 +1371,7 @@ enum d_walk_ret {
+@@ -1437,7 +1441,7 @@ enum d_walk_ret {
   *
   * The @enter() callbacks are called with d_lock held.
   */
@@ -86,10 +86,10 @@ index 2c61aeea41f45..fa77362b92bc3 100644
  {
  	struct dentry *this_parent, *dentry;
 diff --git a/fs/exec.c b/fs/exec.c
-index ba12b4c466f6d..b05e6fab20756 100644
+index d5993cedc829a..fd7cd51b6acd4 100644
 --- a/fs/exec.c
 +++ b/fs/exec.c
-@@ -777,6 +777,9 @@ static struct file *do_open_execat(int fd, struct filename *name, int flags)
+@@ -781,6 +781,9 @@ static struct file *do_open_execat(int fd, struct filename *name, int flags)
  		return ERR_PTR(-EINVAL);
  	if (flags & AT_SYMLINK_NOFOLLOW)
  		open_exec_flags.lookup_flags &= ~LOOKUP_FOLLOW;
@@ -100,7 +100,7 @@ index ba12b4c466f6d..b05e6fab20756 100644
  	file = do_file_open(fd, name, &open_exec_flags);
  	if (IS_ERR(file))
 diff --git a/fs/fcntl.c b/fs/fcntl.c
-index beab8080badf6..c9e5300ff82b8 100644
+index c158f082f1da4..30aadd42ed8ee 100644
 --- a/fs/fcntl.c
 +++ b/fs/fcntl.c
 @@ -36,7 +36,7 @@
@@ -122,7 +122,7 @@ index beab8080badf6..c9e5300ff82b8 100644
  		return error;
  
 diff --git a/fs/fhandle.c b/fs/fhandle.c
-index 1ca7eb3a6cb51..54702ef282bc1 100644
+index f8829231e3d75..1ec27a6546f8e 100644
 --- a/fs/fhandle.c
 +++ b/fs/fhandle.c
 @@ -156,6 +156,9 @@ SYSCALL_DEFINE5(name_to_handle_at, int, dfd, const char __user *, name,
@@ -150,10 +150,10 @@ index ae19e51365986..3725f6730b8e5 100644
  			 (flags & FSPICK_EMPTY_PATH) ? LOOKUP_EMPTY : 0);
  	ret = filename_lookup(dfd, filename, lookup_flags, &target, NULL);
 diff --git a/fs/namei.c b/fs/namei.c
-index 4787244ca4a75..11779f7cfc892 100644
+index 19ce43c9a6e66..1d71126399c38 100644
 --- a/fs/namei.c
 +++ b/fs/namei.c
-@@ -3781,7 +3781,7 @@ static struct dentry *lock_two_directories(struct dentry *p1, struct dentry *p2)
+@@ -3779,7 +3779,7 @@ static struct dentry *lock_two_directories(struct dentry *p1, struct dentry *p2)
  /*
   * p1 and p2 should be directories on the same fs.
   */
@@ -162,7 +162,7 @@ index 4787244ca4a75..11779f7cfc892 100644
  {
  	if (p1 == p2) {
  		inode_lock_nested(p1->d_inode, I_MUTEX_PARENT);
-@@ -3833,7 +3833,7 @@ static struct dentry *lock_rename_child(struct dentry *c1, struct dentry *p2)
+@@ -3831,7 +3831,7 @@ static struct dentry *lock_rename_child(struct dentry *c1, struct dentry *p2)
  	return NULL;
  }
  
@@ -172,10 +172,10 @@ index 4787244ca4a75..11779f7cfc892 100644
  	inode_unlock(p1->d_inode);
  	if (p1 != p2) {
 diff --git a/fs/namespace.c b/fs/namespace.c
-index 341ddd353b3a8..61e16b4a3252c 100644
+index 3d5cd5bf3b053..0d149e4fb6d5e 100644
 --- a/fs/namespace.c
 +++ b/fs/namespace.c
-@@ -3210,6 +3210,9 @@ static struct file *vfs_open_tree(int dfd, const char __user *filename, unsigned
+@@ -3215,6 +3215,9 @@ static struct file *vfs_open_tree(int dfd, const char __user *filename, unsigned
  		lookup_flags &= ~LOOKUP_AUTOMOUNT;
  	if (flags & AT_SYMLINK_NOFOLLOW)
  		lookup_flags &= ~LOOKUP_FOLLOW;
@@ -185,7 +185,7 @@ index 341ddd353b3a8..61e16b4a3252c 100644
  
  	/*
  	 * If we create a new mount namespace with the cloned mount tree we
-@@ -5153,6 +5156,9 @@ SYSCALL_DEFINE5(mount_setattr, int, dfd, const char __user *, path,
+@@ -5161,6 +5164,9 @@ SYSCALL_DEFINE5(mount_setattr, int, dfd, const char __user *, path,
  		lookup_flags &= ~LOOKUP_AUTOMOUNT;
  	if (flags & AT_SYMLINK_NOFOLLOW)
  		lookup_flags &= ~LOOKUP_FOLLOW;
@@ -196,7 +196,7 @@ index 341ddd353b3a8..61e16b4a3252c 100644
  	kattr = (struct mount_kattr) {
  		.lookup_flags	= lookup_flags,
 diff --git a/fs/open.c b/fs/open.c
-index 681d405bc61eb..41c7e8f23c058 100644
+index 408925d7bd0b7..eb3c2abdd5d26 100644
 --- a/fs/open.c
 +++ b/fs/open.c
 @@ -476,6 +476,9 @@ static int do_faccessat(int dfd, const char __user *filename, int mode, int flag
@@ -243,10 +243,10 @@ index 9d8f63e2fd1ab..d2b70cb432d1d 100644
  {
  	if (unlikely(!out->f_op->splice_write))
 diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 11559c513dfbb..391dfb0ca7719 100644
+index d10897b3a1e35..2844dd944906b 100644
 --- a/include/linux/fs.h
 +++ b/include/linux/fs.h
-@@ -1390,6 +1390,7 @@ extern void fasync_free(struct fasync_struct *);
+@@ -1385,6 +1385,7 @@ extern void fasync_free(struct fasync_struct *);
  /* can be called from interrupts */
  extern void kill_fasync(struct fasync_struct **, int, int);
  
@@ -254,7 +254,7 @@ index 11559c513dfbb..391dfb0ca7719 100644
  extern void __f_setown(struct file *filp, struct pid *, enum pid_type, int force);
  extern int f_setown(struct file *filp, int who, int force);
  extern void f_delown(struct file *filp);
-@@ -1946,6 +1947,7 @@ struct file_operations {
+@@ -1941,6 +1942,7 @@ struct file_operations {
  	int (*lock) (struct file *, int, struct file_lock *);
  	unsigned long (*get_unmapped_area)(struct file *, unsigned long, unsigned long, unsigned long, unsigned long);
  	int (*check_flags)(int);
@@ -276,10 +276,10 @@ index 621566345406d..24d2eca0dc1d0 100644
   * Acquire a lock.
   *
 diff --git a/include/linux/namei.h b/include/linux/namei.h
-index 2ad6dd9987b90..78ca5f08511ca 100644
+index ebe6e29f7e93b..6fbc20fddeec0 100644
 --- a/include/linux/namei.h
 +++ b/include/linux/namei.h
-@@ -165,6 +165,8 @@ extern int follow_down_one(struct path *);
+@@ -159,6 +159,8 @@ extern int follow_down_one(struct path *);
  extern int follow_down(struct path *path, unsigned int flags);
  extern int follow_up(struct path *);
  

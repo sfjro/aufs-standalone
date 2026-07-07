@@ -2,7 +2,7 @@ SPDX-License-Identifier: GPL-2.0
 aufs7.x-rcN mmap patch
 
 diff --git a/fs/Makefile b/fs/Makefile
-index a2d17bc51a7a4..2f446b8f9f61f 100644
+index a77d258630be0..9a8ab5cd23d6f 100644
 --- a/fs/Makefile
 +++ b/fs/Makefile
 @@ -18,6 +18,12 @@ obj-y :=	open.o read_write.o file_table.o super.o \
@@ -84,12 +84,12 @@ index 0000000000000..64c4d93ba9f50
 +}
 +EXPORT_SYMBOL_GPL(au_file_user_inode);
 diff --git a/fs/proc/base.c b/fs/proc/base.c
-index d9acfa89c894b..f3d4acf9ac6b6 100644
+index 780f812590527..010e98f171147 100644
 --- a/fs/proc/base.c
 +++ b/fs/proc/base.c
-@@ -1788,8 +1788,8 @@ static int proc_exe_link(struct dentry *dentry, struct path *exe_path)
+@@ -1765,8 +1765,8 @@ static int proc_exe_link(struct dentry *dentry, struct path *exe_path,
+ 
  	exe_file = get_task_exe_file(task);
- 	put_task_struct(task);
  	if (exe_file) {
 -		*exe_path = exe_file->f_path;
 -		path_get(&exe_file->f_path);
@@ -125,10 +125,10 @@ index d362919f4f688..79a2590d40f4d 100644
  		ino = inode->i_ino;
  		pgoff = (loff_t)vma->vm_pgoff << PAGE_SHIFT;
 diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 391dfb0ca7719..f00a7f9efa825 100644
+index 2844dd944906b..3644404e82772 100644
 --- a/include/linux/fs.h
 +++ b/include/linux/fs.h
-@@ -2491,6 +2491,21 @@ static inline void backing_file_set_security(struct file *f, void *security)
+@@ -2497,6 +2497,21 @@ static inline void backing_file_set_security(struct file *f, void *security)
  }
  #endif /* CONFIG_SECURITY */
  
@@ -150,7 +150,7 @@ index 391dfb0ca7719..f00a7f9efa825 100644
  /*
   * When mmapping a file on a stackable filesystem (e.g., overlayfs), the file
   * stored in ->vm_file is a backing file whose f_inode is on the underlying
-@@ -2503,15 +2518,25 @@ static inline void backing_file_set_security(struct file *f, void *security)
+@@ -2509,15 +2524,25 @@ static inline void backing_file_set_security(struct file *f, void *security)
  /* Get the path to display in /proc/<pid>/maps */
  static inline const struct path *file_user_path(const struct file *f)
  {
