@@ -125,10 +125,10 @@ index d362919f4f688..79a2590d40f4d 100644
  		ino = inode->i_ino;
  		pgoff = (loff_t)vma->vm_pgoff << PAGE_SHIFT;
 diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 2844dd944906b..3644404e82772 100644
+index 84a7d43b779d6..f475d5f6e07b4 100644
 --- a/include/linux/fs.h
 +++ b/include/linux/fs.h
-@@ -2497,6 +2497,21 @@ static inline void backing_file_set_security(struct file *f, void *security)
+@@ -2502,6 +2502,21 @@ static inline void backing_file_set_security(struct file *f, void *security)
  }
  #endif /* CONFIG_SECURITY */
  
@@ -150,7 +150,7 @@ index 2844dd944906b..3644404e82772 100644
  /*
   * When mmapping a file on a stackable filesystem (e.g., overlayfs), the file
   * stored in ->vm_file is a backing file whose f_inode is on the underlying
-@@ -2509,15 +2524,25 @@ static inline void backing_file_set_security(struct file *f, void *security)
+@@ -2514,15 +2529,25 @@ static inline void backing_file_set_security(struct file *f, void *security)
  /* Get the path to display in /proc/<pid>/maps */
  static inline const struct path *file_user_path(const struct file *f)
  {
