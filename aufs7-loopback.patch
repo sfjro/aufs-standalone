@@ -2,7 +2,7 @@ SPDX-License-Identifier: GPL-2.0
 aufs7.x-rcN loopback patch
 
 diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index 7abc7687ed900..6313fd7b1f36f 100644
+index 8edbec92f8d3d..eb2432ac1659b 100644
 --- a/drivers/block/loop.c
 +++ b/drivers/block/loop.c
 @@ -52,7 +52,7 @@ struct loop_device {
@@ -125,12 +125,13 @@ index 7abc7687ed900..6313fd7b1f36f 100644
  	/* This is safe: open() is still holding a reference. */
  	module_put(THIS_MODULE);
  	return error;
-@@ -1137,11 +1173,13 @@ static void __loop_clr_fd(struct loop_device *lo)
+@@ -1137,12 +1173,14 @@ static void __loop_clr_fd(struct loop_device *lo)
  {
  	struct queue_limits lim;
  	struct file *filp;
 +	struct file *virt_filp = lo->lo_backing_virt_file;
  	gfp_t gfp = lo->old_gfp_mask;
+ 	int err;
  
  	spin_lock_irq(&lo->lo_lock);
  	filp = lo->lo_backing_file;
@@ -139,7 +140,7 @@ index 7abc7687ed900..6313fd7b1f36f 100644
  	spin_unlock_irq(&lo->lo_lock);
  
  	lo->lo_device = NULL;
-@@ -1208,6 +1246,8 @@ static void __loop_clr_fd(struct loop_device *lo)
+@@ -1204,6 +1242,8 @@ static void __loop_clr_fd(struct loop_device *lo)
  	 * fput can take open_mutex which is usually taken before lo_mutex.
  	 */
  	fput(filp);

@@ -14,7 +14,7 @@ index 93b6ce3730ed3..e67af79fcd533 100644
  struct check_mount {
  	struct vfsmount *mnt;
 diff --git a/fs/exec.c b/fs/exec.c
-index fd7cd51b6acd4..85393f39ee652 100644
+index a48561b453f64..0d9a21ca2d0ed 100644
 --- a/fs/exec.c
 +++ b/fs/exec.c
 @@ -121,6 +121,7 @@ bool path_noexec(const struct path *path)

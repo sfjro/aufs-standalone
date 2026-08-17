@@ -2,10 +2,10 @@ SPDX-License-Identifier: GPL-2.0
 aufs7.x-rcN base patch
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 806bd2d80d153..47bdb7b3c0d93 100644
+index 8014b9f8253ed..ad3e58af8dbcc 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -4332,6 +4332,19 @@ F:	kernel/audit*
+@@ -4323,6 +4323,19 @@ F:	kernel/audit*
  F:	lib/*audit.c
  K:	\baudit_[a-z_0-9]\+\b
  
@@ -26,7 +26,7 @@ index 806bd2d80d153..47bdb7b3c0d93 100644
  M:	Rong Xu <xur@google.com>
  M:	Han Shen <shenhan@google.com>
 diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index 310de0463beb1..7abc7687ed900 100644
+index 1faecef330092..8edbec92f8d3d 100644
 --- a/drivers/block/loop.c
 +++ b/drivers/block/loop.c
 @@ -626,6 +626,31 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
@@ -86,7 +86,7 @@ index 3e9af9de70746..93b6ce3730ed3 100644
  {
  	struct dentry *this_parent, *dentry;
 diff --git a/fs/exec.c b/fs/exec.c
-index d5993cedc829a..fd7cd51b6acd4 100644
+index c7b8f2d6366c4..a48561b453f64 100644
 --- a/fs/exec.c
 +++ b/fs/exec.c
 @@ -781,6 +781,9 @@ static struct file *do_open_execat(int fd, struct filename *name, int flags)
