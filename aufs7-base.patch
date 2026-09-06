@@ -2,10 +2,10 @@ SPDX-License-Identifier: GPL-2.0
 aufs7.x-rcN base patch
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 8014b9f8253ed..ad3e58af8dbcc 100644
+index 3a19da74d00c9..512ebafec7027 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -4323,6 +4323,19 @@ F:	kernel/audit*
+@@ -4364,6 +4364,19 @@ F:	kernel/audit*
  F:	lib/*audit.c
  K:	\baudit_[a-z_0-9]\+\b
  
@@ -26,10 +26,10 @@ index 8014b9f8253ed..ad3e58af8dbcc 100644
  M:	Rong Xu <xur@google.com>
  M:	Han Shen <shenhan@google.com>
 diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index 1faecef330092..8edbec92f8d3d 100644
+index 6f12976035b09..24317ef96e0fb 100644
 --- a/drivers/block/loop.c
 +++ b/drivers/block/loop.c
-@@ -626,6 +626,31 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
+@@ -638,6 +638,31 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
  	goto done;
  }
  
@@ -62,7 +62,7 @@ index 1faecef330092..8edbec92f8d3d 100644
  
  static ssize_t loop_attr_show(struct device *dev, char *page,
 diff --git a/fs/dcache.c b/fs/dcache.c
-index 3e9af9de70746..93b6ce3730ed3 100644
+index 1b1a81f10da67..2bc3e63fe702d 100644
 --- a/fs/dcache.c
 +++ b/fs/dcache.c
 @@ -1429,6 +1429,10 @@ enum d_walk_ret {
@@ -86,10 +86,10 @@ index 3e9af9de70746..93b6ce3730ed3 100644
  {
  	struct dentry *this_parent, *dentry;
 diff --git a/fs/exec.c b/fs/exec.c
-index c7b8f2d6366c4..a48561b453f64 100644
+index 745f6eb5279e6..0cb555d449731 100644
 --- a/fs/exec.c
 +++ b/fs/exec.c
-@@ -781,6 +781,9 @@ static struct file *do_open_execat(int fd, struct filename *name, int flags)
+@@ -782,6 +782,9 @@ static struct file *do_open_execat(int fd, struct filename *name, int flags)
  		return ERR_PTR(-EINVAL);
  	if (flags & AT_SYMLINK_NOFOLLOW)
  		open_exec_flags.lookup_flags &= ~LOOKUP_FOLLOW;
@@ -150,7 +150,7 @@ index ae19e51365986..3725f6730b8e5 100644
  			 (flags & FSPICK_EMPTY_PATH) ? LOOKUP_EMPTY : 0);
  	ret = filename_lookup(dfd, filename, lookup_flags, &target, NULL);
 diff --git a/fs/namei.c b/fs/namei.c
-index 19ce43c9a6e66..1d71126399c38 100644
+index 20a6534ea3eff..e04ea1e86911c 100644
 --- a/fs/namei.c
 +++ b/fs/namei.c
 @@ -3779,7 +3779,7 @@ static struct dentry *lock_two_directories(struct dentry *p1, struct dentry *p2)
@@ -172,10 +172,10 @@ index 19ce43c9a6e66..1d71126399c38 100644
  	inode_unlock(p1->d_inode);
  	if (p1 != p2) {
 diff --git a/fs/namespace.c b/fs/namespace.c
-index 3d5cd5bf3b053..0d149e4fb6d5e 100644
+index 1ecd96c918b33..b9ead7f264b50 100644
 --- a/fs/namespace.c
 +++ b/fs/namespace.c
-@@ -3215,6 +3215,9 @@ static struct file *vfs_open_tree(int dfd, const char __user *filename, unsigned
+@@ -3218,6 +3218,9 @@ static struct file *vfs_open_tree(int dfd, const char __user *filename, unsigned
  		lookup_flags &= ~LOOKUP_AUTOMOUNT;
  	if (flags & AT_SYMLINK_NOFOLLOW)
  		lookup_flags &= ~LOOKUP_FOLLOW;
@@ -185,7 +185,7 @@ index 3d5cd5bf3b053..0d149e4fb6d5e 100644
  
  	/*
  	 * If we create a new mount namespace with the cloned mount tree we
-@@ -5161,6 +5164,9 @@ SYSCALL_DEFINE5(mount_setattr, int, dfd, const char __user *, path,
+@@ -5168,6 +5171,9 @@ SYSCALL_DEFINE5(mount_setattr, int, dfd, const char __user *, path,
  		lookup_flags &= ~LOOKUP_AUTOMOUNT;
  	if (flags & AT_SYMLINK_NOFOLLOW)
  		lookup_flags &= ~LOOKUP_FOLLOW;
@@ -196,7 +196,7 @@ index 3d5cd5bf3b053..0d149e4fb6d5e 100644
  	kattr = (struct mount_kattr) {
  		.lookup_flags	= lookup_flags,
 diff --git a/fs/open.c b/fs/open.c
-index 408925d7bd0b7..eb3c2abdd5d26 100644
+index 6b1c14e684a93..7829733b96b68 100644
 --- a/fs/open.c
 +++ b/fs/open.c
 @@ -476,6 +476,9 @@ static int do_faccessat(int dfd, const char __user *filename, int mode, int flag
@@ -209,7 +209,7 @@ index 408925d7bd0b7..eb3c2abdd5d26 100644
  
  	if (access_need_override_creds(flags)) {
  		old_cred = access_override_creds();
-@@ -675,6 +678,9 @@ static int do_fchmodat(int dfd, const char __user *filename, umode_t mode,
+@@ -724,6 +727,9 @@ static int do_fchmodat(int dfd, const char __user *filename, umode_t mode,
  		return -EINVAL;
  
  	lookup_flags = (flags & AT_SYMLINK_NOFOLLOW) ? 0 : LOOKUP_FOLLOW;
@@ -219,7 +219,7 @@ index 408925d7bd0b7..eb3c2abdd5d26 100644
  	CLASS(filename_uflags, name)(filename, flags);
  retry:
  	error = filename_lookup(dfd, name, lookup_flags, &path, NULL);
-@@ -795,6 +801,9 @@ int do_fchownat(int dfd, const char __user *filename, uid_t user, gid_t group,
+@@ -844,6 +850,9 @@ int do_fchownat(int dfd, const char __user *filename, uid_t user, gid_t group,
  		return -EINVAL;
  
  	lookup_flags = (flag & AT_SYMLINK_NOFOLLOW) ? 0 : LOOKUP_FOLLOW;
@@ -243,7 +243,7 @@ index 9d8f63e2fd1ab..d2b70cb432d1d 100644
  {
  	if (unlikely(!out->f_op->splice_write))
 diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 50ce731a2b78f..84a7d43b779d6 100644
+index f9d1e05e8ae68..a8faa51d38605 100644
 --- a/include/linux/fs.h
 +++ b/include/linux/fs.h
 @@ -1385,6 +1385,7 @@ extern void fasync_free(struct fasync_struct *);
@@ -254,7 +254,7 @@ index 50ce731a2b78f..84a7d43b779d6 100644
  extern void __f_setown(struct file *filp, struct pid *, enum pid_type, int force);
  extern int f_setown(struct file *filp, int who, int force);
  extern void f_delown(struct file *filp);
-@@ -1941,6 +1942,7 @@ struct file_operations {
+@@ -1939,6 +1940,7 @@ struct file_operations {
  	int (*lock) (struct file *, int, struct file_lock *);
  	unsigned long (*get_unmapped_area)(struct file *, unsigned long, unsigned long, unsigned long, unsigned long);
  	int (*check_flags)(int);
@@ -263,7 +263,7 @@ index 50ce731a2b78f..84a7d43b779d6 100644
  	ssize_t (*splice_write)(struct pipe_inode_info *, struct file *, loff_t *, size_t, unsigned int);
  	ssize_t (*splice_read)(struct file *, loff_t *, struct pipe_inode_info *, size_t, unsigned int);
 diff --git a/include/linux/lockdep.h b/include/linux/lockdep.h
-index 621566345406d..24d2eca0dc1d0 100644
+index a6451ecbbe9a0..3653295b03197 100644
 --- a/include/linux/lockdep.h
 +++ b/include/linux/lockdep.h
 @@ -210,6 +210,8 @@ static inline int lockdep_match_key(struct lockdep_map *lock,
@@ -276,10 +276,10 @@ index 621566345406d..24d2eca0dc1d0 100644
   * Acquire a lock.
   *
 diff --git a/include/linux/namei.h b/include/linux/namei.h
-index ebe6e29f7e93b..6fbc20fddeec0 100644
+index 86d657b24fc6a..e9099a8dda8c1 100644
 --- a/include/linux/namei.h
 +++ b/include/linux/namei.h
-@@ -159,6 +159,8 @@ extern int follow_down_one(struct path *);
+@@ -162,6 +162,8 @@ extern int follow_down_one(struct path *);
  extern int follow_down(struct path *path, unsigned int flags);
  extern int follow_up(struct path *);
  
@@ -301,7 +301,7 @@ index 9dec4861d09f6..14583d8468640 100644
 +			      loff_t *ppos, size_t len, unsigned int flags);
  #endif
 diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 2d4c5bab5af88..b720d966c7b92 100644
+index c56a7f91d72e2..4a7ba5d62418b 100644
 --- a/kernel/locking/lockdep.c
 +++ b/kernel/locking/lockdep.c
 @@ -224,7 +224,7 @@ unsigned long max_lock_class_idx;

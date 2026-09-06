@@ -2,12 +2,12 @@ SPDX-License-Identifier: GPL-2.0
 aufs7.x-rcN mmap patch
 
 diff --git a/fs/Makefile b/fs/Makefile
-index a77d258630be0..9a8ab5cd23d6f 100644
+index eff984d7f1cb2..133c0f95ddb9d 100644
 --- a/fs/Makefile
 +++ b/fs/Makefile
 @@ -18,6 +18,12 @@ obj-y :=	open.o read_write.o file_table.o super.o \
  		kernel_read_file.o mnt_idmapping.o remap_range.o pidfs.o \
- 		file_attr.o fserror.o nullfs.o
+ 		file_attr.o fserror.o nullfs.o failfs.o
  
 +# don't move au_mf.o to the bottom of this file, otherwise it will
 +# conflict with aufs-kbuild.patch.
@@ -84,7 +84,7 @@ index 0000000000000..64c4d93ba9f50
 +}
 +EXPORT_SYMBOL_GPL(au_file_user_inode);
 diff --git a/fs/proc/base.c b/fs/proc/base.c
-index 780f812590527..010e98f171147 100644
+index 6a39de424f62a..12ee342d9d712 100644
 --- a/fs/proc/base.c
 +++ b/fs/proc/base.c
 @@ -1765,8 +1765,8 @@ static int proc_exe_link(struct dentry *dentry, struct path *exe_path,
@@ -125,10 +125,10 @@ index d362919f4f688..79a2590d40f4d 100644
  		ino = inode->i_ino;
  		pgoff = (loff_t)vma->vm_pgoff << PAGE_SHIFT;
 diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 84a7d43b779d6..f475d5f6e07b4 100644
+index a8faa51d38605..8cfff2b5887c4 100644
 --- a/include/linux/fs.h
 +++ b/include/linux/fs.h
-@@ -2502,6 +2502,21 @@ static inline void backing_file_set_security(struct file *f, void *security)
+@@ -2522,6 +2522,21 @@ static inline void backing_file_set_security(struct file *f, void *security)
  }
  #endif /* CONFIG_SECURITY */
  
@@ -150,7 +150,7 @@ index 84a7d43b779d6..f475d5f6e07b4 100644
  /*
   * When mmapping a file on a stackable filesystem (e.g., overlayfs), the file
   * stored in ->vm_file is a backing file whose f_inode is on the underlying
-@@ -2514,15 +2529,25 @@ static inline void backing_file_set_security(struct file *f, void *security)
+@@ -2534,15 +2549,25 @@ static inline void backing_file_set_security(struct file *f, void *security)
  /* Get the path to display in /proc/<pid>/maps */
  static inline const struct path *file_user_path(const struct file *f)
  {
