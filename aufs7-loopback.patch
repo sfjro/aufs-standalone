@@ -150,7 +150,7 @@ index 8edbec92f8d3d..eb2432ac1659b 100644
  
  static int loop_clr_fd(struct loop_device *lo)
 diff --git a/fs/aufs/f_op.c b/fs/aufs/f_op.c
-index 75977325091bd..6dc08b1353f21 100644
+index 33fa6c3863563..2ecbfce5feb6f 100644
 --- a/fs/aufs/f_op.c
 +++ b/fs/aufs/f_op.c
 @@ -326,7 +326,7 @@ static ssize_t aufs_read_iter(struct kiocb *kio, struct iov_iter *iov_iter)
