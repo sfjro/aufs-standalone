@@ -70,7 +70,7 @@ index e04ea1e86911c..ebfe0ca6e6287 100644
  /**
   * __start_renaming - lookup and lock names for rename
 diff --git a/fs/namespace.c b/fs/namespace.c
-index b9ead7f264b50..231c47b409c53 100644
+index f8d34899fc58b..821a7b9840809 100644
 --- a/fs/namespace.c
 +++ b/fs/namespace.c
 @@ -6345,6 +6345,7 @@ bool our_mnt(struct vfsmount *mnt)
@@ -166,7 +166,7 @@ index d589791152007..66a1a13461209 100644
  ssize_t
  __vfs_getxattr(struct dentry *dentry, struct inode *inode, const char *name,
 diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 4a7ba5d62418b..00beb8cae29e9 100644
+index e32375c659649..3015d100b316b 100644
 --- a/kernel/locking/lockdep.c
 +++ b/kernel/locking/lockdep.c
 @@ -245,6 +245,7 @@ inline struct lock_class *lockdep_hlock_class(struct held_lock *hlock)

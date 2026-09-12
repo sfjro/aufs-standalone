@@ -2,7 +2,7 @@ SPDX-License-Identifier: GPL-2.0
 aufs7.x-rcN base patch
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 3a19da74d00c9..512ebafec7027 100644
+index 6215fcb077705..e5ec3e394bd66 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
 @@ -4364,6 +4364,19 @@ F:	kernel/audit*
@@ -26,10 +26,10 @@ index 3a19da74d00c9..512ebafec7027 100644
  M:	Rong Xu <xur@google.com>
  M:	Han Shen <shenhan@google.com>
 diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index 6f12976035b09..24317ef96e0fb 100644
+index 758c20678bf6c..179f838c560d4 100644
 --- a/drivers/block/loop.c
 +++ b/drivers/block/loop.c
-@@ -638,6 +638,31 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
+@@ -640,6 +640,31 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
  	goto done;
  }
  
@@ -172,7 +172,7 @@ index 20a6534ea3eff..e04ea1e86911c 100644
  	inode_unlock(p1->d_inode);
  	if (p1 != p2) {
 diff --git a/fs/namespace.c b/fs/namespace.c
-index 1ecd96c918b33..b9ead7f264b50 100644
+index ae5dc64f8b457..f8d34899fc58b 100644
 --- a/fs/namespace.c
 +++ b/fs/namespace.c
 @@ -3218,6 +3218,9 @@ static struct file *vfs_open_tree(int dfd, const char __user *filename, unsigned
@@ -301,7 +301,7 @@ index 9dec4861d09f6..14583d8468640 100644
 +			      loff_t *ppos, size_t len, unsigned int flags);
  #endif
 diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index c56a7f91d72e2..4a7ba5d62418b 100644
+index c3dc84a7cef26..e32375c659649 100644
 --- a/kernel/locking/lockdep.c
 +++ b/kernel/locking/lockdep.c
 @@ -224,7 +224,7 @@ unsigned long max_lock_class_idx;
