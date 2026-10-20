@@ -2,7 +2,7 @@ SPDX-License-Identifier: GPL-2.0
 aufs7.x-rcN base patch
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 6215fcb077705..e5ec3e394bd66 100644
+index 782389bd5cd3d..6470f865e0d2c 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
 @@ -4364,6 +4364,19 @@ F:	kernel/audit*
@@ -62,7 +62,7 @@ index 758c20678bf6c..179f838c560d4 100644
  
  static ssize_t loop_attr_show(struct device *dev, char *page,
 diff --git a/fs/dcache.c b/fs/dcache.c
-index 1b1a81f10da67..2bc3e63fe702d 100644
+index f44c7b39c3b38..43f0a97435a48 100644
 --- a/fs/dcache.c
 +++ b/fs/dcache.c
 @@ -1429,6 +1429,10 @@ enum d_walk_ret {
@@ -86,7 +86,7 @@ index 1b1a81f10da67..2bc3e63fe702d 100644
  {
  	struct dentry *this_parent, *dentry;
 diff --git a/fs/exec.c b/fs/exec.c
-index 745f6eb5279e6..0cb555d449731 100644
+index a5269b5e00df1..377c59578c6a0 100644
 --- a/fs/exec.c
 +++ b/fs/exec.c
 @@ -782,6 +782,9 @@ static struct file *do_open_execat(int fd, struct filename *name, int flags)
@@ -100,7 +100,7 @@ index 745f6eb5279e6..0cb555d449731 100644
  	file = do_file_open(fd, name, &open_exec_flags);
  	if (IS_ERR(file))
 diff --git a/fs/fcntl.c b/fs/fcntl.c
-index c158f082f1da4..30aadd42ed8ee 100644
+index 9b71bc9d71d15..75c5416d0e0b7 100644
 --- a/fs/fcntl.c
 +++ b/fs/fcntl.c
 @@ -36,7 +36,7 @@
@@ -122,7 +122,7 @@ index c158f082f1da4..30aadd42ed8ee 100644
  		return error;
  
 diff --git a/fs/fhandle.c b/fs/fhandle.c
-index f8829231e3d75..1ec27a6546f8e 100644
+index d22f2e065677a..9b291d8961a1f 100644
 --- a/fs/fhandle.c
 +++ b/fs/fhandle.c
 @@ -156,6 +156,9 @@ SYSCALL_DEFINE5(name_to_handle_at, int, dfd, const char __user *, name,
@@ -150,7 +150,7 @@ index ae19e51365986..3725f6730b8e5 100644
  			 (flags & FSPICK_EMPTY_PATH) ? LOOKUP_EMPTY : 0);
  	ret = filename_lookup(dfd, filename, lookup_flags, &target, NULL);
 diff --git a/fs/namei.c b/fs/namei.c
-index 20a6534ea3eff..e04ea1e86911c 100644
+index e45e30603215d..69da2972359ba 100644
 --- a/fs/namei.c
 +++ b/fs/namei.c
 @@ -3779,7 +3779,7 @@ static struct dentry *lock_two_directories(struct dentry *p1, struct dentry *p2)
@@ -172,10 +172,10 @@ index 20a6534ea3eff..e04ea1e86911c 100644
  	inode_unlock(p1->d_inode);
  	if (p1 != p2) {
 diff --git a/fs/namespace.c b/fs/namespace.c
-index ae5dc64f8b457..f8d34899fc58b 100644
+index c30f063742f40..2a3aa15806d79 100644
 --- a/fs/namespace.c
 +++ b/fs/namespace.c
-@@ -3218,6 +3218,9 @@ static struct file *vfs_open_tree(int dfd, const char __user *filename, unsigned
+@@ -3334,6 +3334,9 @@ static struct file *vfs_open_tree(int dfd, const char __user *filename, unsigned
  		lookup_flags &= ~LOOKUP_AUTOMOUNT;
  	if (flags & AT_SYMLINK_NOFOLLOW)
  		lookup_flags &= ~LOOKUP_FOLLOW;
@@ -185,7 +185,7 @@ index ae5dc64f8b457..f8d34899fc58b 100644
  
  	/*
  	 * If we create a new mount namespace with the cloned mount tree we
-@@ -5168,6 +5171,9 @@ SYSCALL_DEFINE5(mount_setattr, int, dfd, const char __user *, path,
+@@ -5334,6 +5337,9 @@ SYSCALL_DEFINE5(mount_setattr, int, dfd, const char __user *, path,
  		lookup_flags &= ~LOOKUP_AUTOMOUNT;
  	if (flags & AT_SYMLINK_NOFOLLOW)
  		lookup_flags &= ~LOOKUP_FOLLOW;
@@ -243,7 +243,7 @@ index 9d8f63e2fd1ab..d2b70cb432d1d 100644
  {
  	if (unlikely(!out->f_op->splice_write))
 diff --git a/include/linux/fs.h b/include/linux/fs.h
-index f9d1e05e8ae68..a8faa51d38605 100644
+index deb411e866617..840980f456470 100644
 --- a/include/linux/fs.h
 +++ b/include/linux/fs.h
 @@ -1385,6 +1385,7 @@ extern void fasync_free(struct fasync_struct *);

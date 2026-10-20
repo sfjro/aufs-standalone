@@ -2,7 +2,7 @@ SPDX-License-Identifier: GPL-2.0
 aufs7.x-rcN standalone patch
 
 diff --git a/fs/dcache.c b/fs/dcache.c
-index 2bc3e63fe702d..8c24071683a18 100644
+index 43f0a97435a48..6e8c4e3947cbf 100644
 --- a/fs/dcache.c
 +++ b/fs/dcache.c
 @@ -1540,6 +1540,7 @@ void d_walk(struct dentry *parent, void *data,
@@ -14,7 +14,7 @@ index 2bc3e63fe702d..8c24071683a18 100644
  struct check_mount {
  	struct vfsmount *mnt;
 diff --git a/fs/exec.c b/fs/exec.c
-index 0cb555d449731..ca17d7adb0d0e 100644
+index 377c59578c6a0..a160305d2c0c8 100644
 --- a/fs/exec.c
 +++ b/fs/exec.c
 @@ -122,6 +122,7 @@ bool path_noexec(const struct path *path)
@@ -26,7 +26,7 @@ index 0cb555d449731..ca17d7adb0d0e 100644
  #ifdef CONFIG_MMU
  /*
 diff --git a/fs/fcntl.c b/fs/fcntl.c
-index 30aadd42ed8ee..78db19b2a4f51 100644
+index 75c5416d0e0b7..58a77399057a4 100644
 --- a/fs/fcntl.c
 +++ b/fs/fcntl.c
 @@ -89,6 +89,7 @@ int setfl(int fd, struct file * filp, unsigned int arg)
@@ -38,7 +38,7 @@ index 30aadd42ed8ee..78db19b2a4f51 100644
  /*
   * Allocate an file->f_owner struct if it doesn't exist, handling racing
 diff --git a/fs/file_table.c b/fs/file_table.c
-index c68b8c0a4097a..5367fd8ad12db 100644
+index e2665eaa6f8c2..6e1da727501a8 100644
 --- a/fs/file_table.c
 +++ b/fs/file_table.c
 @@ -281,6 +281,7 @@ struct file *alloc_empty_file(int flags, const struct cred *cred)
@@ -50,7 +50,7 @@ index c68b8c0a4097a..5367fd8ad12db 100644
  /*
   * Variant of alloc_empty_file() that doesn't check and modify nr_files.
 diff --git a/fs/namei.c b/fs/namei.c
-index e04ea1e86911c..ebfe0ca6e6287 100644
+index 69da2972359ba..4b4584c5792cb 100644
 --- a/fs/namei.c
 +++ b/fs/namei.c
 @@ -3789,6 +3789,7 @@ struct dentry *lock_rename(struct dentry *p1, struct dentry *p2)
@@ -70,10 +70,10 @@ index e04ea1e86911c..ebfe0ca6e6287 100644
  /**
   * __start_renaming - lookup and lock names for rename
 diff --git a/fs/namespace.c b/fs/namespace.c
-index f8d34899fc58b..821a7b9840809 100644
+index 2a3aa15806d79..042f22c20b7d5 100644
 --- a/fs/namespace.c
 +++ b/fs/namespace.c
-@@ -6345,6 +6345,7 @@ bool our_mnt(struct vfsmount *mnt)
+@@ -6558,6 +6558,7 @@ bool our_mnt(struct vfsmount *mnt)
  {
  	return check_mnt(real_mount(mnt));
  }
