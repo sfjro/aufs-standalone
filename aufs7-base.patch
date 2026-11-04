@@ -2,10 +2,10 @@ SPDX-License-Identifier: GPL-2.0
 aufs7.x-rcN base patch
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 782389bd5cd3d..6470f865e0d2c 100644
+index 93abbb315065d..c9f58b374b140 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -4364,6 +4364,19 @@ F:	kernel/audit*
+@@ -4473,6 +4473,19 @@ F:	kernel/audit*
  F:	lib/*audit.c
  K:	\baudit_[a-z_0-9]\+\b
  
@@ -26,11 +26,11 @@ index 782389bd5cd3d..6470f865e0d2c 100644
  M:	Rong Xu <xur@google.com>
  M:	Han Shen <shenhan@google.com>
 diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index 758c20678bf6c..179f838c560d4 100644
+index a3325ceab484a..5139ffa13e42d 100644
 --- a/drivers/block/loop.c
 +++ b/drivers/block/loop.c
-@@ -640,6 +640,31 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
- 	goto done;
+@@ -537,6 +537,31 @@ static int loop_check_backing_file(struct file *file)
+ 	return 0;
  }
  
 +/*
@@ -62,10 +62,10 @@ index 758c20678bf6c..179f838c560d4 100644
  
  static ssize_t loop_attr_show(struct device *dev, char *page,
 diff --git a/fs/dcache.c b/fs/dcache.c
-index f44c7b39c3b38..43f0a97435a48 100644
+index 409f841e058e4..54e83facc74a6 100644
 --- a/fs/dcache.c
 +++ b/fs/dcache.c
-@@ -1429,6 +1429,10 @@ enum d_walk_ret {
+@@ -1465,6 +1465,10 @@ enum d_walk_ret {
  	D_WALK_SKIP,
  };
  
@@ -76,7 +76,7 @@ index f44c7b39c3b38..43f0a97435a48 100644
  /**
   * d_walk - walk the dentry tree
   * @parent:	start of walk
-@@ -1437,7 +1441,7 @@ enum d_walk_ret {
+@@ -1473,7 +1477,7 @@ enum d_walk_ret {
   *
   * The @enter() callbacks are called with d_lock held.
   */
@@ -86,7 +86,7 @@ index f44c7b39c3b38..43f0a97435a48 100644
  {
  	struct dentry *this_parent, *dentry;
 diff --git a/fs/exec.c b/fs/exec.c
-index a5269b5e00df1..377c59578c6a0 100644
+index 8d2b14e1d455c..9124f2fec2367 100644
 --- a/fs/exec.c
 +++ b/fs/exec.c
 @@ -782,6 +782,9 @@ static struct file *do_open_execat(int fd, struct filename *name, int flags)
@@ -122,7 +122,7 @@ index 9b71bc9d71d15..75c5416d0e0b7 100644
  		return error;
  
 diff --git a/fs/fhandle.c b/fs/fhandle.c
-index d22f2e065677a..9b291d8961a1f 100644
+index 32fcff14f88fd..a066b8e9ee970 100644
 --- a/fs/fhandle.c
 +++ b/fs/fhandle.c
 @@ -156,6 +156,9 @@ SYSCALL_DEFINE5(name_to_handle_at, int, dfd, const char __user *, name,
@@ -136,10 +136,10 @@ index d22f2e065677a..9b291d8961a1f 100644
  	err = filename_lookup(dfd, filename, lookup_flags, &path, NULL);
  	if (!err) {
 diff --git a/fs/fsopen.c b/fs/fsopen.c
-index ae19e51365986..3725f6730b8e5 100644
+index 70024870fefa2..5b04cb10ad87f 100644
 --- a/fs/fsopen.c
 +++ b/fs/fsopen.c
-@@ -181,6 +181,9 @@ SYSCALL_DEFINE3(fspick, int, dfd, const char __user *, path, unsigned int, flags
+@@ -184,6 +184,9 @@ SYSCALL_DEFINE3(fspick, int, dfd, const char __user *, path, unsigned int, flags
  		lookup_flags &= ~LOOKUP_FOLLOW;
  	if (flags & FSPICK_NO_AUTOMOUNT)
  		lookup_flags &= ~LOOKUP_AUTOMOUNT;
@@ -150,10 +150,10 @@ index ae19e51365986..3725f6730b8e5 100644
  			 (flags & FSPICK_EMPTY_PATH) ? LOOKUP_EMPTY : 0);
  	ret = filename_lookup(dfd, filename, lookup_flags, &target, NULL);
 diff --git a/fs/namei.c b/fs/namei.c
-index e45e30603215d..69da2972359ba 100644
+index 925aeb63bfa1d..89d5db9a79699 100644
 --- a/fs/namei.c
 +++ b/fs/namei.c
-@@ -3779,7 +3779,7 @@ static struct dentry *lock_two_directories(struct dentry *p1, struct dentry *p2)
+@@ -3785,7 +3785,7 @@ static struct dentry *lock_two_directories(struct dentry *p1, struct dentry *p2)
  /*
   * p1 and p2 should be directories on the same fs.
   */
@@ -162,7 +162,7 @@ index e45e30603215d..69da2972359ba 100644
  {
  	if (p1 == p2) {
  		inode_lock_nested(p1->d_inode, I_MUTEX_PARENT);
-@@ -3831,7 +3831,7 @@ static struct dentry *lock_rename_child(struct dentry *c1, struct dentry *p2)
+@@ -3837,7 +3837,7 @@ static struct dentry *lock_rename_child(struct dentry *c1, struct dentry *p2)
  	return NULL;
  }
  
@@ -172,10 +172,10 @@ index e45e30603215d..69da2972359ba 100644
  	inode_unlock(p1->d_inode);
  	if (p1 != p2) {
 diff --git a/fs/namespace.c b/fs/namespace.c
-index c30f063742f40..2a3aa15806d79 100644
+index 25e196c051263..c573bda67af7c 100644
 --- a/fs/namespace.c
 +++ b/fs/namespace.c
-@@ -3334,6 +3334,9 @@ static struct file *vfs_open_tree(int dfd, const char __user *filename, unsigned
+@@ -3346,6 +3346,9 @@ static struct file *vfs_open_tree(int dfd, const char __user *filename, unsigned
  		lookup_flags &= ~LOOKUP_AUTOMOUNT;
  	if (flags & AT_SYMLINK_NOFOLLOW)
  		lookup_flags &= ~LOOKUP_FOLLOW;
@@ -185,7 +185,7 @@ index c30f063742f40..2a3aa15806d79 100644
  
  	/*
  	 * If we create a new mount namespace with the cloned mount tree we
-@@ -5334,6 +5337,9 @@ SYSCALL_DEFINE5(mount_setattr, int, dfd, const char __user *, path,
+@@ -5343,6 +5346,9 @@ SYSCALL_DEFINE5(mount_setattr, int, dfd, const char __user *, path,
  		lookup_flags &= ~LOOKUP_AUTOMOUNT;
  	if (flags & AT_SYMLINK_NOFOLLOW)
  		lookup_flags &= ~LOOKUP_FOLLOW;
@@ -196,7 +196,7 @@ index c30f063742f40..2a3aa15806d79 100644
  	kattr = (struct mount_kattr) {
  		.lookup_flags	= lookup_flags,
 diff --git a/fs/open.c b/fs/open.c
-index 6b1c14e684a93..7829733b96b68 100644
+index e43f02ff64acb..9b46664e280e4 100644
 --- a/fs/open.c
 +++ b/fs/open.c
 @@ -476,6 +476,9 @@ static int do_faccessat(int dfd, const char __user *filename, int mode, int flag
@@ -230,7 +230,7 @@ index 6b1c14e684a93..7829733b96b68 100644
  retry:
  	error = filename_lookup(dfd, name, lookup_flags, &path, NULL);
 diff --git a/fs/splice.c b/fs/splice.c
-index 9d8f63e2fd1ab..d2b70cb432d1d 100644
+index e6d43329ed3f0..8a4e271d226a7 100644
 --- a/fs/splice.c
 +++ b/fs/splice.c
 @@ -928,7 +928,7 @@ static int warn_unsupported(struct file *file, const char *op)
@@ -243,10 +243,10 @@ index 9d8f63e2fd1ab..d2b70cb432d1d 100644
  {
  	if (unlikely(!out->f_op->splice_write))
 diff --git a/include/linux/fs.h b/include/linux/fs.h
-index deb411e866617..840980f456470 100644
+index 99caef43ff3c4..cdf4833bf1d3b 100644
 --- a/include/linux/fs.h
 +++ b/include/linux/fs.h
-@@ -1385,6 +1385,7 @@ extern void fasync_free(struct fasync_struct *);
+@@ -1387,6 +1387,7 @@ extern void fasync_free(struct fasync_struct *);
  /* can be called from interrupts */
  extern void kill_fasync(struct fasync_struct **, int, int);
  
@@ -254,7 +254,7 @@ index deb411e866617..840980f456470 100644
  extern void __f_setown(struct file *filp, struct pid *, enum pid_type, int force);
  extern int f_setown(struct file *filp, int who, int force);
  extern void f_delown(struct file *filp);
-@@ -1939,6 +1940,7 @@ struct file_operations {
+@@ -1942,6 +1943,7 @@ struct file_operations {
  	int (*lock) (struct file *, int, struct file_lock *);
  	unsigned long (*get_unmapped_area)(struct file *, unsigned long, unsigned long, unsigned long, unsigned long);
  	int (*check_flags)(int);
@@ -276,10 +276,10 @@ index a6451ecbbe9a0..3653295b03197 100644
   * Acquire a lock.
   *
 diff --git a/include/linux/namei.h b/include/linux/namei.h
-index 86d657b24fc6a..e9099a8dda8c1 100644
+index c4436e5c2ba65..31487f479815c 100644
 --- a/include/linux/namei.h
 +++ b/include/linux/namei.h
-@@ -162,6 +162,8 @@ extern int follow_down_one(struct path *);
+@@ -163,6 +163,8 @@ extern int follow_down_one(struct path *);
  extern int follow_down(struct path *path, unsigned int flags);
  extern int follow_up(struct path *);
  
@@ -289,7 +289,7 @@ index 86d657b24fc6a..e9099a8dda8c1 100644
  		   struct qstr *old_last, struct qstr *new_last);
  int start_renaming_dentry(struct renamedata *rd, int lookup_flags,
 diff --git a/include/linux/splice.h b/include/linux/splice.h
-index 9dec4861d09f6..14583d8468640 100644
+index 0e6c955dc6ffe..a42b636269f95 100644
 --- a/include/linux/splice.h
 +++ b/include/linux/splice.h
 @@ -108,4 +108,7 @@ extern void splice_shrink_spd(struct splice_pipe_desc *);
