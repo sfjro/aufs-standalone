@@ -149,11 +149,11 @@ index 1c7fe7eeae0a8..111d6e193ff70 100644
  
  static int loop_clr_fd(struct loop_device *lo)
 diff --git a/fs/aufs/f_op.c b/fs/aufs/f_op.c
-index 3d2a3d4973c31..343db6046eb59 100644
+index 161dc8d87ccbc..fb29ea42f5bc1 100644
 --- a/fs/aufs/f_op.c
 +++ b/fs/aufs/f_op.c
-@@ -326,7 +326,7 @@ static ssize_t aufs_read_iter(struct kiocb *kio, struct iov_iter *iov_iter)
- 	if (IS_ERR(h_file))
+@@ -342,7 +342,7 @@ static ssize_t aufs_read_iter(struct kiocb *kio, struct iov_iter *iov_iter)
+ 	if (unlikely(err))
  		goto out;
  
 -	if (au_test_loopback_kthread()) {
@@ -208,7 +208,7 @@ index 519efba31c700..ac701381da792 100644
  
  #endif /* __KERNEL__ */
 diff --git a/fs/aufs/super.c b/fs/aufs/super.c
-index 0af2ddbe73649..8f730afa44c81 100644
+index 62fc2ce7d2fb5..7b71d7fa30210 100644
 --- a/fs/aufs/super.c
 +++ b/fs/aufs/super.c
 @@ -758,7 +758,10 @@ const struct super_operations aufs_sop = {
