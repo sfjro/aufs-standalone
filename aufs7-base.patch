@@ -2,7 +2,7 @@ SPDX-License-Identifier: GPL-2.0
 aufs7.x-rcN base patch
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 93abbb315065d..c9f58b374b140 100644
+index 222b7fc2c3aab..8a033f03873f3 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
 @@ -4473,6 +4473,19 @@ F:	kernel/audit*
@@ -62,10 +62,10 @@ index a3325ceab484a..5139ffa13e42d 100644
  
  static ssize_t loop_attr_show(struct device *dev, char *page,
 diff --git a/fs/dcache.c b/fs/dcache.c
-index 409f841e058e4..54e83facc74a6 100644
+index 720b32cb2e039..30fd2fe02c142 100644
 --- a/fs/dcache.c
 +++ b/fs/dcache.c
-@@ -1465,6 +1465,10 @@ enum d_walk_ret {
+@@ -1459,6 +1459,10 @@ enum d_walk_ret {
  	D_WALK_SKIP,
  };
  
@@ -76,7 +76,7 @@ index 409f841e058e4..54e83facc74a6 100644
  /**
   * d_walk - walk the dentry tree
   * @parent:	start of walk
-@@ -1473,7 +1477,7 @@ enum d_walk_ret {
+@@ -1467,7 +1471,7 @@ enum d_walk_ret {
   *
   * The @enter() callbacks are called with d_lock held.
   */
@@ -172,7 +172,7 @@ index 925aeb63bfa1d..89d5db9a79699 100644
  	inode_unlock(p1->d_inode);
  	if (p1 != p2) {
 diff --git a/fs/namespace.c b/fs/namespace.c
-index 25e196c051263..c573bda67af7c 100644
+index 010ed5d68d229..30cb7aa5ffc77 100644
 --- a/fs/namespace.c
 +++ b/fs/namespace.c
 @@ -3346,6 +3346,9 @@ static struct file *vfs_open_tree(int dfd, const char __user *filename, unsigned
@@ -196,7 +196,7 @@ index 25e196c051263..c573bda67af7c 100644
  	kattr = (struct mount_kattr) {
  		.lookup_flags	= lookup_flags,
 diff --git a/fs/open.c b/fs/open.c
-index e43f02ff64acb..9b46664e280e4 100644
+index bb484b07390ac..0c06d0e93f0ab 100644
 --- a/fs/open.c
 +++ b/fs/open.c
 @@ -476,6 +476,9 @@ static int do_faccessat(int dfd, const char __user *filename, int mode, int flag
@@ -301,7 +301,7 @@ index 0e6c955dc6ffe..a42b636269f95 100644
 +			      loff_t *ppos, size_t len, unsigned int flags);
  #endif
 diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index c3dc84a7cef26..e32375c659649 100644
+index fdae495bf918b..a7e35ee9f3b05 100644
 --- a/kernel/locking/lockdep.c
 +++ b/kernel/locking/lockdep.c
 @@ -224,7 +224,7 @@ unsigned long max_lock_class_idx;

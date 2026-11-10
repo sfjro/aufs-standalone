@@ -84,10 +84,10 @@ index 0000000000000..64c4d93ba9f50
 +}
 +EXPORT_SYMBOL_GPL(au_file_user_inode);
 diff --git a/fs/proc/base.c b/fs/proc/base.c
-index c9aebee0a338c..258a7798ab556 100644
+index 7685660c36241..0a4db55e7a059 100644
 --- a/fs/proc/base.c
 +++ b/fs/proc/base.c
-@@ -1766,8 +1766,8 @@ static int proc_exe_link(struct dentry *dentry, struct path *exe_path,
+@@ -1765,8 +1765,8 @@ static int proc_exe_link(struct dentry *dentry, struct path *exe_path,
  
  	exe_file = get_task_exe_file(task);
  	if (exe_file) {
