@@ -70,10 +70,26 @@ index 1d71126399c38..8b71979527fa8 100644
  /**
   * __start_renaming - lookup and lock names for rename
 diff --git a/fs/namespace.c b/fs/namespace.c
-index 0d149e4fb6d5e..aef48d29d7e36 100644
+index 0d149e4fb6d5e..cdd4dd6c85fd0 100644
 --- a/fs/namespace.c
 +++ b/fs/namespace.c
-@@ -6334,6 +6334,7 @@ bool our_mnt(struct vfsmount *mnt)
+@@ -2283,6 +2283,7 @@ const struct path *collect_paths(const struct path *path,
+ 		path_get(p);
+ 	return res;
+ }
++EXPORT_SYMBOL_GPL(collect_paths);
+ 
+ void drop_collected_paths(const struct path *paths, const struct path *prealloc)
+ {
+@@ -2291,6 +2292,7 @@ void drop_collected_paths(const struct path *paths, const struct path *prealloc)
+ 	if (paths != prealloc)
+ 		kfree(paths);
+ }
++EXPORT_SYMBOL_GPL(drop_collected_paths);
+ 
+ static struct mnt_namespace *alloc_mnt_ns(struct user_namespace *, bool);
+ 
+@@ -6334,6 +6336,7 @@ bool our_mnt(struct vfsmount *mnt)
  {
  	return check_mnt(real_mount(mnt));
  }
