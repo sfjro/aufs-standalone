@@ -2,7 +2,7 @@ SPDX-License-Identifier: GPL-2.0
 aufs7.x-rcN base patch
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 222b7fc2c3aab..8a033f03873f3 100644
+index ccbcdc0799b9f..8ed8fbb4b5e3e 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
 @@ -4473,6 +4473,19 @@ F:	kernel/audit*
@@ -62,10 +62,10 @@ index a3325ceab484a..5139ffa13e42d 100644
  
  static ssize_t loop_attr_show(struct device *dev, char *page,
 diff --git a/fs/dcache.c b/fs/dcache.c
-index 720b32cb2e039..30fd2fe02c142 100644
+index ba17f49f8a636..c6ab862137515 100644
 --- a/fs/dcache.c
 +++ b/fs/dcache.c
-@@ -1459,6 +1459,10 @@ enum d_walk_ret {
+@@ -1471,6 +1471,10 @@ enum d_walk_ret {
  	D_WALK_SKIP,
  };
  
@@ -76,7 +76,7 @@ index 720b32cb2e039..30fd2fe02c142 100644
  /**
   * d_walk - walk the dentry tree
   * @parent:	start of walk
-@@ -1467,7 +1471,7 @@ enum d_walk_ret {
+@@ -1479,7 +1483,7 @@ enum d_walk_ret {
   *
   * The @enter() callbacks are called with d_lock held.
   */
@@ -172,7 +172,7 @@ index 925aeb63bfa1d..89d5db9a79699 100644
  	inode_unlock(p1->d_inode);
  	if (p1 != p2) {
 diff --git a/fs/namespace.c b/fs/namespace.c
-index 010ed5d68d229..30cb7aa5ffc77 100644
+index aecd05ac01705..fadb6e2886332 100644
 --- a/fs/namespace.c
 +++ b/fs/namespace.c
 @@ -3346,6 +3346,9 @@ static struct file *vfs_open_tree(int dfd, const char __user *filename, unsigned
@@ -185,7 +185,7 @@ index 010ed5d68d229..30cb7aa5ffc77 100644
  
  	/*
  	 * If we create a new mount namespace with the cloned mount tree we
-@@ -5343,6 +5346,9 @@ SYSCALL_DEFINE5(mount_setattr, int, dfd, const char __user *, path,
+@@ -5341,6 +5344,9 @@ SYSCALL_DEFINE5(mount_setattr, int, dfd, const char __user *, path,
  		lookup_flags &= ~LOOKUP_AUTOMOUNT;
  	if (flags & AT_SYMLINK_NOFOLLOW)
  		lookup_flags &= ~LOOKUP_FOLLOW;
@@ -230,10 +230,10 @@ index bb484b07390ac..0c06d0e93f0ab 100644
  retry:
  	error = filename_lookup(dfd, name, lookup_flags, &path, NULL);
 diff --git a/fs/splice.c b/fs/splice.c
-index e6d43329ed3f0..8a4e271d226a7 100644
+index 5397ded643a7f..b48b77d3ec5dd 100644
 --- a/fs/splice.c
 +++ b/fs/splice.c
-@@ -928,7 +928,7 @@ static int warn_unsupported(struct file *file, const char *op)
+@@ -855,7 +855,7 @@ static int warn_unsupported(struct file *file, const char *op)
  /*
   * Attempt to initiate a splice from pipe to file.
   */
@@ -243,10 +243,10 @@ index e6d43329ed3f0..8a4e271d226a7 100644
  {
  	if (unlikely(!out->f_op->splice_write))
 diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 99caef43ff3c4..cdf4833bf1d3b 100644
+index 5b3a100aba77b..13c9cf443787d 100644
 --- a/include/linux/fs.h
 +++ b/include/linux/fs.h
-@@ -1387,6 +1387,7 @@ extern void fasync_free(struct fasync_struct *);
+@@ -1388,6 +1388,7 @@ extern void fasync_free(struct fasync_struct *);
  /* can be called from interrupts */
  extern void kill_fasync(struct fasync_struct **, int, int);
  
@@ -254,7 +254,7 @@ index 99caef43ff3c4..cdf4833bf1d3b 100644
  extern void __f_setown(struct file *filp, struct pid *, enum pid_type, int force);
  extern int f_setown(struct file *filp, int who, int force);
  extern void f_delown(struct file *filp);
-@@ -1942,6 +1943,7 @@ struct file_operations {
+@@ -1943,6 +1944,7 @@ struct file_operations {
  	int (*lock) (struct file *, int, struct file_lock *);
  	unsigned long (*get_unmapped_area)(struct file *, unsigned long, unsigned long, unsigned long, unsigned long);
  	int (*check_flags)(int);

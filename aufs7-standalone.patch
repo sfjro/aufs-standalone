@@ -2,10 +2,10 @@ SPDX-License-Identifier: GPL-2.0
 aufs7.x-rcN standalone patch
 
 diff --git a/fs/dcache.c b/fs/dcache.c
-index 30fd2fe02c142..bd83f970bb401 100644
+index c6ab862137515..a23e2ae75cd36 100644
 --- a/fs/dcache.c
 +++ b/fs/dcache.c
-@@ -1570,6 +1570,7 @@ void d_walk(struct dentry *parent, void *data,
+@@ -1582,6 +1582,7 @@ void d_walk(struct dentry *parent, void *data,
  	seq = 1;
  	goto again;
  }
@@ -70,7 +70,7 @@ index 89d5db9a79699..3197de41b751b 100644
  /**
   * __start_renaming - lookup and lock names for rename
 diff --git a/fs/namespace.c b/fs/namespace.c
-index 30cb7aa5ffc77..a8d1661c04300 100644
+index fadb6e2886332..dcc4e6c23feda 100644
 --- a/fs/namespace.c
 +++ b/fs/namespace.c
 @@ -2344,6 +2344,7 @@ const struct path *collect_paths(const struct path *path,
@@ -89,7 +89,7 @@ index 30cb7aa5ffc77..a8d1661c04300 100644
  
  static struct mnt_namespace *alloc_mnt_ns(struct user_namespace *, bool);
  
-@@ -6568,6 +6570,7 @@ bool our_mnt(struct vfsmount *mnt)
+@@ -6566,6 +6568,7 @@ bool our_mnt(struct vfsmount *mnt)
  {
  	return check_mnt(real_mount(mnt));
  }
@@ -138,10 +138,10 @@ index 0c06d0e93f0ab..6612eab354ce7 100644
  int vfs_truncate(const struct path *path, loff_t length)
  {
 diff --git a/fs/read_write.c b/fs/read_write.c
-index 6767283108991..e93d22a680f10 100644
+index b15522cf96cd6..9f230cdd9ff4a 100644
 --- a/fs/read_write.c
 +++ b/fs/read_write.c
-@@ -581,6 +581,7 @@ ssize_t vfs_read(struct file *file, char __user *buf, size_t count, loff_t *pos)
+@@ -561,6 +561,7 @@ ssize_t vfs_read(struct file *file, char __user *buf, size_t count, loff_t *pos)
  	inc_syscr(current);
  	return ret;
  }
@@ -149,7 +149,7 @@ index 6767283108991..e93d22a680f10 100644
  
  static ssize_t new_sync_write(struct file *filp, const char __user *buf, size_t len, loff_t *ppos)
  {
-@@ -695,6 +696,7 @@ ssize_t vfs_write(struct file *file, const char __user *buf, size_t count, loff_
+@@ -675,6 +676,7 @@ ssize_t vfs_write(struct file *file, const char __user *buf, size_t count, loff_
  	file_end_write(file);
  	return ret;
  }
@@ -158,10 +158,10 @@ index 6767283108991..e93d22a680f10 100644
  /* file_ppos returns &file->f_pos or NULL if file is stream */
  static inline loff_t *file_ppos(struct file *file)
 diff --git a/fs/splice.c b/fs/splice.c
-index 8a4e271d226a7..551886c538b87 100644
+index b48b77d3ec5dd..e1f0c141f0888 100644
 --- a/fs/splice.c
 +++ b/fs/splice.c
-@@ -935,6 +935,7 @@ ssize_t do_splice_from(struct pipe_inode_info *pipe, struct file *out,
+@@ -862,6 +862,7 @@ ssize_t do_splice_from(struct pipe_inode_info *pipe, struct file *out,
  		return warn_unsupported(out, "write");
  	return out->f_op->splice_write(pipe, out, ppos, len, flags);
  }
